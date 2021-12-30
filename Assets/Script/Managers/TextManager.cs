@@ -75,7 +75,7 @@ public class TextManager : MonoBehaviour
                 break;
             }
             textPanel.text = string.Format("{0}\n{1}", Sentence[chatID][typingID, 1], Sentence[chatID][typingID, 2].Substring(0, i));
-            yield return new WaitForSeconds(0.15f);
+            yield return new WaitForSeconds(0.1f);
         }
         isTyping = false;
     }
@@ -84,14 +84,20 @@ public class TextManager : MonoBehaviour
     {
         if (!isTyping)
         {
-            if (Sentence[chatID][typingID, 5] == "이동")
+            string eventName = Sentence[chatID][typingID, 5];
+            if (eventName == "이동")
             {
                 chatID = System.Convert.ToInt32(Sentence[chatID][typingID, 6]);
                 typingID = 0;
             }
 
+            if (eventName == "함수")
+            {
+                Invoke(Sentence[chatID][typingID, 6], 0f);
+            }
+
             image[imageID].SetActive(false);
-            if (Sentence[chatID][typingID, 5] == "선택")
+            if (eventName == "선택")
             {
                 textPanel.gameObject.SetActive(false);
                 SelectOpen();
@@ -105,6 +111,12 @@ public class TextManager : MonoBehaviour
             }
         }
         else skip = true;
+    }
+
+    public void TextMove()
+    {
+        int num = Random.Range(6, System.Convert.ToInt32(Sentence[chatID][typingID, 19]));
+        chatID = System.Convert.ToInt32(Sentence[chatID][typingID, num]);
     }
 
     public void SelectOpen()
