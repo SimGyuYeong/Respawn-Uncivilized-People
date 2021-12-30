@@ -17,7 +17,7 @@ public class TextManager : MonoBehaviour
     Dictionary<int, int> max = new Dictionary<int, int>();
     List<string> select = new List<string>();
 
-    int chatID = 1, typingID = 1, imageID = 1;
+    public int chatID = 1, typingID = 1, imageID = 1;
     bool isTyping = false, skip = false;
 
     IEnumerator Start()
@@ -51,15 +51,11 @@ public class TextManager : MonoBehaviour
             max[chatID]++;
             lineCount++;
         }
-
-        chatID = 1;
-        StartCoroutine(Typing());
     }
 
-    IEnumerator Typing()
+    public IEnumerator Typing()
     {
-        
-
+        textPanel.gameObject.SetActive(true);
         isTyping = true;
         if (Sentence[chatID][typingID, 3] != "")
         {
