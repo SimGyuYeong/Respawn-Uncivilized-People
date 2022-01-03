@@ -19,7 +19,7 @@ public class TextManager : MonoBehaviour
     Dictionary<int, int> max = new Dictionary<int, int>();
     List<string> select = new List<string>();
 
-    public int chatID = 1, typingID = 1, imageID = 1, backID = 1;
+    public int chatID = 1, typingID = 1, imageID = 0, backID = 1;
     bool isTyping = false, skip = false;
 
     IEnumerator Start()
@@ -98,6 +98,7 @@ public class TextManager : MonoBehaviour
             {
                 Invoke(Sentence[chatID][typingID, 6], 0f);
             }
+            Debug.Log(imageID);
             if (backID >= 1) background[backID].SetActive(false);
             if (imageID >= 1) image[imageID].SetActive(false);
 
