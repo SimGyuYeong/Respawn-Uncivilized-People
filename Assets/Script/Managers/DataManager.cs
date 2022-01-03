@@ -62,6 +62,7 @@ public class DataManager : MonoBehaviour
             Debug.Log("Save Complete");
             data[slot].playerName = "테스트";
             data[slot].date = DateTime.Now.ToString("yyyy년 MM월 dd일\n HH:mm:ss");
+            data[slot].id = GameManager.Instance.TEXT.chatID;
             SaveToJson();
             SaveMenuPanelUpdate();
             savemenuPanel.SetActive(false);
@@ -70,6 +71,11 @@ public class DataManager : MonoBehaviour
         {
             Debug.Log(data[slot].playerName);
             Debug.Log(data[slot].date);
+            Debug.Log(data[slot].id);
+
+            GameManager.Instance.TEXT.chatID = data[slot].id;
+            GameManager.Instance.TitlePanel.SetActive(false);
+            StartCoroutine(GameManager.Instance.TEXT.Typing());
         }
     }
 
