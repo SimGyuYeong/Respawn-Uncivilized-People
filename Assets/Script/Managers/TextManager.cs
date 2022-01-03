@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class TextManager : MonoBehaviour
 {
@@ -143,5 +144,10 @@ public class TextManager : MonoBehaviour
                 StartCoroutine(Typing());
             }
         }
+    }
+
+    private void GoToMinimap()
+    {
+        SceneManager.LoadScene("MiniMap");   
     }
 }
