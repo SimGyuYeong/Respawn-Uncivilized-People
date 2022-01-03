@@ -51,13 +51,7 @@ public class GameManager : MonoBehaviour
 
     public void OptionPanelOC(int check)
     {
-        if (check == 1)
-        {
-            optionPanel.SetActive(false);
-        }
-        else
-        {
-            optionPanel.SetActive(true);
-        }
+        if (check == 1) optionPanel.SetActive(false);
+        else optionPanel.SetActive(true);
     }
 }
