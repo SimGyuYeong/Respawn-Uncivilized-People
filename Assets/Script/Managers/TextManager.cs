@@ -98,9 +98,9 @@ public class TextManager : MonoBehaviour
             {
                 Invoke(Sentence[chatID][typingID, 6], 0f);
             }
+            if (backID >= 1) background[backID].SetActive(false);
+            if (imageID >= 1) image[imageID].SetActive(false);
 
-            background[backID].SetActive(false);
-            image[imageID].SetActive(false);
             if (eventName == "º±≈√")
             {
                 textPanel.gameObject.SetActive(false);
