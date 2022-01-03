@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     public DataManager DATA {  get { return dataManager; } }
 
     [SerializeField] public GameObject TitlePanel;
+    [SerializeField] GameObject optionPanel;
 
     private void Awake()
     {
@@ -36,8 +37,27 @@ public class GameManager : MonoBehaviour
                 textManager.chatID = 1;
                 StartCoroutine(textManager.Typing());
                 break;
+            case "Á¾·á":
+#if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+#else
+                Application.Quit();
+#endif
+                break;
             default:
                 break;
+        }
+    }
+
+    public void OptionPanelOC(int check)
+    {
+        if (check == 1)
+        {
+            optionPanel.SetActive(false);
+        }
+        else
+        {
+            optionPanel.SetActive(true);
         }
     }
 }

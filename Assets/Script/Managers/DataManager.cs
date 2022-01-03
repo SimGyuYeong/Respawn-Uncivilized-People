@@ -55,6 +55,11 @@ public class DataManager : MonoBehaviour
         SLCheck = num;
     }
 
+    public void SaveMenuPanelClose()
+    {
+        savemenuPanel.SetActive(false);
+    }
+
     public void SaveOrLoad(int slot)
     {
         if (SLCheck == 1)
