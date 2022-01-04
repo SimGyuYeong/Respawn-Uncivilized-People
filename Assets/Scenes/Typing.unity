@@ -4920,9 +4920,9 @@ MonoBehaviour:
   - {fileID: 2110660346}
   - {fileID: 1484106246}
   - {fileID: 1987081622}
-  - {fileID: 0}
-  - {fileID: 0}
-  image: []
+  - {fileID: 1987081622}
+  image:
+  - {fileID: 188348599}
   chatID: 1
   typingID: 1
   imageID: 1
