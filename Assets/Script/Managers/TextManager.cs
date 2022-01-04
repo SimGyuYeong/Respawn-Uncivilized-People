@@ -3,21 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class TextManager : MonoBehaviour
 {
     const string URL = "https://docs.google.com/spreadsheets/d/18d1eO7_f3gewvcBi5MIe0sqh50lp1PF-kkQg2nm03wg/export?format=tsv";
 
     [SerializeField] private Text textPanel;
-    [SerializeField] private GameObject[] image;
     [SerializeField] private Transform selectPanel;
     [SerializeField] private GameObject selectButton;
+    [SerializeField] private GameObject[] background;
+    [SerializeField] private GameObject[] image;
 
     Dictionary<int, string[,]> Sentence = new Dictionary<int, string[,]>();
     Dictionary<int, int> max = new Dictionary<int, int>();
     List<string> select = new List<string>();
 
-    public int chatID = 1, typingID = 1, imageID = 1;
+    public int chatID = 1, typingID = 1, imageID = 0, backID = 1;
     bool isTyping = false, skip = false;
 
     IEnumerator Start()
@@ -59,7 +61,12 @@ public class TextManager : MonoBehaviour
         isTyping = true;
         if (Sentence[chatID][typingID, 3] != "")
         {
-            imageID = System.Convert.ToInt32(Sentence[chatID][typingID, 3]) - 1;
+            backID = System.Convert.ToInt32(Sentence[chatID][typingID, 3]) - 1;
+            background[backID].SetActive(true);
+        }
+        if (Sentence[chatID][typingID, 4] != "")
+        {
+            imageID = System.Convert.ToInt32(Sentence[chatID][typingID, 4]) - 1;
             image[imageID].SetActive(true);
         }
         for (int i = 0; i < Sentence[chatID][typingID, 2].Length + 1; i++)
@@ -91,8 +98,10 @@ public class TextManager : MonoBehaviour
             {
                 Invoke(Sentence[chatID][typingID, 6], 0f);
             }
+            Debug.Log(imageID);
+            if (backID >= 1) background[backID].SetActive(false);
+            if (imageID >= 1) image[imageID].SetActive(false);
 
-            image[imageID].SetActive(false);
             if (eventName == "º±≈√")
             {
                 textPanel.gameObject.SetActive(false);
@@ -143,5 +152,10 @@ public class TextManager : MonoBehaviour
                 StartCoroutine(Typing());
             }
         }
+    }
+
+    private void GoToMinimap()
+    {
+        SceneManager.LoadScene("MiniMap");   
     }
 }

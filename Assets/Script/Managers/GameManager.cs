@@ -6,16 +6,20 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance;
+
     [SerializeField] private TextManager textManager = null;
     public TextManager TEXT { get { return textManager; } }
 
     [SerializeField] private DataManager dataManager = null;
     public DataManager DATA {  get { return dataManager; } }
 
-    [SerializeField] GameObject TitlePanel;
+    [SerializeField] public GameObject TitlePanel;
+    [SerializeField] GameObject optionPanel;
 
     private void Awake()
     {
+        Instance = this;
         textManager = GetComponent<TextManager>();
         dataManager = GetComponent<DataManager>();
         DontDestroyOnLoad(gameObject);
@@ -47,11 +51,25 @@ public class GameManager : MonoBehaviour
                 textManager.chatID = 1;
                 StartCoroutine(textManager.Typing());
                 break;
+            case "Á¾·á":
+#if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+#else
+                Application.Quit();
+#endif
+                break;
             default:
                 break;
         }
     }
 
+<<<<<<< HEAD
+    public void OptionPanelOC(int check)
+    {
+        if (check == 1) optionPanel.SetActive(false);
+        else optionPanel.SetActive(true);
+    }
+=======
     public AudioSource bgsound;
     public AudioClip[] bglist;
 
@@ -86,4 +104,5 @@ public class GameManager : MonoBehaviour
         bgsound.Play();
     }
     #endregion
+>>>>>>> Prototype
 }
