@@ -81,6 +81,7 @@ public class TextManager : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
         isTyping = false;
+        print(chatID);
     }
 
     public void SkipText()
@@ -88,15 +89,11 @@ public class TextManager : MonoBehaviour
         if (!isTyping)
         {
             string eventName = Sentence[chatID][typingID, 5];
+            if (eventName == "함수") Invoke(Sentence[chatID][typingID, 6], 0f);
             if (eventName == "이동")
             {
                 chatID = System.Convert.ToInt32(Sentence[chatID][typingID, 6]);
                 typingID = 0;
-            }
-
-            if (eventName == "함수")
-            {
-                Invoke(Sentence[chatID][typingID, 6], 0f);
             }
             if (backID >= 1) background[backID].SetActive(false);
             if (imageID >= 1) image[imageID].SetActive(false);
@@ -153,8 +150,14 @@ public class TextManager : MonoBehaviour
         }
     }
 
-    private void GoToMinimap()
+    public void StartTutorial()
     {
-        SceneManager.LoadScene("MiniMap");   
+        chatID = 2;
+        StartCoroutine(Typing());
+    }
+
+    public void test()
+    {
+        Debug.Log("ㅎㅇ");
     }
 }

@@ -21,10 +21,6 @@ public class GameManager : MonoBehaviour
         Instance = this;
         textManager = GetComponent<TextManager>();
         dataManager = GetComponent<DataManager>();
-    }
-
-    public void Start()
-    {
         DontDestroyOnLoad(this);
     }
 
