@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System;
 
 public class TextManager : MonoBehaviour
 {
@@ -19,8 +20,9 @@ public class TextManager : MonoBehaviour
     Dictionary<int, int> max = new Dictionary<int, int>();
     List<string> select = new List<string>();
 
-    public int chatID = 1, typingID = 1, imageID = 1, backID = 1;
+    public int chatID = 1, typingID = 1, backID = 1;
     bool isTyping = false, skip = false;
+    string[] imageList;
 
     private void Awake()
     {
@@ -66,14 +68,10 @@ public class TextManager : MonoBehaviour
         isTyping = true;
         if (Sentence[chatID][typingID, 3] != "")
         {
-            backID = System.Convert.ToInt32(Sentence[chatID][typingID, 3]) - 1;
+            backID = Convert.ToInt32(Sentence[chatID][typingID, 3]) - 1;
             background[backID].SetActive(true);
         }
-        if (Sentence[chatID][typingID, 4] != "")
-        {
-            imageID = System.Convert.ToInt32(Sentence[chatID][typingID, 4]) - 1;
-            image[imageID].SetActive(true);
-        }
+        if (Sentence[chatID][typingID, 4] != "") imageSetactive(true);
         for (int i = 0; i < Sentence[chatID][typingID, 2].Length + 1; i++)
         {
             if (skip)
@@ -93,13 +91,13 @@ public class TextManager : MonoBehaviour
         if (!isTyping)
         {
             if (backID >= 1) background[backID].SetActive(false);
-            if (imageID >= 1) image[imageID].SetActive(false);
+            if (Sentence[chatID][typingID, 4] != "") imageSetactive(false);
 
             string eventName = Sentence[chatID][typingID, 5];
             if (eventName == "함수") Invoke(Sentence[chatID][typingID, 6], 0f);
             else if (eventName == "이동")
             {
-                chatID = System.Convert.ToInt32(Sentence[chatID][typingID, 6]);
+                chatID = Convert.ToInt32(Sentence[chatID][typingID, 6]);
                 typingID = 0;
             }
 
@@ -120,13 +118,13 @@ public class TextManager : MonoBehaviour
 
     public void TextMove()
     {
-        int num = Random.Range(6, System.Convert.ToInt32(Sentence[chatID][typingID, 19]));
-        chatID = System.Convert.ToInt32(Sentence[chatID][typingID, num]);
+        int num = UnityEngine.Random.Range(6, Convert.ToInt32(Sentence[chatID][typingID, 19]));
+        chatID = Convert.ToInt32(Sentence[chatID][typingID, num]);
     }
 
     public void SelectOpen()
     {
-        for (int i = 6; i < System.Convert.ToInt32(Sentence[chatID][typingID, 19]); i++)
+        for (int i = 6; i < Convert.ToInt32(Sentence[chatID][typingID, 19]); i++)
         {
             select.Add(Sentence[chatID][typingID, i]);
             GameObject button = Instantiate(selectButton, selectPanel);
@@ -154,13 +152,12 @@ public class TextManager : MonoBehaviour
         }
     }
 
-    public void StartTutorial()
+    private void imageSetactive(bool set)
     {
-        chatID = 2;
-        StartCoroutine(Typing());
-    }
-    public void test1()
-    {
-        Debug.Log("ㅎㅇ");
+        imageList = Sentence[chatID][typingID, 4].Split(',');
+        foreach (string x in imageList)
+        {
+            image[Convert.ToInt32(x) - 1].SetActive(set);
+        }
     }
 }
