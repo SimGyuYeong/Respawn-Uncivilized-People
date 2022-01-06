@@ -30,9 +30,10 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        chatSpeedSlider.value = TEXT.chatSpeed; // 슬라이더 값을 chatspeed로 변경
         chatSpeedSlider.maxValue = 0.3f; // 슬라이더의 최댓값을 0.3으로 설정
         chatSpeedSlider.minValue = 0.05f; // 슬라이더의 최솟값을 0.05로 설정
+        TEXT.chatSpeed = 0.1f;
+        chatSpeedSlider.value = TEXT.chatSpeed; // 슬라이더 값을 chatspeed로 변경
     }
 
     public void Game(string name)
