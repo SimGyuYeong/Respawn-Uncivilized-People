@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -17,6 +15,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] public GameObject TitlePanel;
     [SerializeField] GameObject optionPanel;
 
+    //옵션
+    [SerializeField] Slider chatSpeedSlider;
+
     private void Awake()
     {
         TitlePanel.SetActive(true);
@@ -25,6 +26,13 @@ public class GameManager : MonoBehaviour
         textManager = GetComponent<TextManager>();
         dataManager = GetComponent<DataManager>();
         DontDestroyOnLoad(this);
+    }
+
+    private void Start()
+    {
+        chatSpeedSlider.value = TEXT.chatSpeed; // 슬라이더 값을 chatspeed로 변경
+        chatSpeedSlider.maxValue = 0.3f; // 슬라이더의 최댓값을 0.3으로 설정
+        chatSpeedSlider.minValue = 0.05f; // 슬라이더의 최솟값을 0.05로 설정
     }
 
     public void Game(string name)
@@ -53,5 +61,10 @@ public class GameManager : MonoBehaviour
     {
         if (check == 1) optionPanel.SetActive(false);
         else optionPanel.SetActive(true);
+    }
+    
+    public void SetMusicVolume(float volume)
+    {
+        TEXT.chatSpeed = volume;
     }
 }

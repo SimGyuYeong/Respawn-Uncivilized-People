@@ -23,6 +23,7 @@ public class TextManager : MonoBehaviour
     public int chatID = 1, typingID = 1, backID = 1;
     bool isTyping = false, skip = false;
     string[] imageList;
+    public float chatSpeed = 0.1f;
 
     private void Awake()
     {
@@ -81,7 +82,7 @@ public class TextManager : MonoBehaviour
                 break;
             }
             textPanel.text = string.Format("{0}\n{1}", Sentence[chatID][typingID, 1], Sentence[chatID][typingID, 2].Substring(0, i));
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(chatSpeed);
         }
         isTyping = false;
     }
@@ -97,7 +98,8 @@ public class TextManager : MonoBehaviour
             if (eventName == "함수") Invoke(Sentence[chatID][typingID, 6], 0f);
             else if (eventName == "이동")
             {
-                chatID = Convert.ToInt32(Sentence[chatID][typingID, 6]);
+                int num = UnityEngine.Random.Range(6, Convert.ToInt32(Sentence[chatID][typingID, 19]));
+                chatID = Convert.ToInt32(Sentence[chatID][typingID, num]);
                 typingID = 0;
             }
 
@@ -114,12 +116,6 @@ public class TextManager : MonoBehaviour
             }
         }
         else skip = true;
-    }
-
-    public void TextMove()
-    {
-        int num = UnityEngine.Random.Range(6, Convert.ToInt32(Sentence[chatID][typingID, 19]));
-        chatID = Convert.ToInt32(Sentence[chatID][typingID, num]);
     }
 
     public void SelectOpen()
@@ -143,7 +139,7 @@ public class TextManager : MonoBehaviour
             if (selectPanel.transform.GetChild(i).gameObject == selectObj)
             {
                 int num = (i - 1) * 2;
-                chatID = System.Convert.ToInt32(select[num + 1]);
+                chatID = Convert.ToInt32(select[num + 1]);
                 selectPanel.gameObject.SetActive(false);
                 textPanel.gameObject.SetActive(true);
                 typingID = 1;
