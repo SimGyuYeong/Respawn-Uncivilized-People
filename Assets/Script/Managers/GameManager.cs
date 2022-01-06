@@ -13,11 +13,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] private DataManager dataManager = null;
     public DataManager DATA {  get { return dataManager; } }
 
+    [SerializeField] public GameObject Buttons;
     [SerializeField] public GameObject TitlePanel;
     [SerializeField] GameObject optionPanel;
 
     private void Awake()
     {
+        TitlePanel.SetActive(true);
+        Buttons.SetActive(true);
         Instance = this;
         textManager = GetComponent<TextManager>();
         dataManager = GetComponent<DataManager>();
@@ -30,6 +33,7 @@ public class GameManager : MonoBehaviour
         {
             case "Ω√¿€":
                 TitlePanel.SetActive(false);
+                Buttons.SetActive(false);
                 textManager.chatID = 1;
                 StartCoroutine(textManager.Typing());
                 break;
