@@ -11,12 +11,14 @@ class saveData
     public string playerName;
     public int id;
     public string date;
+    public int typdingID;
 
-    public saveData(string name, int id, string date)
+    public saveData(string name, int id, string date, int typing)
     {
         playerName = name;
         this.id = id;
         this.date = date;
+        typdingID = typing;
     }
 }
 
@@ -33,6 +35,15 @@ public class DataManager : MonoBehaviour
     {
         LoadFromJson();
         SaveMenuPanelUpdate();
+    }
+
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Time.timeScale = 0;
+            SaveMenuPanelOpen(1);
+        }
     }
 
     private void SaveMenuPanelUpdate()
@@ -64,22 +75,20 @@ public class DataManager : MonoBehaviour
     {
         if (SLCheck == 1)
         {
-            Debug.Log("Save Complete");
             data[slot].playerName = "테스트";
             data[slot].date = DateTime.Now.ToString("yyyy년 MM월 dd일\n HH:mm:ss");
             data[slot].id = GameManager.Instance.TEXT.chatID;
+            data[slot].typdingID = GameManager.Instance.TEXT.typingID;
             SaveToJson();
             SaveMenuPanelUpdate();
-            savemenuPanel.SetActive(false);
         }
         else if (SLCheck == 2)
         {
-            Debug.Log(data[slot].playerName);
-            Debug.Log(data[slot].date);
-            Debug.Log(data[slot].id);
-
             GameManager.Instance.TEXT.chatID = data[slot].id;
+            GameManager.Instance.TEXT.typingID = data[slot].typdingID;
             GameManager.Instance.TitlePanel.SetActive(false);
+            GameManager.Instance.Buttons.SetActive(false);
+            SaveMenuPanelClose();
             StartCoroutine(GameManager.Instance.TEXT.Typing());
         }
     }
@@ -100,7 +109,7 @@ public class DataManager : MonoBehaviour
         {
             for(int i = 0; i < 8; i++)
             {
-                data[i] = new saveData("???", 0, " ");
+                data[i] = new saveData("???", 0, " ", 0);
             }
             SaveToJson();
         }   

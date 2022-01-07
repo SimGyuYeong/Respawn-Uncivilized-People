@@ -47,7 +47,7 @@ public class TextManager : MonoBehaviour
             if (row[0] != "")
             {
                 lineCount = 1;
-                chatID = System.Convert.ToInt32(row[0]);
+                chatID = Convert.ToInt32(row[0]);
                 max[chatID] = 1;
                 Sentence[chatID] = new string[lineSize, 20];
             }
@@ -84,6 +84,7 @@ public class TextManager : MonoBehaviour
             textPanel.text = string.Format("{0}\n{1}", Sentence[chatID][typingID, 1], Sentence[chatID][typingID, 2].Substring(0, i));
             yield return new WaitForSeconds(chatSpeed);
         }
+        textPanel.text += "¢º¢º¢º";
         isTyping = false;
     }
 
