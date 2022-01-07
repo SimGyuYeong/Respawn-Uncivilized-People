@@ -15,6 +15,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] public GameObject TitlePanel;
     [SerializeField] GameObject optionPanel;
 
+    [SerializeField] public Camera mainCamera;
+    [SerializeField] public Camera shakingCamera;
+
     //옵션
     [SerializeField] Slider chatSpeedSlider;
 
@@ -34,6 +37,17 @@ public class GameManager : MonoBehaviour
         chatSpeedSlider.minValue = 0.05f; // 슬라이더의 최솟값을 0.05로 설정
         TEXT.chatSpeed = 0.1f;
         chatSpeedSlider.value = TEXT.chatSpeed; // 슬라이더 값을 chatspeed로 변경
+
+        shakingCamera.gameObject.SetActive(false);
+    }
+
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Time.timeScale = 0;
+            DATA.SaveMenuPanelOpen(1);
+        }
     }
 
     public void Game(string name)
@@ -67,5 +81,20 @@ public class GameManager : MonoBehaviour
     public void SetMusicVolume(float volume)
     {
         TEXT.chatSpeed = volume;
+    }
+
+    public void CameraChange(string cN)
+    {
+        if (cN == "main")
+        {
+            mainCamera.gameObject.SetActive(true);
+            shakingCamera.gameObject.SetActive(false);
+        }
+        else if(cN == "Shake")
+        {
+            mainCamera.gameObject.SetActive(false);
+            shakingCamera.gameObject.SetActive(true);
+            CameraShaking.Instance.OnShakeCamera();
+        }
     }
 }

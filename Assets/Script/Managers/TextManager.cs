@@ -158,4 +158,9 @@ public class TextManager : MonoBehaviour
             image[Convert.ToInt32(x) - 1].SetActive(set);
         }
     }
+
+    private void CameraShaking()
+    {
+        GameManager.Instance.CameraChange("Shake");
+    }
 }

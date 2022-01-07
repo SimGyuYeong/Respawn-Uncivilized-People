@@ -37,15 +37,6 @@ public class DataManager : MonoBehaviour
         SaveMenuPanelUpdate();
     }
 
-    public void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Time.timeScale = 0;
-            SaveMenuPanelOpen(1);
-        }
-    }
-
     private void SaveMenuPanelUpdate()
     {
         for (int i = 0; i < 8; i++)
