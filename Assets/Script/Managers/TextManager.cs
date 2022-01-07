@@ -15,6 +15,7 @@ public class TextManager : MonoBehaviour
     [SerializeField] private GameObject selectButton;
     [SerializeField] private GameObject[] background;
     [SerializeField] private GameObject[] image;
+    [SerializeField] private GameObject typingEndAnimation;
 
     Dictionary<int, string[,]> Sentence = new Dictionary<int, string[,]>();
     Dictionary<int, int> max = new Dictionary<int, int>();
@@ -84,7 +85,7 @@ public class TextManager : MonoBehaviour
             textPanel.text = string.Format("{0}\n{1}", Sentence[chatID][typingID, 1], Sentence[chatID][typingID, 2].Substring(0, i));
             yield return new WaitForSeconds(chatSpeed);
         }
-        textPanel.text += "¢º¢º¢º";
+        textPanel.text += typingEndAnimation.ToString();
         isTyping = false;
     }
 
