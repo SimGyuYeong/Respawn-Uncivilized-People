@@ -48,6 +48,10 @@ public class GameManager : MonoBehaviour
             Time.timeScale = 0;
             DATA.SaveMenuPanelOpen(1);
         }
+        else if (Input.GetKeyDown(KeyCode.A))
+        {
+            StartCoroutine(CameraShaking.Instance.ShakeCoroutine());
+        }
     }
 
     public void Game(string name)
@@ -94,7 +98,6 @@ public class GameManager : MonoBehaviour
         {
             mainCamera.gameObject.SetActive(false);
             shakingCamera.gameObject.SetActive(true);
-            CameraShaking.Instance.OnShakeCamera();
         }
     }
 }

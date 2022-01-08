@@ -10,12 +10,12 @@ public class TextManager : MonoBehaviour
 {
     const string URL = "https://docs.google.com/spreadsheets/d/18d1eO7_f3gewvcBi5MIe0sqh50lp1PF-kkQg2nm03wg/export?format=tsv";
 
+    [SerializeField] private GameObject textImage;
     [SerializeField] private Text textPanel;
     [SerializeField] private Transform selectPanel;
     [SerializeField] private GameObject selectButton;
     [SerializeField] private GameObject[] background;
     [SerializeField] private GameObject[] image;
-    [SerializeField] private GameObject typingEndAnimation;
 
     Dictionary<int, string[,]> Sentence = new Dictionary<int, string[,]>();
     Dictionary<int, int> max = new Dictionary<int, int>();
@@ -66,7 +66,7 @@ public class TextManager : MonoBehaviour
 
     public IEnumerator Typing()
     {
-        textPanel.gameObject.SetActive(true);
+        textImage.SetActive(true);
         isTyping = true;
         if (Sentence[chatID][typingID, 3] != "")
         {
@@ -85,7 +85,7 @@ public class TextManager : MonoBehaviour
             textPanel.text = string.Format("{0}\n{1}", Sentence[chatID][typingID, 1], Sentence[chatID][typingID, 2].Substring(0, i));
             yield return new WaitForSeconds(chatSpeed);
         }
-        textPanel.text += typingEndAnimation.ToString();
+        textPanel.text += "°Â";
         isTyping = false;
     }
 
@@ -107,14 +107,14 @@ public class TextManager : MonoBehaviour
 
             if (eventName == "º±≈√")
             {
-                textPanel.gameObject.SetActive(false);
+                textImage.SetActive(false);
                 SelectOpen();
             }
             else
             {
                 typingID++;
                 if (typingID != max[chatID]) StartCoroutine(Typing());
-                else textPanel.gameObject.SetActive(false);
+                else textImage.SetActive(false);
             }
         }
         else skip = true;
@@ -143,7 +143,7 @@ public class TextManager : MonoBehaviour
                 int num = (i - 1) * 2;
                 chatID = Convert.ToInt32(select[num + 1]);
                 selectPanel.gameObject.SetActive(false);
-                textPanel.gameObject.SetActive(true);
+                textImage.SetActive(true);
                 typingID = 1;
                 StartCoroutine(Typing());
             }
