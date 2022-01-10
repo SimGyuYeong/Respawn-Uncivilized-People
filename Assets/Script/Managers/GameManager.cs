@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class GameManager : MonoBehaviour
 {
@@ -20,6 +21,9 @@ public class GameManager : MonoBehaviour
 
     //¿É¼Ç
     [SerializeField] Slider chatSpeedSlider;
+
+    //FadeIn
+    [SerializeField] Image BlackImage;
 
     private void Awake()
     {
@@ -99,5 +103,11 @@ public class GameManager : MonoBehaviour
             mainCamera.gameObject.SetActive(false);
             shakingCamera.gameObject.SetActive(true);
         }
+    }
+
+    public void PadeIn()
+    {
+        BlackImage.DOFade(0, 0);
+        BlackImage.DOFade(1, 1);
     }
 }

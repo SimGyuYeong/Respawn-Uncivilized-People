@@ -163,4 +163,5 @@ public class TextManager : MonoBehaviour
     {
         GameManager.Instance.CameraChange("Shake");
     }
+
 }
