@@ -294,7 +294,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 727, y: -432}
+  m_AnchoredPosition: {x: -462, y: -357}
   m_SizeDelta: {x: 250, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &21722549
@@ -326,7 +326,7 @@ MonoBehaviour:
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
-    m_HighlightedSprite: {fileID: 21300000, guid: d519b288a897846498c64e9b72927033, type: 3}
+    m_HighlightedSprite: {fileID: 8839946546385899143, guid: c887676b4436ca142878cccd93424786, type: 3}
     m_PressedSprite: {fileID: 0}
     m_SelectedSprite: {fileID: 0}
     m_DisabledSprite: {fileID: 0}
@@ -2014,7 +2014,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 495842230}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 580, y: 344.52002, z: -9720}
+  m_LocalPosition: {x: -578, y: 398, z: -9720}
   m_LocalScale: {x: 100, y: 234, z: 1}
   m_Children: []
   m_Father: {fileID: 509713663}
@@ -4465,7 +4465,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -358, y: -432}
+  m_AnchoredPosition: {x: -462, y: -257}
   m_SizeDelta: {x: 250, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1146666146
@@ -4673,7 +4673,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -700, y: -432}
+  m_AnchoredPosition: {x: -712, y: -257}
   m_SizeDelta: {x: 250, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1287968360
@@ -6264,8 +6264,6 @@ MonoBehaviour:
   Buttons: {fileID: 1252647023}
   TitlePanel: {fileID: 509713662}
   optionPanel: {fileID: 1677435524}
-  mainCamera: {fileID: 445553247}
-  shakingCamera: {fileID: 817529185}
   chatSpeedSlider: {fileID: 783234574}
   BlackImage: {fileID: 0}
 --- !u!4 &1757475161
@@ -6333,6 +6331,7 @@ MonoBehaviour:
   - {fileID: 138511791}
   - {fileID: 2042421707}
   - {fileID: 421893159}
+  endObject: {fileID: 263284963217031293, guid: 3550f48f7231a5e4e910e30d6e177e01, type: 3}
   chatID: 1
   typingID: 1
   backID: 1
@@ -7564,7 +7563,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 353, y: -432}
+  m_AnchoredPosition: {x: -712, y: -357}
   m_SizeDelta: {x: 250, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2070198667
