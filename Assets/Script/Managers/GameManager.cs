@@ -52,10 +52,6 @@ public class GameManager : MonoBehaviour
             Time.timeScale = 0;
             DATA.SaveMenuPanelOpen(1);
         }
-        else if (Input.GetKeyDown(KeyCode.A))
-        {
-            StartCoroutine(CameraShaking.Instance.ShakeCoroutine());
-        }
     }
 
     public void Game(string name)

@@ -4,52 +4,32 @@ using UnityEngine;
 
 public class CameraShaking : MonoBehaviour
 {
-    private static CameraShaking instance;
-    public static CameraShaking Instance => instance;
-
-    [SerializeField] float m_force = 0f;
-    [SerializeField] Vector3 m_offset = Vector3.zero;
-
-    Quaternion m_originRot;
-
+    public float shaking;
+    [SerializeField]
+    float shakeTime;
+    Vector3 startPosition;
     private void Start()
     {
-        m_originRot = transform.rotation;
+        startPosition = new Vector3(0f,0f,-6f);
     }
 
-    public CameraShaking()
+    public void ShakeForTime(float time)
     {
-        instance = this;
+        shakeTime = time;
     }
 
-    public IEnumerator ShakeCoroutine()
+    private void Update()
     {
-        Vector3 t_originEuler = transform.eulerAngles;
-        while (true)
+        if(shakeTime > 0)
         {
-            float t_rotX = Random.Range(-m_offset.x, m_offset.x);
-            float t_rotY = Random.Range(-m_offset.y, m_offset.y);
-            float t_rotZ = Random.Range(-m_offset.z, m_offset.z);
-
-            Vector3 t_randomRot = t_originEuler + new Vector3(t_rotX, t_rotY, t_rotZ);
-            Quaternion t_rot = Quaternion.Euler(t_randomRot);
-
-            while(Quaternion.Angle(transform.rotation, t_rot) > 0.1f)
-            {
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, t_rot, m_force * Time.deltaTime);
-                yield return null;
-            }
-            yield return null;
+            transform.position = Random.insideUnitSphere * shaking + startPosition;
+            shakeTime -= Time.deltaTime;
         }
-    }
 
-    IEnumerator ShakeReset()
-    {
-        while(Quaternion.Angle(transform.rotation, m_originRot) > 0)
+        else
         {
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, m_originRot, m_force * Time.deltaTime);
-            yield return null;
+            shakeTime = 0.0f;
+            transform.position = startPosition;
         }
-        yield return null;
     }
 }
