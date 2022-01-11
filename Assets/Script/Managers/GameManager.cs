@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using System.Collections;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
@@ -16,8 +18,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] public GameObject TitlePanel;
     [SerializeField] GameObject optionPanel;
 
-    [SerializeField] public Camera mainCamera;
-    [SerializeField] public Camera shakingCamera;
 
     //옵션
     [SerializeField] Slider chatSpeedSlider;
@@ -41,8 +41,6 @@ public class GameManager : MonoBehaviour
         chatSpeedSlider.minValue = 0.05f; // 슬라이더의 최솟값을 0.05로 설정
         TEXT.chatSpeed = 0.1f;
         chatSpeedSlider.value = TEXT.chatSpeed; // 슬라이더 값을 chatspeed로 변경
-
-        shakingCamera.gameObject.SetActive(false);
     }
 
     public void Update()
@@ -91,23 +89,25 @@ public class GameManager : MonoBehaviour
         TEXT.chatSpeed = volume;
     }
 
-    public void CameraChange(string cN)
+    public IEnumerator FadeIn()
     {
-        if (cN == "main")
+        Color color = BlackImage.color;
+        while (color.a != 0)
         {
-            mainCamera.gameObject.SetActive(true);
-            shakingCamera.gameObject.SetActive(false);
-        }
-        else if(cN == "Shake")
-        {
-            mainCamera.gameObject.SetActive(false);
-            shakingCamera.gameObject.SetActive(true);
+            color.a -= 0.01f;
+            BlackImage.color = color;
+            yield return new WaitForSeconds(0.1f);
         }
     }
 
-    public void PadeIn()
+    public IEnumerator FadeOut()
     {
-        BlackImage.DOFade(0, 0);
-        BlackImage.DOFade(1, 1);
+        Color color = BlackImage.color;
+        while (color.a != 100)
+        {
+            color.a += 0.01f;
+            BlackImage.color = color;
+            yield return new WaitForSeconds(0.1f);
+        }
     }
 }
