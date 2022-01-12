@@ -6,6 +6,7 @@ using System.IO;
 using Newtonsoft.Json;
 using System;
 
+
 class saveData
 {
     public string playerName;
@@ -22,11 +23,12 @@ class saveData
     }
 }
 
+
 public class DataManager : MonoBehaviour
 {
     Dictionary<int, saveData> data = new Dictionary<int, saveData>();
 
-    [SerializeField] private GameObject savemenuPanel;
+    [SerializeField] public GameObject savemenuPanel;
     [SerializeField] List<GameObject> menu = new List<GameObject>();
 
     private int SLCheck = 1;

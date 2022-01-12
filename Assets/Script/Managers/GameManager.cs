@@ -60,6 +60,7 @@ public class GameManager : MonoBehaviour
                 TitlePanel.SetActive(false);
                 Buttons.SetActive(false);
                 textManager.chatID = 1;
+                StartCoroutine(FadeIn());
                 StartCoroutine(textManager.Typing());
                 break;
             case "Á¾·á":
