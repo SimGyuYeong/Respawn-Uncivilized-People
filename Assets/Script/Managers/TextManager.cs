@@ -16,6 +16,7 @@ public class TextManager : MonoBehaviour
     [SerializeField] private GameObject selectButton;
     [SerializeField] private GameObject[] background;
     [SerializeField] private GameObject[] image;
+    [SerializeField] private GameObject[] music;
     [SerializeField] private GameObject endObject;
 
     Dictionary<int, string[,]> Sentence = new Dictionary<int, string[,]>();
@@ -104,9 +105,13 @@ public class TextManager : MonoBehaviour
                 chatID = Convert.ToInt32(Sentence[chatID][typingID, num]);
                 typingID = 0;
             }
-
             if (eventName == "º±≈√")
             {
+                if (Sentence[chatID][typingID, 3] != "")
+                {
+                    backID = Convert.ToInt32(Sentence[chatID][typingID, 3]) - 1;
+                    background[backID].SetActive(true);
+                }
                 textImage.SetActive(false);
                 SelectOpen();
             }
@@ -157,6 +162,18 @@ public class TextManager : MonoBehaviour
         {
             image[Convert.ToInt32(x) - 1].SetActive(set);
         }
+    }
+
+    /*IEnumerator PlayBGM(int SoundNumber)
+    {
+        for 
+        music[SoundNumber].SetActive(true);
+        yield break;
+    }*/
+
+    private void CameraShaking()
+    {
+        Camera.main.GetComponent<CameraShaking>().ShakeForTime(0.2f);
     }
 
 }
