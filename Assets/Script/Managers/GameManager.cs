@@ -14,6 +14,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private DataManager dataManager = null;
     public DataManager DATA {  get { return dataManager; } }
 
+    [SerializeField] private SoundManager soundManager = null;
+    public SoundManager SOUND {  get { return soundManager; } }
+
     [SerializeField] public GameObject Buttons;
     [SerializeField] public GameObject TitlePanel;
     [SerializeField] GameObject optionPanel;

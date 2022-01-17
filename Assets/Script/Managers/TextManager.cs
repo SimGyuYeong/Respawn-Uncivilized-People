@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 using System;
 
 public class TextManager : MonoBehaviour
@@ -87,6 +87,7 @@ public class TextManager : MonoBehaviour
             textPanel.text = string.Format("{0}\n{1}", Sentence[chatID][typingID, 1], Sentence[chatID][typingID, 2].Substring(0, i));
             yield return new WaitForSeconds(chatSpeed);
         }
+
         isTyping = false;
     }
 
@@ -164,12 +165,11 @@ public class TextManager : MonoBehaviour
         }
     }
 
-    /*IEnumerator PlayBGM(int SoundNumber)
+    private void PlayMusic(int num)
     {
-        for 
-        music[SoundNumber].SetActive(true);
-        yield break;
-    }*/
+        GameManager.Instance.SOUND.PauseMusic();
+        GameManager.Instance.SOUND.PlayingMusic(num);
+    }
 
     private void CameraShaking()
     {
