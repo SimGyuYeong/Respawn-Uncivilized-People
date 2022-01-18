@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
 
     //FadeIn
     [SerializeField] Image BlackImage;
+    [SerializeField] GameObject BlackImageObject;
 
     private void Awake()
     {
@@ -35,6 +36,7 @@ public class GameManager : MonoBehaviour
         Instance = this;
         textManager = GetComponent<TextManager>();
         dataManager = GetComponent<DataManager>();
+        soundManager = GetComponent<SoundManager>();
         DontDestroyOnLoad(this);
     }
 
@@ -45,6 +47,7 @@ public class GameManager : MonoBehaviour
         TEXT.chatSpeed = 0.1f;
         chatSpeedSlider.value = chatSpeedSlider.value * -1; // 슬라이더 값 -1 곱하기
         chatSpeedSlider.value = TEXT.chatSpeed; // 슬라이더 값을 chatspeed로 변경
+        soundManager.PlayingMusic(0, 0.01f);
     }
 
     public void Update()
@@ -64,6 +67,8 @@ public class GameManager : MonoBehaviour
                 TitlePanel.SetActive(false);
                 Buttons.SetActive(false);
                 textManager.chatID = 1;
+                soundManager.PauseMusic();
+                soundManager.PlayingMusic(1, 0.01f);
                 StartCoroutine(FadeIn());
                 StartCoroutine(textManager.Typing());
                 break;
@@ -92,23 +97,38 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator FadeIn()
     {
+        BlackImageObject.SetActive(true);
         Color color = BlackImage.color;
         while (color.a != 0)
         {
             color.a -= 0.01f;
             BlackImage.color = color;
+            BlackImageObject.SetActive(false);
             yield return new WaitForSeconds(0.1f);
         }
     }
 
     public IEnumerator FadeOut()
     {
+        BlackImageObject.SetActive(true);
         Color color = BlackImage.color;
         while (color.a != 100)
         {
             color.a += 0.01f;
             BlackImage.color = color;
+            BlackImageObject.SetActive(false);
             yield return new WaitForSeconds(0.1f);
         }
+    }
+    public IEnumerator CameraShaking()
+    {
+        Camera.main.GetComponent<CameraShaking>().ShakeForTime(0.2f);
+        yield return new WaitForSeconds(0.1f);
+    }
+
+    public IEnumerator StopCroutine()
+    {
+        StopAllCoroutines();
+        yield break;
     }
 }

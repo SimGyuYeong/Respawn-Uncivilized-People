@@ -168,7 +168,7 @@ public class TextManager : MonoBehaviour
     private void PlayMusic(int num)
     {
         GameManager.Instance.SOUND.PauseMusic();
-        GameManager.Instance.SOUND.PlayingMusic(num);
+        GameManager.Instance.SOUND.PlayingMusic(num, 0.5f);
     }
 
     private void CameraShaking()
