@@ -1609,7 +1609,6 @@ GameObject:
   - component: {fileID: 445553248}
   - component: {fileID: 445553247}
   - component: {fileID: 445553246}
-  - component: {fileID: 445553249}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1682,20 +1681,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &445553249
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 445553245}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58177c5cd4bf375478fd25e0c1288b85, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  shaking: 0.1
-  shakeTime: 0
 --- !u!1 &447188223
 GameObject:
   m_ObjectHideFlags: 0
@@ -2057,8 +2042,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1358221797
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: a31809becaaae6b47817fe144b36487a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -3334,6 +3319,7 @@ GameObject:
   - component: {fileID: 817529186}
   - component: {fileID: 817529185}
   - component: {fileID: 817529184}
+  - component: {fileID: 817529187}
   m_Layer: 0
   m_Name: Shaking Camera
   m_TagString: MainCamera
@@ -3406,6 +3392,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &817529187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 817529183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58177c5cd4bf375478fd25e0c1288b85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shaking: 0.1
+  shakeTime: 0
 --- !u!1 &821812172
 GameObject:
   m_ObjectHideFlags: 0
