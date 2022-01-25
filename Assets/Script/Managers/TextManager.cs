@@ -19,11 +19,12 @@ public class TextManager : MonoBehaviour
     [SerializeField] private GameObject[] image;
     [SerializeField] private GameObject endObject;
 
+    List<string> textLog = new List<string>();
     Dictionary<int, string[,]> Sentence = new Dictionary<int, string[,]>();
     Dictionary<int, int> max = new Dictionary<int, int>();
     List<string> select = new List<string>();
 
-    public int chatID = 1, typingID = 1, backID = 1;
+    public int chatID = 1, typingID = 1, backID = 1, slotID = 0;
     private bool isTyping = false, skip = false;
     string[] imageList;
     public float chatSpeed = 0.1f;
@@ -94,6 +95,8 @@ public class TextManager : MonoBehaviour
         }
         if (!Auto) endObject.SetActive(true);
         isTyping = false;
+
+        textLog.Add(string.Format("{0}: {1}", Sentence[chatID][typingID, 1], Sentence[chatID][typingID, 2]));
 
         if (Auto)
         {
@@ -197,5 +200,13 @@ public class TextManager : MonoBehaviour
         Auto = !Auto;
         if (!isTyping) SkipText();
         endObject.SetActive(false);
+    }
+
+    public void ShowTextLog()
+    {
+        foreach(string text in textLog)
+        {
+            Debug.Log(text);
+        }
     }
 }
