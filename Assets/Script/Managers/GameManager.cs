@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour
         TEXT.chatSpeed = 0.1f;
         chatSpeedSlider.value = chatSpeedSlider.value * -1; // 슬라이더 값 -1 곱하기
         chatSpeedSlider.value = TEXT.chatSpeed; // 슬라이더 값을 chatspeed로 변경
-        soundManager.PlayingMusic(0, 0.01f);
+        //soundManager.PlayingMusic(0, 0.01f);
     }
 
     public void Update()
@@ -68,7 +68,7 @@ public class GameManager : MonoBehaviour
                 Buttons.SetActive(false);
                 textManager.chatID = 1;
                 soundManager.PauseMusic();
-                soundManager.PlayingMusic(1, 0.01f);
+                //soundManager.PlayingMusic(1, 0.01f);
                 StartCoroutine(FadeIn());
                 StartCoroutine(textManager.Typing());
                 break;
@@ -101,7 +101,7 @@ public class GameManager : MonoBehaviour
         Color color = BlackImage.color;
         while (color.a != 0)
         {
-            color.a -= 0.01f;
+            color.a -= 0.05f;
             BlackImage.color = color;
             BlackImageObject.SetActive(false);
             yield return new WaitForSeconds(0.1f);
@@ -114,7 +114,7 @@ public class GameManager : MonoBehaviour
         Color color = BlackImage.color;
         while (color.a != 100)
         {
-            color.a += 0.01f;
+            color.a += 0.05f;
             BlackImage.color = color;
             BlackImageObject.SetActive(false);
             yield return new WaitForSeconds(0.1f);

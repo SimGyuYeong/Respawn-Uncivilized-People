@@ -55,18 +55,25 @@ public class DataManager : MonoBehaviour
 
     public void SaveMenuPanelOpen(int num)
     {
-        savemenuPanel.SetActive(true);
-        SLCheck = num;
+        if (num == 0) SaveOrLoad(0);
+        else if (num == 3) SaveOrLoad(3);
+        else
+        {
+            Time.timeScale = 0f;
+            savemenuPanel.SetActive(true);
+            SLCheck = num;
+        }
     }
 
     public void SaveMenuPanelClose()
     {
+        Time.timeScale = 1f;
         savemenuPanel.SetActive(false);
     }
 
     public void SaveOrLoad(int slot)
     {
-        if (SLCheck == 1)
+        if (SLCheck < 2)
         {
             data[slot].playerName = "테스트";
             data[slot].date = DateTime.Now.ToString("yyyy년 MM월 dd일\n HH:mm:ss");
@@ -75,8 +82,10 @@ public class DataManager : MonoBehaviour
             SaveToJson();
             SaveMenuPanelUpdate();
         }
-        else if (SLCheck == 2)
+        else
         {
+            if (slot == 3) slot = 0;
+            StartCoroutine(GameManager.Instance.FadeIn());
             GameManager.Instance.TEXT.chatID = data[slot].id;
             GameManager.Instance.TEXT.typingID = data[slot].typdingID;
             GameManager.Instance.TitlePanel.SetActive(false);
