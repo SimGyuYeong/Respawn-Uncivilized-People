@@ -8330,6 +8330,7 @@ MonoBehaviour:
   slotID: 0
   chatSpeed: 1
   Auto: 0
+  soundManager: {fileID: 0}
 --- !u!114 &1757475165
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8347,7 +8348,9 @@ MonoBehaviour:
     audio: {fileID: 8300000, guid: a9727a36263e9ff488588f64b63a707a, type: 3}
   - name: StartBgm
     audio: {fileID: 8300000, guid: a9727a36263e9ff488588f64b63a707a, type: 3}
-  EffectMusics: []
+  EffectMusics:
+  - name: Typing
+    audio: {fileID: 8300000, guid: 22bc77700d8db6b4da805315c27d1e9f, type: 3}
   audioBGMPlayer: {fileID: 73219012}
   audioPlayer: {fileID: 445890124}
 --- !u!1 &1780953136
