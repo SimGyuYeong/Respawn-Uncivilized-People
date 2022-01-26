@@ -87,7 +87,11 @@ public class GameManager : MonoBehaviour
 
     public void OptionPanelOC(int check)
     {
-        if (check == 1) optionPanel.SetActive(false);
+        if (check == 1)
+        {
+            optionPanel.SetActive(false);
+            Time.timeScale = 1f;
+        }
         else optionPanel.SetActive(true);
     }
     
@@ -138,5 +142,10 @@ public class GameManager : MonoBehaviour
     public void Fullscene(bool is_fullscene)
     {
         Screen.fullScreen = is_fullscene;
+    }
+
+    public void InputName()
+    {
+
     }
 }
