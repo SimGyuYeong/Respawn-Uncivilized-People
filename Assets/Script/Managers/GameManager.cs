@@ -105,13 +105,14 @@ public class GameManager : MonoBehaviour
         Debug.Log("½ÇÇà");
         BlackImageObject.SetActive(true);
         Color color = BlackImage.color;
-        while (color.a != 0)
+        color.a = 1f;
+        while (color.a >= 0)
         {
-            color.a -= 0.05f;
+            color.a -= 0.06f;
             BlackImage.color = color;
-            BlackImageObject.SetActive(false);
             yield return new WaitForSeconds(0.1f);
         }
+        BlackImageObject.SetActive(false);
     }
 
     public IEnumerator FadeOut()
