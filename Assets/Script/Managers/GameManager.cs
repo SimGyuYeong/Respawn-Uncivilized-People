@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] public GameObject TitlePanel;
     [SerializeField] GameObject optionPanel;
 
+    public string PlayerName = "公疙";
 
     //可记
     [SerializeField] Slider chatSpeedSlider;
@@ -97,6 +98,7 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator FadeIn()
     {
+        Debug.Log("角青");
         BlackImageObject.SetActive(true);
         Color color = BlackImage.color;
         while (color.a != 0)
@@ -122,7 +124,7 @@ public class GameManager : MonoBehaviour
     }
     public IEnumerator CameraShaking()
     {
-        Camera.main.GetComponent<CameraShaking>().ShakeForTime(0.2f);
+        Camera.main.GetComponent<CameraShaking>().ShakeCam(0.13f, 1000);
         yield return new WaitForSeconds(0.1f);
     }
 
@@ -130,5 +132,10 @@ public class GameManager : MonoBehaviour
     {
         StopAllCoroutines();
         yield break;
+    }
+
+    public void Fullscene(bool is_fullscene)
+    {
+        Screen.fullScreen = is_fullscene;
     }
 }

@@ -1,9 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CameraShaking : MonoBehaviour
 {
+    public static CameraShaking Instance;
+    [SerializeField]
+    public UnityEvent<float, float> OnShakeCam;
     public float shaking;
     [SerializeField]
     float shakeTime;
@@ -13,9 +17,19 @@ public class CameraShaking : MonoBehaviour
         startPosition = new Vector3(0f,0f,-6f);
     }
 
-    public void ShakeForTime(float time)
+    void Awake()
     {
-        shakeTime = time;
+        if(Instance != null)
+        {
+            Debug.LogError("¿À·ù");
+
+        }
+        Instance = this;
+    }
+
+    public void ShakeCam(float time = 0.13f, float str = 1000)
+    {
+        OnShakeCam?.Invoke(time, str);
     }
 
     private void Update()
