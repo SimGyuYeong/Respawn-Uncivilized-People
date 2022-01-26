@@ -46,10 +46,10 @@ public class DataManager : MonoBehaviour
     {
         for (int i = 0; i < 8; i++)
         {
-            for (int j = 1; j < 4; j++)
+            for (int j = 1; j < 3; j++)
             {
                 GameObject obj = menu[i].transform.GetChild(j).gameObject;
-                if (j == 3)
+                if (j == 2)
                 {
                     Image image = obj.GetComponent<Image>();
                     image.sprite = nullImage;
@@ -60,7 +60,7 @@ public class DataManager : MonoBehaviour
                 else
                 {
                     Text text = obj.GetComponent<Text>();
-                    if (j == 1) text.text = data[i].playerName;
+                    if (j == 0) text.text = data[i].playerName;
                     else text.text = data[i].date;
                 }
                 
