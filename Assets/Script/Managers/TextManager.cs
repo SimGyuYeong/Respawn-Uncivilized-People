@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
 using System;
 
 
@@ -32,8 +31,6 @@ public class TextManager : MonoBehaviour
     public float chatSpeed = 0.1f;
     public bool Auto = false;
 
-    private RectTransform _targetTransform;
-
     [SerializeField] private SoundManager soundManager = null;
     public SoundManager SOUND { get { return soundManager; } }
 
@@ -41,7 +38,6 @@ public class TextManager : MonoBehaviour
     {
         soundManager = GetComponent<SoundManager>();
         StartCoroutine(LoadTextData());
-        _targetTransform = textPanel.gameObject.GetComponent<RectTransform>();
     }
 
     public IEnumerator LoadTextData()
