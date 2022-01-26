@@ -70,8 +70,16 @@ public class DataManager : MonoBehaviour
 
     public void SaveMenuPanelOpen(int num)
     {
-        if (num == 0) SaveOrLoad(0);
-        else if (num == 3) SaveOrLoad(3);
+        if (num == 0)
+        {
+            SLCheck = 1;
+            SaveOrLoad(0);
+        }
+        else if (num == 3)
+        {
+            SLCheck = 2;
+            SaveOrLoad(0);
+        }
         else
         {
             Time.timeScale = 0f;
@@ -88,6 +96,7 @@ public class DataManager : MonoBehaviour
 
     public void SaveOrLoad(int slot)
     {
+        
         if (SLCheck < 2)
         {
             data[slot].playerName = GameManager.Instance.PlayerName;
@@ -100,7 +109,7 @@ public class DataManager : MonoBehaviour
         }
         else
         {
-            if (slot == 3) slot = 0;
+            StopAllCoroutines();
             StartCoroutine(GameManager.Instance.FadeIn());
             GameManager.Instance.TEXT.chatID = data[slot].id;
             GameManager.Instance.TEXT.typingID = data[slot].typdingID;
