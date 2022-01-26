@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.UIElements;
 using System;
 
+
 public class TextManager : MonoBehaviour
 {
     const string URL = "https://docs.google.com/spreadsheets/d/18d1eO7_f3gewvcBi5MIe0sqh50lp1PF-kkQg2nm03wg/export?format=tsv";
@@ -16,21 +17,25 @@ public class TextManager : MonoBehaviour
     [SerializeField] private GameObject selectButton;
     [SerializeField] private GameObject[] background;
     [SerializeField] private GameObject[] image;
-    [SerializeField] private GameObject[] music;
     [SerializeField] private GameObject endObject;
 
+    List<string> textLog = new List<string>();
     Dictionary<int, string[,]> Sentence = new Dictionary<int, string[,]>();
     Dictionary<int, int> max = new Dictionary<int, int>();
     List<string> select = new List<string>();
 
-    public int chatID = 1, typingID = 1, backID = 1;
-    bool isTyping = false, skip = false;
+    public int chatID = 1, typingID = 1, backID = 1, slotID = 0;
+    private bool isTyping = false, skip = false;
     string[] imageList;
     public float chatSpeed = 0.1f;
+    public bool Auto = false;
+
+    private RectTransform _targetTransform;
 
     private void Awake()
     {
         StartCoroutine(LoadTextData());
+        _targetTransform = textPanel.gameObject.GetComponent<RectTransform>();
     }
 
     IEnumerator LoadTextData()
@@ -69,6 +74,7 @@ public class TextManager : MonoBehaviour
     public IEnumerator Typing()
     {
         textImage.SetActive(true);
+        if (!Auto) endObject.SetActive(false);
         isTyping = true;
         if (Sentence[chatID][typingID, 3] != "")
         {
@@ -87,43 +93,56 @@ public class TextManager : MonoBehaviour
             textPanel.text = string.Format("{0}\n{1}", Sentence[chatID][typingID, 1], Sentence[chatID][typingID, 2].Substring(0, i));
             yield return new WaitForSeconds(chatSpeed);
         }
-
+        if (!Auto) endObject.SetActive(true);
         isTyping = false;
+
+        textLog.Add(string.Format("{0}: {1}", Sentence[chatID][typingID, 1], Sentence[chatID][typingID, 2]));
+
+        if (Auto)
+        {
+            yield return new WaitForSeconds(1f);
+            SkipText();
+        }
+    }
+
+    public void SkipTextClick()
+    {
+        if (!Auto)
+        {
+            if (!isTyping) SkipText();
+            else skip = true;
+        }
     }
 
     public void SkipText()
     {
-        if (!isTyping)
-        {
-            if (backID >= 1) background[backID].SetActive(false);
-            if (Sentence[chatID][typingID, 4] != "") imageSetactive(false);
+        if (backID >= 1) background[backID].SetActive(false);
+        if (Sentence[chatID][typingID, 4] != "") imageSetactive(false);
 
-            string eventName = Sentence[chatID][typingID, 5];
-            if (eventName == "함수") Invoke(Sentence[chatID][typingID, 6], 0f);
-            else if (eventName == "이동")
-            {
-                int num = UnityEngine.Random.Range(6, Convert.ToInt32(Sentence[chatID][typingID, 19]));
-                chatID = Convert.ToInt32(Sentence[chatID][typingID, num]);
-                typingID = 0;
-            }
-            if (eventName == "선택")
-            {
-                if (Sentence[chatID][typingID, 3] != "")
-                {
-                    backID = Convert.ToInt32(Sentence[chatID][typingID, 3]) - 1;
-                    background[backID].SetActive(true);
-                }
-                textImage.SetActive(false);
-                SelectOpen();
-            }
-            else
-            {
-                typingID++;
-                if (typingID != max[chatID]) StartCoroutine(Typing());
-                else textImage.SetActive(false);
-            }
+        string eventName = Sentence[chatID][typingID, 5];
+        if (eventName == "함수") Invoke(Sentence[chatID][typingID, 6], 0f);
+        else if (eventName == "이동")
+        {
+            int num = UnityEngine.Random.Range(6, Convert.ToInt32(Sentence[chatID][typingID, 19]));
+            chatID = Convert.ToInt32(Sentence[chatID][typingID, num]);
+            typingID = 0;
         }
-        else skip = true;
+        if (eventName == "선택")
+        {
+            if (Sentence[chatID][typingID, 3] != "")
+            {
+                backID = Convert.ToInt32(Sentence[chatID][typingID, 3]) - 1;
+                background[backID].SetActive(true);
+            }
+            textImage.SetActive(false);
+            SelectOpen();
+        }
+        else
+        {
+            typingID++;
+            if (typingID != max[chatID]) StartCoroutine(Typing());
+            else textImage.SetActive(false);
+        }
     }
 
     public void SelectOpen()
@@ -176,4 +195,18 @@ public class TextManager : MonoBehaviour
         Camera.main.GetComponent<CameraShaking>().ShakeForTime(0.2f);
     }
 
+    public void AutoPlay()
+    {
+        Auto = !Auto;
+        if (!isTyping) SkipText();
+        endObject.SetActive(false);
+    }
+
+    public void ShowTextLog()
+    {
+        foreach(string text in textLog)
+        {
+            Debug.Log(text);
+        }
+    }
 }
