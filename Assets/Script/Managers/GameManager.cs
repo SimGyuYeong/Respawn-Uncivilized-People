@@ -108,7 +108,6 @@ public class GameManager : MonoBehaviour
             BlackImageObject.SetActive(false);
             yield return new WaitForSeconds(0.1f);
         }
-        
     }
 
     public IEnumerator FadeOut()
@@ -133,5 +132,10 @@ public class GameManager : MonoBehaviour
     {
         StopAllCoroutines();
         yield break;
+    }
+
+    public void Fullscene(bool is_fullscene)
+    {
+        Screen.fullScreen = is_fullscene;
     }
 }
