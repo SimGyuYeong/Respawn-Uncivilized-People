@@ -19,6 +19,9 @@ public class TextManager : MonoBehaviour
     [SerializeField] private GameObject endObject;
     [SerializeField] private float shakeTime = 0.13f;
     [SerializeField] private float shakestr = 0;
+    [SerializeField] private GameObject textlogPrefab;
+    [SerializeField] private Transform textlogView;
+    [SerializeField] private GameObject textlogScroll;
 
     List<string> textLog = new List<string>();
     Dictionary<int, string[,]> Sentence = new Dictionary<int, string[,]>();
@@ -129,7 +132,9 @@ public class TextManager : MonoBehaviour
         if (!Auto) endObject.SetActive(true);
         isTyping = false;
 
-        textLog.Add(string.Format("{0}: {1}", Name, Sentence[chatID][typingID, 2]));
+        GameObject tl = Instantiate(textlogPrefab, textlogView);
+        if (Name == "") tl.GetComponent<Text>().text = string.Format(Sentence[chatID][typingID, 2]);
+        else tl.GetComponent<Text>().text = string.Format("{0}: {1}", Name, Sentence[chatID][typingID, 2]);
 
         if (Auto)
         {
@@ -185,12 +190,9 @@ public class TextManager : MonoBehaviour
         endObject.SetActive(false);
     }
 
-    public void ShowTextLog()
+    public void ShowTextLog(bool check)
     {
-        foreach (string text in textLog)
-        {
-            Debug.Log(text);
-        }
+        textlogScroll.SetActive(check);
     }
 
 
@@ -245,5 +247,9 @@ public class TextManager : MonoBehaviour
         CameraShaking.Instance.ShakeCam(shakeTime, shakestr);
     }
 
-    
+    public void InputNameCanvasOpen()
+    {
+        GameManager.Instance.InputNameCanvas.SetActive(true);
+    }
+
 }

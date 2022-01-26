@@ -30,6 +30,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] Image BlackImage;
     [SerializeField] GameObject BlackImageObject;
 
+    //이름입력
+    public GameObject InputNameCanvas;
+    [SerializeField] private InputField inputField;
+
     private void Awake()
     {
         TitlePanel.SetActive(true);
@@ -144,8 +148,14 @@ public class GameManager : MonoBehaviour
         Screen.fullScreen = is_fullscene;
     }
 
+    
+
     public void InputName()
     {
-
+        PlayerName = inputField.text;
+        InputNameCanvas.SetActive(false);
+        TEXT.chatID = 100000003;
+        StartCoroutine(TEXT.LoadTextData());
+        StartCoroutine(TEXT.Typing());
     }
 }
