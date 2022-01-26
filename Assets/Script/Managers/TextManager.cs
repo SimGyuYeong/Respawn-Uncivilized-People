@@ -34,8 +34,12 @@ public class TextManager : MonoBehaviour
 
     private RectTransform _targetTransform;
 
+    [SerializeField] private SoundManager soundManager = null;
+    public SoundManager SOUND { get { return soundManager; } }
+
     private void Awake()
     {
+        soundManager = GetComponent<SoundManager>();
         StartCoroutine(LoadTextData());
         _targetTransform = textPanel.gameObject.GetComponent<RectTransform>();
     }
@@ -122,6 +126,7 @@ public class TextManager : MonoBehaviour
                 skip = false;
                 break;
             }
+            soundManager.TypingSound();
             textPanel.text = string.Format("{0}\n{1}", Name, Sentence[chatID][typingID, 2].Substring(0, i));
             yield return new WaitForSeconds(chatSpeed);
         }

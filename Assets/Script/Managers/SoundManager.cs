@@ -42,6 +42,15 @@ public class SoundManager : MonoBehaviour
         audioPlayer.Play();
     }
 
+    public void TypingSound()
+    {
+        audioPlayer.clip = EffectMusics[0].audio;
+        audioPlayer.time = Random.Range(0f, 5f);
+        audioPlayer.Play();
+        Invoke("PauseMusic", 1f);
+    }
+
+
     public void PauseMusic()
     {
         audioPlayer.Pause();
@@ -52,6 +61,6 @@ public class SoundManager : MonoBehaviour
     {
         audioPlayer.clip = null;
         audioBGMPlayer.clip = null;
-
     }
-}
+
+ }
