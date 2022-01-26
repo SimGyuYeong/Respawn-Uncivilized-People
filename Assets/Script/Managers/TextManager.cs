@@ -15,7 +15,7 @@ public class TextManager : MonoBehaviour
     [SerializeField] private Text textPanel;
     [SerializeField] private Transform selectPanel;
     [SerializeField] private GameObject selectButton;
-    [SerializeField] private GameObject[] background;
+    [SerializeField] public GameObject[] background;
     [SerializeField] private GameObject[] image;
     [SerializeField] private GameObject endObject;
     [SerializeField] private float shakeTime = 0.13f;
@@ -40,13 +40,13 @@ public class TextManager : MonoBehaviour
         _targetTransform = textPanel.gameObject.GetComponent<RectTransform>();
     }
 
-    IEnumerator LoadTextData()
+    public IEnumerator LoadTextData()
     {
         UnityWebRequest www = UnityWebRequest.Get(URL);
         yield return www.SendWebRequest();
 
-        string data = www.downloadHandler.text;
-        string[] line = data.Split('\n');
+        string data = www.downloadHandler.text, vertualText;
+        string[] line = data.Split('\n'), vText;
         int lineSize = line.Length;
         int rawSize = line[0].Split('\t').Length;
         int chatID = 1, lineCount = 1, i, j;
@@ -66,7 +66,30 @@ public class TextManager : MonoBehaviour
             {
                 Sentence[chatID][lineCount, j] = row[j];
             }
-            Sentence[chatID][lineCount, 19] = j.ToString();
+
+            vertualText = Sentence[chatID][lineCount, 2];
+
+            if (vertualText != null)
+            {
+                foreach(char N in vertualText)
+                {
+                    if(N == 'N')
+                    {
+                        vText = vertualText.Split('N');
+                        if (vText[1] != null)
+                        {
+                            Sentence[chatID][lineCount, 2] = string.Format("{0}{1}{2}", vText[0], GameManager.Instance.PlayerName, vText[1]);
+                        }
+                        else
+                        {
+                            Sentence[chatID][lineCount, 2] = string.Format("{0}{1}", GameManager.Instance.PlayerName, vText[0]);
+                        }
+                        break;
+                    }
+                }
+            }
+
+            Sentence[chatID][lineCount, j] = Sentence[chatID][lineCount, 19] = j.ToString();
             Sentence[chatID][lineCount, ++j] = "x";
             max[chatID]++;
             lineCount++;
@@ -89,21 +112,23 @@ public class TextManager : MonoBehaviour
             background[backID].SetActive(true);
         }
         if (Sentence[chatID][typingID, 4] != "") imageSetactive(true);
+        string Name = Sentence[chatID][typingID, 1];
+        if (Name == "´ç½Å") Name = GameManager.Instance.PlayerName;
         for (int i = 0; i < Sentence[chatID][typingID, 2].Length + 1; i++)
         {
             if (skip)
             {
-                textPanel.text = string.Format("{0}\n{1}", Sentence[chatID][typingID, 1], Sentence[chatID][typingID, 2]);
+                textPanel.text = string.Format("{0}\n{1}", Name, Sentence[chatID][typingID, 2]);
                 skip = false;
                 break;
             }
-            textPanel.text = string.Format("{0}\n{1}", Sentence[chatID][typingID, 1], Sentence[chatID][typingID, 2].Substring(0, i));
+            textPanel.text = string.Format("{0}\n{1}", Name, Sentence[chatID][typingID, 2].Substring(0, i));
             yield return new WaitForSeconds(chatSpeed);
         }
         if (!Auto) endObject.SetActive(true);
         isTyping = false;
 
-        textLog.Add(string.Format("{0}: {1}", Sentence[chatID][typingID, 1], Sentence[chatID][typingID, 2]));
+        textLog.Add(string.Format("{0}: {1}", Name, Sentence[chatID][typingID, 2]));
 
         if (Auto)
         {

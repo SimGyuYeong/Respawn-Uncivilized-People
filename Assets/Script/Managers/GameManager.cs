@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] public GameObject TitlePanel;
     [SerializeField] GameObject optionPanel;
 
+    public string PlayerName = "公疙";
 
     //可记
     [SerializeField] Slider chatSpeedSlider;
@@ -55,7 +56,7 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Time.timeScale = 0;
-            DATA.SaveMenuPanelOpen(1);
+            OptionPanelOC(0);
         }
     }
 
@@ -70,8 +71,6 @@ public class GameManager : MonoBehaviour
                 soundManager.PauseMusic();
                 //soundManager.PlayingMusic(1, 0.01f);
                 StartCoroutine(FadeIn());
-                //Invoke("CameraShake()", 1.4f);
-                textManager.CallCameraShake();
                 StartCoroutine(textManager.Typing());
                 break;
             case "辆丰":
@@ -99,17 +98,16 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator FadeIn()
     {
+        Debug.Log("角青");
         BlackImageObject.SetActive(true);
         Color color = BlackImage.color;
-        color.a = 1f;
-        while (color.a >= 0)
+        while (color.a != 0)
         {
-            color.a -= 0.16f;
+            color.a -= 0.05f;
             BlackImage.color = color;
+            BlackImageObject.SetActive(false);
             yield return new WaitForSeconds(0.1f);
         }
-        Debug.Log("角青");
-        BlackImageObject.SetActive(false);
     }
 
     public IEnumerator FadeOut()
@@ -134,5 +132,10 @@ public class GameManager : MonoBehaviour
     {
         StopAllCoroutines();
         yield break;
+    }
+
+    public void Fullscene(bool is_fullscene)
+    {
+        Screen.fullScreen = is_fullscene;
     }
 }
