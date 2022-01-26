@@ -52,7 +52,7 @@ public class GameManager : MonoBehaviour
         //chatSpeedSlider.minValue = 0.05f; // 슬라이더의 최솟값을 0.05로 설정
         chatSpeedSlider.value = chatSpeedSlider.value * -1; // 슬라이더 값 -1 곱하기
         chatSpeedSlider.value = TEXT.chatSpeed; // 슬라이더 값을 chatspeed로 변경
-        //soundManager.PlayingMusic(0, 0.01f);
+        soundManager.PlayingMusic(0, 0.01f);
     }
 
     public void Update()
@@ -149,7 +149,18 @@ public class GameManager : MonoBehaviour
         Screen.fullScreen = is_fullscene;
     }
 
-    
+    public void BackTitle()
+    {
+        StopAllCoroutines();
+        OptionPanelOC(1);
+        BlackImageObject.SetActive(false);
+        TEXT.textImage.gameObject.SetActive(false);
+        TEXT.background[TEXT.backID].gameObject.SetActive(false);
+        TitlePanel.SetActive(true);
+        Buttons.SetActive(true);
+        soundManager.PauseMusic();
+        soundManager.PlayingMusic(0, 0.01f);
+    }
 
     public void InputName()
     {

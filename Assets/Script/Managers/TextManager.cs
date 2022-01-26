@@ -10,7 +10,7 @@ public class TextManager : MonoBehaviour
 {
     const string URL = "https://docs.google.com/spreadsheets/d/18d1eO7_f3gewvcBi5MIe0sqh50lp1PF-kkQg2nm03wg/export?format=tsv";
 
-    [SerializeField] private GameObject textImage;
+    [SerializeField] public GameObject textImage;
     [SerializeField] private Text textPanel;
     [SerializeField] private Transform selectPanel;
     [SerializeField] private GameObject selectButton;
