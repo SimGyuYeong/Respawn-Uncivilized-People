@@ -73,6 +73,11 @@ public class TextManager : MonoBehaviour
 
     public IEnumerator Typing()
     {
+        if (Sentence[chatID][typingID, 1] == null)
+        {
+            LoadTextData();
+        }
+
         textImage.SetActive(true);
         if (!Auto) endObject.SetActive(false);
         isTyping = true;
@@ -145,6 +150,22 @@ public class TextManager : MonoBehaviour
         }
     }
 
+    public void AutoPlay()
+    {
+        Auto = !Auto;
+        if (!isTyping) SkipText();
+        endObject.SetActive(false);
+    }
+
+    public void ShowTextLog()
+    {
+        foreach (string text in textLog)
+        {
+            Debug.Log(text);
+        }
+    }
+
+
     public void SelectOpen()
     {
         for (int i = 6; i < Convert.ToInt32(Sentence[chatID][typingID, 19]); i++)
@@ -195,18 +216,5 @@ public class TextManager : MonoBehaviour
         Camera.main.GetComponent<CameraShaking>().ShakeForTime(0.2f);
     }
 
-    public void AutoPlay()
-    {
-        Auto = !Auto;
-        if (!isTyping) SkipText();
-        endObject.SetActive(false);
-    }
-
-    public void ShowTextLog()
-    {
-        foreach(string text in textLog)
-        {
-            Debug.Log(text);
-        }
-    }
+    
 }
