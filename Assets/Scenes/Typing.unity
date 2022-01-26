@@ -2902,6 +2902,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 564707370}
+  - component: {fileID: 564707371}
   m_Layer: 5
   m_Name: TextSpeed
   m_TagString: Untagged
@@ -2930,6 +2931,18 @@ RectTransform:
   m_AnchoredPosition: {x: -2, y: 27.000004}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &564707371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 564707369}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11c6b808caf087b4ea9c37d469c223f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &578468571
 GameObject:
   m_ObjectHideFlags: 0
@@ -4037,8 +4050,8 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1757475160}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+      - m_Target: {fileID: 564707371}
+        m_TargetAssemblyTypeName: TextSpeedSetting, Assembly-CSharp
         m_MethodName: SetMusicVolume
         m_Mode: 0
         m_Arguments:
@@ -8928,6 +8941,7 @@ MonoBehaviour:
   optionPanel: {fileID: 1677435524}
   PlayerName: "\uBB34\uBA85"
   chatSpeedSlider: {fileID: 783234574}
+  audoSpeedSlider: {fileID: 1926711633}
   BlackImage: {fileID: 1642258638}
   BlackImageObject: {fileID: 1642258636}
   InputNameCanvas: {fileID: 1762896567}
@@ -9011,6 +9025,7 @@ MonoBehaviour:
   backID: 1
   slotID: 0
   chatSpeed: 1
+  autoSpeed: 1
   Auto: 0
   soundManager: {fileID: 0}
 --- !u!114 &1757475165
@@ -9741,14 +9756,14 @@ MonoBehaviour:
   m_HandleRect: {fileID: 336365676}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 1
-  m_WholeNumbers: 0
-  m_Value: 0
+  m_MaxValue: 10
+  m_WholeNumbers: 1
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1757475160}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+      - m_Target: {fileID: 2115882023}
+        m_TargetAssemblyTypeName: AutoPlaySpeedSetting, Assembly-CSharp
         m_MethodName: SetMusicVolume
         m_Mode: 0
         m_Arguments:
@@ -11224,13 +11239,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2115882022}
+  - component: {fileID: 2115882023}
   m_Layer: 5
   m_Name: AutoPlaySpeed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2115882022
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11252,6 +11268,18 @@ RectTransform:
   m_AnchoredPosition: {x: -2, y: 27}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2115882023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2115882021}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 834c111f15db44547b71e51df10e7c67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2133080594
 GameObject:
   m_ObjectHideFlags: 0
