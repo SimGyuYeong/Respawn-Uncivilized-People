@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using System;
+using DG.Tweening;
 
 
 public class TextManager : MonoBehaviour
@@ -232,6 +233,8 @@ public class TextManager : MonoBehaviour
         foreach (string x in imageList)
         {
             image[Convert.ToInt32(x) - 1].SetActive(set);
+            //image[Convert.ToInt32(x) - 1].transform.DOMoveX(0, 0.7f);
+            //image[Convert.ToInt32(x)].transform.position = image[Convert.ToInt32(x) - 1].transform.position;
         }
     }
 
