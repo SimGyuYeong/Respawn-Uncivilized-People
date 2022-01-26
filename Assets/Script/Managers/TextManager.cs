@@ -18,6 +18,8 @@ public class TextManager : MonoBehaviour
     [SerializeField] private GameObject[] background;
     [SerializeField] private GameObject[] image;
     [SerializeField] private GameObject endObject;
+    [SerializeField] private float shakeTime = 0.13f;
+    [SerializeField] private float shakestr = 0;
 
     List<string> textLog = new List<string>();
     Dictionary<int, string[,]> Sentence = new Dictionary<int, string[,]>();
@@ -214,9 +216,10 @@ public class TextManager : MonoBehaviour
         GameManager.Instance.SOUND.PlayingMusic(num, 0.5f);
     }
 
-    private void CameraShaking()
+    private void CallCameraShake()
     {
-        Camera.main.GetComponent<CameraShaking>().ShakeForTime(0.2f);
+        //Camera.main.GetComponent<CameraShaking>().ShakeCam(shakeTime);
+        CameraShaking.Instance.ShakeCam(shakeTime, shakestr);
     }
 
     

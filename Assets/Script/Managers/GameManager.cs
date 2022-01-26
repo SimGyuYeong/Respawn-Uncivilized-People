@@ -98,6 +98,7 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator FadeIn()
     {
+        Debug.Log("½ÇÇà");
         BlackImageObject.SetActive(true);
         Color color = BlackImage.color;
         while (color.a != 0)
@@ -107,6 +108,7 @@ public class GameManager : MonoBehaviour
             BlackImageObject.SetActive(false);
             yield return new WaitForSeconds(0.1f);
         }
+        
     }
 
     public IEnumerator FadeOut()
@@ -123,7 +125,7 @@ public class GameManager : MonoBehaviour
     }
     public IEnumerator CameraShaking()
     {
-        Camera.main.GetComponent<CameraShaking>().ShakeForTime(0.2f);
+        Camera.main.GetComponent<CameraShaking>().ShakeCam(0.13f, 1000);
         yield return new WaitForSeconds(0.1f);
     }
 

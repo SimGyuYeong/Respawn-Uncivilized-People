@@ -7,6 +7,6 @@ public class ShakingButton : MonoBehaviour
 {
     public void ShakeButton()
     {
-        Camera.main.GetComponent<CameraShaking>().ShakeForTime(0.2f);
+        Camera.main.GetComponent<CameraShaking>().ShakeCam(0.13f, 1000);
     }
 }
