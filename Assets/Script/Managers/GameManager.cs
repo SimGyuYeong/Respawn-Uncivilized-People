@@ -56,7 +56,7 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Time.timeScale = 0;
-            DATA.SaveMenuPanelOpen(1);
+            OptionPanelOC(0);
         }
     }
 
