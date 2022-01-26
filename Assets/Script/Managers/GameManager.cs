@@ -47,9 +47,9 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        chatSpeedSlider.maxValue = 0.3f; // 슬라이더의 최댓값을 0.3으로 설정
-        chatSpeedSlider.minValue = 0.05f; // 슬라이더의 최솟값을 0.05로 설정
-        TEXT.chatSpeed = 0.1f;
+        TEXT.chatSpeed = PlayerPrefs.GetFloat("chatSpeed", 1);
+        //chatSpeedSlider.maxValue = 0.3f; // 슬라이더의 최댓값을 0.3으로 설정
+        //chatSpeedSlider.minValue = 0.05f; // 슬라이더의 최솟값을 0.05로 설정
         chatSpeedSlider.value = chatSpeedSlider.value * -1; // 슬라이더 값 -1 곱하기
         chatSpeedSlider.value = TEXT.chatSpeed; // 슬라이더 값을 chatspeed로 변경
         //soundManager.PlayingMusic(0, 0.01f);
@@ -101,7 +101,8 @@ public class GameManager : MonoBehaviour
     
     public void SetMusicVolume(float volume)
     {
-        TEXT.chatSpeed = volume;
+        TEXT.chatSpeed = volume / 10;
+        PlayerPrefs.SetFloat("chatSpeed", volume);
     }
 
     public IEnumerator FadeIn()
