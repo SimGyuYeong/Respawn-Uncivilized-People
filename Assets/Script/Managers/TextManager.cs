@@ -213,7 +213,7 @@ public class TextManager : MonoBehaviour
         GameManager.Instance.SOUND.PlayingMusic(num, 0.5f);
     }
 
-    private void CallCameraShake()
+    public void CallCameraShake()
     {
         //Camera.main.GetComponent<CameraShaking>().ShakeCam(shakeTime);
         CameraShaking.Instance.ShakeCam(shakeTime, shakestr);

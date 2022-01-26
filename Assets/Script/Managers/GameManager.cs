@@ -70,6 +70,8 @@ public class GameManager : MonoBehaviour
                 soundManager.PauseMusic();
                 //soundManager.PlayingMusic(1, 0.01f);
                 StartCoroutine(FadeIn());
+                //Invoke("CameraShake()", 1.4f);
+                textManager.CallCameraShake();
                 StartCoroutine(textManager.Typing());
                 break;
             case "종료":
@@ -97,17 +99,17 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator FadeIn()
     {
-        Debug.Log("실행");
         BlackImageObject.SetActive(true);
         Color color = BlackImage.color;
-        while (color.a != 0)
+        color.a = 1f;
+        while (color.a >= 0)
         {
-            color.a -= 0.05f;
+            color.a -= 0.16f;
             BlackImage.color = color;
-            BlackImageObject.SetActive(false);
             yield return new WaitForSeconds(0.1f);
         }
-        
+        Debug.Log("실행");
+        BlackImageObject.SetActive(false);
     }
 
     public IEnumerator FadeOut()
