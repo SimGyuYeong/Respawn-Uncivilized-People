@@ -22,7 +22,6 @@ public class CameraShaking : MonoBehaviour
         if(Instance != null)
         {
             Debug.LogError("¿À·ù");
-
         }
         Instance = this;
     }

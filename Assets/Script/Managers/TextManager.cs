@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using System;
+using DG.Tweening;
 
 
 public class TextManager : MonoBehaviour
@@ -22,8 +23,7 @@ public class TextManager : MonoBehaviour
     [SerializeField] private GameObject textlogPrefab;
     [SerializeField] private Transform textlogView;
     [SerializeField] private GameObject textlogScroll;
-
-    List<string> textLog = new List<string>();
+    
     Dictionary<int, string[,]> Sentence = new Dictionary<int, string[,]>();
     Dictionary<int, int> max = new Dictionary<int, int>();
     List<string> select = new List<string>();
@@ -31,7 +31,7 @@ public class TextManager : MonoBehaviour
     public int chatID = 1, typingID = 1, backID = 1, slotID = 0;
     private bool isTyping = false, skip = false;
     string[] imageList;
-    public float chatSpeed = 0.1f;
+    public float chatSpeed = 0.1f, autoSpeed = 1f;
     public bool Auto = false;
 
     [SerializeField] private SoundManager soundManager = null;
@@ -51,12 +51,13 @@ public class TextManager : MonoBehaviour
         string data = www.downloadHandler.text, vertualText;
         string[] line = data.Split('\n'), vText;
         int lineSize = line.Length;
-        int rawSize = line[0].Split('\t').Length;
+        int rawSize;
         int chatID = 1, lineCount = 1, i, j;
 
         for (i = 1; i < lineSize; i++)
         {
             string[] row = line[i].Split('\t');
+            rawSize = line[i].Split('\t').Length;
             if (row[0] != "")
             {
                 lineCount = 1;
@@ -68,7 +69,12 @@ public class TextManager : MonoBehaviour
             for (j = 1; j < rawSize; j++)
             {
                 Sentence[chatID][lineCount, j] = row[j];
+                if(j > 4)
+                {
+                    if (row[j] == "") break;
+                }
             }
+            Sentence[chatID][lineCount, 19] = j.ToString();
 
             vertualText = Sentence[chatID][lineCount, 2];
 
@@ -92,7 +98,7 @@ public class TextManager : MonoBehaviour
                 }
             }
 
-            Sentence[chatID][lineCount, j] = Sentence[chatID][lineCount, 19] = j.ToString();
+            
             Sentence[chatID][lineCount, ++j] = "x";
             max[chatID]++;
             lineCount++;
@@ -101,7 +107,7 @@ public class TextManager : MonoBehaviour
 
     public IEnumerator Typing()
     {
-        if (Sentence[chatID][typingID, 1] == null)
+        if (Sentence[chatID] == null)
         {
             LoadTextData();
         }
@@ -138,7 +144,7 @@ public class TextManager : MonoBehaviour
 
         if (Auto)
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(autoSpeed);
             SkipText();
         }
     }
@@ -232,6 +238,8 @@ public class TextManager : MonoBehaviour
         foreach (string x in imageList)
         {
             image[Convert.ToInt32(x) - 1].SetActive(set);
+            //image[Convert.ToInt32(x) - 1].transform.DOMoveX(0, 0.7f);
+            //image[Convert.ToInt32(x)].transform.position = image[Convert.ToInt32(x) - 1].transform.position;
         }
     }
 

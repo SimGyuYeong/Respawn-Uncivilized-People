@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
 
     //옵션
     [SerializeField] Slider chatSpeedSlider;
+    [SerializeField] Slider audoSpeedSlider;
 
     //FadeIn
     [SerializeField] Image BlackImage;
@@ -52,6 +53,10 @@ public class GameManager : MonoBehaviour
         //chatSpeedSlider.minValue = 0.05f; // 슬라이더의 최솟값을 0.05로 설정
         chatSpeedSlider.value = chatSpeedSlider.value * -1; // 슬라이더 값 -1 곱하기
         chatSpeedSlider.value = TEXT.chatSpeed; // 슬라이더 값을 chatspeed로 변경
+        TEXT.autoSpeed = PlayerPrefs.GetFloat("auto", 1);
+        audoSpeedSlider.value = audoSpeedSlider.value * -1;
+        audoSpeedSlider.value = TEXT.autoSpeed;
+        Debug.Log(PlayerPrefs.GetFloat("auto", 1));
         soundManager.PlayingMusic(0, 0.01f);
     }
 
@@ -97,12 +102,6 @@ public class GameManager : MonoBehaviour
             Time.timeScale = 1f;
         }
         else optionPanel.SetActive(true);
-    }
-    
-    public void SetMusicVolume(float volume)
-    {
-        TEXT.chatSpeed = volume / 10;
-        PlayerPrefs.SetFloat("chatSpeed", volume);
     }
 
     public IEnumerator FadeIn()
@@ -166,7 +165,7 @@ public class GameManager : MonoBehaviour
     {
         PlayerName = inputField.text;
         InputNameCanvas.SetActive(false);
-        TEXT.chatID = 100000003;
+        TEXT.chatID = 100003;
         StartCoroutine(TEXT.LoadTextData());
         StartCoroutine(TEXT.Typing());
     }
