@@ -75,7 +75,7 @@ public class DataManager : MonoBehaviour
     {
         if (SLCheck < 2)
         {
-            data[slot].playerName = "테스트";
+            data[slot].playerName = GameManager.Instance.PlayerName;
             data[slot].date = DateTime.Now.ToString("yyyy년 MM월 dd일\n HH:mm:ss");
             data[slot].id = GameManager.Instance.TEXT.chatID;
             data[slot].typdingID = GameManager.Instance.TEXT.typingID;

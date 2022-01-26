@@ -64,6 +64,7 @@ public class TextManager : MonoBehaviour
             {
                 Sentence[chatID][lineCount, j] = row[j];
             }
+            
             Sentence[chatID][lineCount, 19] = j.ToString();
             Sentence[chatID][lineCount, ++j] = "x";
             max[chatID]++;
@@ -87,21 +88,23 @@ public class TextManager : MonoBehaviour
             background[backID].SetActive(true);
         }
         if (Sentence[chatID][typingID, 4] != "") imageSetactive(true);
+        string Name = Sentence[chatID][typingID, 1];
+        if (Name == "´ç½Å") Name = GameManager.Instance.PlayerName;
         for (int i = 0; i < Sentence[chatID][typingID, 2].Length + 1; i++)
         {
             if (skip)
             {
-                textPanel.text = string.Format("{0}\n{1}", Sentence[chatID][typingID, 1], Sentence[chatID][typingID, 2]);
+                textPanel.text = string.Format("{0}\n{1}", Name, Sentence[chatID][typingID, 2]);
                 skip = false;
                 break;
             }
-            textPanel.text = string.Format("{0}\n{1}", Sentence[chatID][typingID, 1], Sentence[chatID][typingID, 2].Substring(0, i));
+            textPanel.text = string.Format("{0}\n{1}", Name, Sentence[chatID][typingID, 2].Substring(0, i));
             yield return new WaitForSeconds(chatSpeed);
         }
         if (!Auto) endObject.SetActive(true);
         isTyping = false;
 
-        textLog.Add(string.Format("{0}: {1}", Sentence[chatID][typingID, 1], Sentence[chatID][typingID, 2]));
+        textLog.Add(string.Format("{0}: {1}", Name, Sentence[chatID][typingID, 2]));
 
         if (Auto)
         {

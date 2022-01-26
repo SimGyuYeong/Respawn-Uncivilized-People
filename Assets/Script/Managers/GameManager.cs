@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] public GameObject TitlePanel;
     [SerializeField] GameObject optionPanel;
 
+    public string PlayerName = "무명";
 
     //옵션
     [SerializeField] Slider chatSpeedSlider;
