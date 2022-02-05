@@ -26,6 +26,10 @@ public class GameManager : MonoBehaviour
     //¿É¼Ç
     [SerializeField] Slider chatSpeedSlider;
     [SerializeField] Slider audoSpeedSlider;
+    [SerializeField] Dropdown dropdown;
+    List<Resolution> resolutions = new List<Resolution>();
+    private int resolutionNum;
+    FullScreenMode screenMode;
 
     //FadeIn
     [SerializeField] Image BlackImage;
@@ -58,6 +62,22 @@ public class GameManager : MonoBehaviour
         audoSpeedSlider.value = TEXT.autoSpeed;
         Debug.Log(PlayerPrefs.GetFloat("auto", 1));
         soundManager.PlayingMusic(0, 0.01f);
+
+        resolutions.AddRange(Screen.resolutions);
+        dropdown.options.Clear();
+
+        int optionNum = 0;
+        foreach(Resolution item in resolutions)
+        {
+            Dropdown.OptionData option = new Dropdown.OptionData();
+            option.text = item.width + "x" + item.height + " " + item.refreshRate + "hz";
+            dropdown.options.Add(option);
+
+            if (item.width == Screen.width && item.height == Screen.height)
+                dropdown.value = optionNum;
+            optionNum++;
+        }
+        dropdown.RefreshShownValue();
     }
 
     public void Update()
@@ -131,6 +151,17 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
     }
+
+    public void DropboxOptionChange(int x)
+    {
+        resolutionNum = x;
+    }
+
+    public void OkBtnClick()
+    {
+        Screen.SetResolution(resolutions[resolutionNum].width, resolutions[resolutionNum].height, screenMode);
+    }
+
     public IEnumerator CameraShaking()
     {
         Camera.main.GetComponent<CameraShaking>().ShakeCam(0.13f, 1000);
