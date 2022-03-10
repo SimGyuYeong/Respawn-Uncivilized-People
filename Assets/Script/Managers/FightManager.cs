@@ -14,6 +14,8 @@ public class FightManager : MonoBehaviour
     [SerializeField] GameObject TileUI;
     [SerializeField] GameObject GoalUI;
 
+    [SerializeField] GameObject TilePrefab;
+
     private int energy = 100;
     private bool isClickPlayer = false;
     private int enemyCount = 3;
@@ -22,28 +24,64 @@ public class FightManager : MonoBehaviour
     public void Start()
     {
         UpdateUI();
+        CreateTile();
+    }
+
+    public void CreateTile()
+    {
+        int count = 1;
+        float x = -7.5f, y = 3.5f;
+        for(int i = 0; i < 8; i++)
+        {
+            for(int j = 0; j < 8; j++)
+            {
+                var spawnedTile = Instantiate(TilePrefab, new Vector3(x, y), Quaternion.identity);
+                spawnedTile.transform.parent = Content.transform;
+                spawnedTile.name = $"Tile {count}";
+                count++;            }
+            
+            x += 1.1f;
+        }
+
+        //for (float x = -0.42f; x <= 0.42f; x += 0.12f)
+        //{
+        //    for(float y = 0.42f; y >= -0.4f; y -= 0.125f)
+        //    {
+        //        var spawnedTile = Instantiate(TilePrefab, new Vector3(x, y), Quaternion.identity);
+        //        spawnedTile.name = $"Tile {count}";
+        //        count++;
+        //    }
+        //}
     }
 
     public void OnClickTile(GameObject obj)
     {
         if (isClickPlayer)
         {
+            string position = (Player.transform.position - obj.transform.position).ToString();
             if (Player.transform.parent == obj.transform) return;
-            
-            if(energy >= 5)
+            else if (energy < 5) return;
+            else if (position == new Vector3(1.1f, 0).ToString() || position == new Vector3(-1.1f, 0).ToString() || position == new Vector3(0, 1.1f).ToString() || position == new Vector3(0, -1.1f).ToString())
             {
                 if (obj.transform.childCount > 0)
                 {
                     int damage = System.Convert.ToInt32(obj.transform.GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text);
                     energy -= damage;
                     enemyCount--;
-                } else energy -= 5;
+                }
+                else energy -= 5;
+
                 if (obj.transform.childCount > 0)
-                    Player.transform.DOMove(obj.transform.position, 2.0f).OnComplete(() => Destroy(obj.transform.GetChild(0).gameObject))
-                        .OnComplete(()=> StartCoroutine(SoftGoalValueChange()));
+                {
+                    Player.transform.DOMove(obj.transform.position, 2.0f)
+                        .OnComplete(() => StartCoroutine(SoftGoalValueChange()))
+                        .OnComplete(() => Player.transform.SetParent(obj.transform));
+                    Destroy(obj.transform.GetChild(0).gameObject);
+                }
                 else
-                    Player.transform.DOMove(obj.transform.position, 2.0f);
-                Player.transform.SetParent(obj.transform);
+                    Player.transform.DOMove(obj.transform.position, 2.0f)
+                        .OnComplete(() => Player.transform.SetParent(obj.transform));
+
                 OnClickPlayer();
                 turn--;
                 UpdateUI();
