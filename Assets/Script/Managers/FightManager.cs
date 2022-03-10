@@ -24,34 +24,29 @@ public class FightManager : MonoBehaviour
     public void Start()
     {
         UpdateUI();
-        CreateTile();
+        StartCoroutine(spawnTile());
     }
 
-    public void CreateTile()
+
+    IEnumerator spawnTile()
     {
         int count = 1;
-        float x = -7.5f, y = 3.5f;
-        for(int i = 0; i < 8; i++)
+        float y = 3.9f;
+        for (int i = 0; i < 8; i++)
         {
-            for(int j = 0; j < 8; j++)
+            float x = -7.7f;
+            for (int j = 0; j < 8; j++)
             {
                 var spawnedTile = Instantiate(TilePrefab, new Vector3(x, y), Quaternion.identity);
                 spawnedTile.transform.parent = Content.transform;
                 spawnedTile.name = $"Tile {count}";
-                count++;            }
-            
-            x += 1.1f;
+                count++;
+                if(i == 0) yield return new WaitForSeconds(0.08f);
+                x += 1.1f;
+            }
+            yield return new WaitForSeconds(0.08f);
+            y -= 1.1f;
         }
-
-        //for (float x = -0.42f; x <= 0.42f; x += 0.12f)
-        //{
-        //    for(float y = 0.42f; y >= -0.4f; y -= 0.125f)
-        //    {
-        //        var spawnedTile = Instantiate(TilePrefab, new Vector3(x, y), Quaternion.identity);
-        //        spawnedTile.name = $"Tile {count}";
-        //        count++;
-        //    }
-        //}
     }
 
     public void OnClickTile(GameObject obj)
