@@ -6,27 +6,44 @@ using DG.Tweening;
 
 public class FightManager : MonoBehaviour
 {
-    [SerializeField] GameObject Player;
+    //싱글톤
+    public static FightManager Instance;
+
+    //플레이어
+    public GameObject Player;
+    public bool _playerClick = false;
+    public int PlayerSpawnTN = 10;
+
+    //타일 관련
     [SerializeField] GameObject Content;
+    [SerializeField] Tile TilePrefab;
+    public bool[] tileActiveList;
+    public List<GameObject> tileList = new List<GameObject>();
+    public int csTileNum = 1;
+
+    //적AI
+    [SerializeField] GameObject Enemy;
+    public int[] EnemySpawnTN;
 
     [SerializeField] Text turnText;
 
     [SerializeField] GameObject TileUI;
     [SerializeField] GameObject GoalUI;
 
-    [SerializeField] GameObject TilePrefab;
-
     private int energy = 100;
-    private bool isClickPlayer = false;
     private int enemyCount = 3;
     [SerializeField] int turn = 10;
+
+    public void Awake()
+    {
+        Instance = this;
+    }
 
     public void Start()
     {
         UpdateUI();
         StartCoroutine(spawnTile());
     }
-
 
     IEnumerator spawnTile()
     {
@@ -40,6 +57,30 @@ public class FightManager : MonoBehaviour
                 var spawnedTile = Instantiate(TilePrefab, new Vector3(x, y), Quaternion.identity);
                 spawnedTile.transform.parent = Content.transform;
                 spawnedTile.name = $"Tile {count}";
+                spawnedTile.tileNum = count;
+                tileList.Add(spawnedTile.gameObject);
+
+                if (count == PlayerSpawnTN)
+                {
+                    Player = Instantiate(Player, spawnedTile.transform);
+                    Player.transform.position = spawnedTile.transform.position;
+                }
+
+                foreach(int value in EnemySpawnTN)
+                {
+                    if(value == count)
+                    {
+                        Enemy = Instantiate(Enemy, spawnedTile.transform);
+                        Enemy.transform.position = spawnedTile.transform.position;
+                    }
+                }
+
+                if (tileActiveList[count - 1] == true)
+                {
+                    spawnedTile.notActive();
+                    spawnedTile.GetComponent<SpriteRenderer>().color = Color.gray;
+                }
+                
                 count++;
                 if(i == 0) yield return new WaitForSeconds(0.08f);
                 x += 1.1f;
@@ -49,38 +90,37 @@ public class FightManager : MonoBehaviour
         }
     }
 
-    public void OnClickTile(GameObject obj)
+    public void PlayerMove(int tileNum)
     {
-        if (isClickPlayer)
+        GameObject obj = tileList[tileNum - 1].gameObject;
+
+        if (energy < 5) return;
+        else if (obj.GetComponent<SpriteRenderer>().color == Color.yellow)
         {
-            string position = (Player.transform.position - obj.transform.position).ToString();
-            if (Player.transform.parent == obj.transform) return;
-            else if (energy < 5) return;
-            else if (position == new Vector3(1.1f, 0).ToString() || position == new Vector3(-1.1f, 0).ToString() || position == new Vector3(0, 1.1f).ToString() || position == new Vector3(0, -1.1f).ToString())
+            if (obj.transform.childCount >= 2)
             {
-                if (obj.transform.childCount > 0)
-                {
-                    int damage = System.Convert.ToInt32(obj.transform.GetChild(0).GetChild(0).gameObject.GetComponent<Text>().text);
-                    energy -= damage;
-                    enemyCount--;
-                }
-                else energy -= 5;
+                TextMesh textMesh = obj.transform.GetChild(1).GetChild(0).GetComponent<TextMesh>();
+                int damage = System.Convert.ToInt32(textMesh.text);
+                energy -= damage;
+                enemyCount--;
 
-                if (obj.transform.childCount > 0)
-                {
-                    Player.transform.DOMove(obj.transform.position, 2.0f)
-                        .OnComplete(() => StartCoroutine(SoftGoalValueChange()))
-                        .OnComplete(() => Player.transform.SetParent(obj.transform));
-                    Destroy(obj.transform.GetChild(0).gameObject);
-                }
-                else
-                    Player.transform.DOMove(obj.transform.position, 2.0f)
-                        .OnComplete(() => Player.transform.SetParent(obj.transform));
-
-                OnClickPlayer();
-                turn--;
-                UpdateUI();
+                Player.transform.DOMove(obj.transform.position, 2.0f)
+                    .OnComplete(() => StartCoroutine(SoftGoalValueChange()))
+                    .OnComplete(() => Player.transform.SetParent(obj.transform));
+                Destroy(obj.transform.GetChild(1).gameObject);
             }
+            else
+            {
+                energy -= 5;
+                Player.transform.DOMove(obj.transform.position, 2.0f)
+                        .OnComplete(() => Player.transform.SetParent(obj.transform));
+            }
+                
+
+            OnClickPlayer();
+            csTileNum = tileNum;
+            turn--;
+            UpdateUI();
         }
     }
 
@@ -118,21 +158,21 @@ public class FightManager : MonoBehaviour
 
     public void OnClickPlayer()
     {
-        isClickPlayer = !isClickPlayer;
-        int childNum = 29;
-        if (isClickPlayer)
+        _playerClick = !_playerClick;
+
+        if (_playerClick) //플레이어 클릭시, 이동가능거리 표시
         {
-            Content.transform.GetChild(childNum - 1).gameObject.GetComponent<Image>().color = Color.yellow;
-            Content.transform.GetChild(childNum + 1).gameObject.GetComponent<Image>().color = Color.yellow;
-            Content.transform.GetChild(childNum - 8).gameObject.GetComponent<Image>().color = Color.yellow;
-            Content.transform.GetChild(childNum + 8).gameObject.GetComponent<Image>().color = Color.yellow;
+            if (csTileNum % 8 != 0) tileList[csTileNum].GetComponent<Tile>().enter(true); //우측표시
+            if ((csTileNum - 1) % 8 != 0) tileList[csTileNum - 2].GetComponent<Tile>().enter(true); //좌측표시
+            if (csTileNum <= 56) tileList[csTileNum + 7].GetComponent<Tile>().enter(true); //하단표시
+            if (csTileNum > 8) tileList[csTileNum - 9].GetComponent<Tile>().enter(true); //상단표시
         }
-        else
+        else //플레이어를 한번 더 클릭시, 이동가능거리 표시제거
         {
-            Content.transform.GetChild(childNum - 1).gameObject.GetComponent<Image>().color = Color.white;
-            Content.transform.GetChild(childNum + 1).gameObject.GetComponent<Image>().color = Color.white;
-            Content.transform.GetChild(childNum - 8).gameObject.GetComponent<Image>().color = Color.white;
-            Content.transform.GetChild(childNum + 8).gameObject.GetComponent<Image>().color = Color.white;
+            if (csTileNum % 8 != 0) tileList[csTileNum].GetComponent<Tile>().enter(false); //우측표시 제거
+            if ((csTileNum - 1) % 8 != 0) tileList[csTileNum - 2].GetComponent<Tile>().enter(false); //좌측표시 제거
+            if (csTileNum <= 56) tileList[csTileNum + 7].GetComponent<Tile>().enter(false); //하단표시 제거
+            if (csTileNum > 8) tileList[csTileNum - 9].GetComponent<Tile>().enter(false); //상단표시 제거
         }
     }
 }

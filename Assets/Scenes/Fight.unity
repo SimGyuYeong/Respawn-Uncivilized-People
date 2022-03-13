@@ -597,12 +597,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08642dba669d8ec45a88a959d1d74da6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Player: {fileID: 0}
+  Player: {fileID: 5606823143333977831, guid: 17f7354047f4e884e85b8b6444bf56f4, type: 3}
+  _playerClick: 0
+  PlayerSpawnTN: 34
   Content: {fileID: 1905756441}
+  TilePrefab: {fileID: 2317601914350064403, guid: 1d6d0f545e3055240bcab4713ac88eaf, type: 3}
+  tileActiveList: 00000000000000000000000000000000000000000000000100000000000000010000000000000101010000000001010101010000010101010101010101010101
+  tileList: []
+  csTileNum: 0
+  Enemy: {fileID: 5261302399730442904, guid: 41f1e032b3f2925449965e949233d550, type: 3}
+  EnemySpawnTN: 020000000d00000013000000
   turnText: {fileID: 1965038689}
   TileUI: {fileID: 1739071372}
   GoalUI: {fileID: 726875288}
-  TilePrefab: {fileID: 4030991814063021353, guid: 1d6d0f545e3055240bcab4713ac88eaf, type: 3}
   turn: 10
 --- !u!4 &668040824
 Transform:
@@ -1340,9 +1347,9 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -2
   m_Sprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
-  m_Color: {r: 0.4811321, g: 0.4811321, b: 0.4811321, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -1360,8 +1367,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1905756441}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.68, y: 0.11, z: 0}
-  m_LocalScale: {x: 9.31733, y: 8.40515, z: 1}
+  m_LocalPosition: {x: -3.8472, y: 0.0745, z: 0}
+  m_LocalScale: {x: 9.502745, y: 9.296096, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4
