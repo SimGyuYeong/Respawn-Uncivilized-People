@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using TMPro;
 
 public class FightManager : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class FightManager : MonoBehaviour
     public GameObject Player;
     public bool _playerClick = false;
     public int PlayerSpawnTN = 10;
+    public int MoveEnergy = 2;
 
     //타일 관련
     [SerializeField] GameObject Content;
@@ -70,8 +72,8 @@ public class FightManager : MonoBehaviour
                 {
                     if(value == count)
                     {
-                        Enemy = Instantiate(Enemy, spawnedTile.transform);
-                        Enemy.transform.position = spawnedTile.transform.position;
+                        var sEnemy = Instantiate(Enemy, spawnedTile.transform);
+                        sEnemy.transform.position = spawnedTile.transform.position;
                     }
                 }
 
@@ -90,44 +92,58 @@ public class FightManager : MonoBehaviour
         }
     }
 
+    IEnumerator DestroyTile()
+    {
+        foreach(var tile in tileList)
+        {
+            Destroy(tile);
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
     public void PlayerMove(int tileNum)
     {
         GameObject obj = tileList[tileNum - 1].gameObject;
-
-        if (energy < 5) return;
+        
+        if (energy < MoveEnergy)
+        {
+            energy--;
+            turn--;
+        }
         else if (obj.GetComponent<SpriteRenderer>().color == Color.yellow)
         {
             if (obj.transform.childCount >= 2)
             {
-                TextMesh textMesh = obj.transform.GetChild(1).GetChild(0).GetComponent<TextMesh>();
+                TextMeshProUGUI textMesh = obj.transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>();
                 int damage = System.Convert.ToInt32(textMesh.text);
-                energy -= damage;
+                energy -= damage / 2;
                 enemyCount--;
-
-                Player.transform.DOMove(obj.transform.position, 2.0f)
-                    .OnComplete(() => StartCoroutine(SoftGoalValueChange()))
-                    .OnComplete(() => Player.transform.SetParent(obj.transform));
-                Destroy(obj.transform.GetChild(1).gameObject);
+                AttackEnemy(obj.transform.GetChild(1).gameObject);
             }
             else
             {
-                energy -= 5;
-                Player.transform.DOMove(obj.transform.position, 2.0f)
+                energy -= MoveEnergy;
+                Player.transform.DOMove(obj.transform.position, 1.0f)
                         .OnComplete(() => Player.transform.SetParent(obj.transform));
             }
-                
-
-            OnClickPlayer();
-            csTileNum = tileNum;
-            turn--;
-            UpdateUI();
         }
+
+        OnClickPlayer();
+        csTileNum = tileNum;
+        turn--;
+        if (turn == 0)
+        {
+            StartCoroutine(DestroyTile());
+            Debug.Log("Stage Over");
+        }
+        UpdateUI();
     }
 
     private void UpdateUI()
     {
         turnText.text = string.Format("앞으로 {0}턴", turn);
         StartCoroutine(SoftTileValueChange());
+        StartCoroutine(SoftGoalValueChange());
     }
 
     private IEnumerator SoftTileValueChange()
@@ -174,5 +190,21 @@ public class FightManager : MonoBehaviour
             if (csTileNum <= 56) tileList[csTileNum + 7].GetComponent<Tile>().enter(false); //하단표시 제거
             if (csTileNum > 8) tileList[csTileNum - 9].GetComponent<Tile>().enter(false); //상단표시 제거
         }
+    }
+
+    private void AttackEnemy(GameObject enemy)
+    {
+        Vector3 playerP = Player.transform.position;
+        Vector3 enemyP = enemy.transform.position;
+
+        Player.transform.DOMoveX(playerP.x - 0.4f, 1.5f).
+            OnComplete(() => Player.transform.DOMoveX(playerP.x + 0.2f, 1f)
+            .OnComplete(() => Player.transform.DOMoveX(playerP.x - 0.03f, 0.5f)));
+
+        enemy.transform.DOMoveX(enemyP.x + 0.4f, 1.5f).
+            OnComplete(() => enemy.transform.DOMoveX(enemyP.x - 0.2f, 1f)
+            .OnComplete(() => enemy.transform.DOMoveX(enemyP.x + 0.03f, 0.5f).
+            OnComplete(() => enemy.transform.GetComponent<SpriteRenderer>().DOFade(0, 1f).OnComplete(() => Destroy(enemy)))));
+
     }
 }
