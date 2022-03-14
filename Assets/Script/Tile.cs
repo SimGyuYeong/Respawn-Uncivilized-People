@@ -15,11 +15,20 @@ public class Tile : MonoBehaviour
 
     public void enter(bool ck)
     {
+        SpriteRenderer color = gameObject.GetComponent<SpriteRenderer>();
         if (_active)
+        {
             if (ck)
-                gameObject.GetComponent<SpriteRenderer>().color = Color.yellow;
+            {
+                if (gameObject.transform.childCount >= 2)
+                    color.color = Color.red;
+                else
+                   color.color = Color.yellow;
+            }
+                
             else
-                gameObject.GetComponent<SpriteRenderer>().color = Color.white;
+                color.color = Color.white;
+        }
     }
 
     void OnMouseEnter()

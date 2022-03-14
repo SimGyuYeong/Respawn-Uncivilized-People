@@ -112,20 +112,17 @@ public class FightManager : MonoBehaviour
         }
         else if (obj.GetComponent<SpriteRenderer>().color == Color.yellow)
         {
-            if (obj.transform.childCount >= 2)
-            {
-                TextMeshProUGUI textMesh = obj.transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>();
-                int damage = System.Convert.ToInt32(textMesh.text);
-                energy -= damage / 2;
-                enemyCount--;
-                AttackEnemy(obj.transform.GetChild(1).gameObject);
-            }
-            else
-            {
-                energy -= MoveEnergy;
-                Player.transform.DOMove(obj.transform.position, 1.0f)
-                        .OnComplete(() => Player.transform.SetParent(obj.transform));
-            }
+            energy -= MoveEnergy;
+            Player.transform.DOMove(obj.transform.position, 1.0f)
+                    .OnComplete(() => Player.transform.SetParent(obj.transform));
+        }
+        else if (obj.GetComponent<SpriteRenderer>().color == Color.red)
+        {
+            TextMeshProUGUI textMesh = obj.transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>();
+            int damage = System.Convert.ToInt32(textMesh.text);
+            energy -= damage / 2;
+            enemyCount--;
+            AttackEnemy(obj.transform.GetChild(1).gameObject);
         }
 
         OnClickPlayer();
