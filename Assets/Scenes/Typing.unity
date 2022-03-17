@@ -10060,7 +10060,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 927b5647c1fab4f428e36408565059a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  is16v9: 0
+  is16v9: 1
   hasHz: 0
   fullscreenToggle: {fileID: 1017026549}
   resolutionDropdown: {fileID: 1751482782}
