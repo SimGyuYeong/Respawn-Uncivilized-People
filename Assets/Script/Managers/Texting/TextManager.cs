@@ -127,12 +127,12 @@ public class TextManager : MonoBehaviour
         {
             if (skip)
             {
-                textPanel.text = string.Format("{0}\n{1}", Name, Sentence[chatID][typingID, 2]);
+                textPanel.text = string.Format("{0}\n{1}", Name, Sentence[chatID][typingID, 2]);              // 텍스트 넘김.....누르면 한줄이 한번에 딱
                 skip = false;
                 break;
             }
             soundManager.TypingSound();
-            textPanel.text = string.Format("{0}\n{1}", Name, Sentence[chatID][typingID, 2].Substring(0, i));
+            textPanel.text = string.Format("{0}\n{1}", Name, Sentence[chatID][typingID, 2].Substring(0, i));  // 텍스트 출력....따따따따
             yield return new WaitForSeconds(chatSpeed);
         }
         if (!Auto) endObject.SetActive(true);
