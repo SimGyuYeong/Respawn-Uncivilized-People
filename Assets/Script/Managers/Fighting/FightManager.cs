@@ -1,207 +1,113 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using DG.Tweening;
-using TMPro;
+
+[System.Serializable]
+public class Node
+{
+    public Node(bool _isWall, int _x, int _y)
+    {
+        isWall = _isWall;
+        
+    }
+
+    // S: 시작부터 이동했던 거리, T: |가로|+|세로| 목표지점까지 거리, A: S+T
+    public bool isWall;
+    public Node ParentNode;
+
+    public int x, y, S, T;
+    public int A { get { return S + T; } }
+}
 
 public class FightManager : MonoBehaviour
 {
-    //싱글톤
-    public static FightManager Instance;
+    public Vector2Int minPos, maxPos, playerPos, enemyPos;
+    public List<Node> FinalNodeList;
 
-    //플레이어
-    public GameObject Player;
-    public bool _playerClick = false;
-    public int PlayerSpawnTN = 10;
-    public int MoveEnergy = 2;
+    int sizeX, sizeY, i;
+    Node[,] NodeArray;
+    Node StartNode, TargetNode, CurNode;
+    List<Node> OpenList, ClosedList;
 
-    //타일 관련
-    [SerializeField] GameObject Content;
-    [SerializeField] Tile TilePrefab;
-    public bool[] tileActiveList;
-    public List<GameObject> tileList = new List<GameObject>();
-    public int csTileNum = 1;
-
-    //적AI
-    [SerializeField] GameObject Enemy;
-    public int[] EnemySpawnTN;
-
-    [SerializeField] Text turnText;
-
-    [SerializeField] GameObject TileUI;
-    [SerializeField] GameObject GoalUI;
-
-    private int energy = 100;
-    private int enemyCount = 3;
-    [SerializeField] int turn = 10;
-
-    public void Awake()
+    public void PathFinding()
     {
-        Instance = this;
-    }
+        sizeX = maxPos.x - minPos.x + 1;
+        sizeY = maxPos.y - minPos.y + 1;
+        NodeArray = new Node[sizeX, sizeY];
 
-    public void Start()
-    {
-        UpdateUI();
-        StartCoroutine(spawnTile());
-    }
-
-    IEnumerator spawnTile()
-    {
-        int count = 1;
-        float y = 3.9f;
-        for (int i = 0; i < 8; i++)
+        //Node 리스트에 타일정보 입력
+        for (i = 0; i < sizeX; i++)
         {
-            float x = -7.7f;
-            for (int j = 0; j < 8; j++)
+            for (int j = 0; j < sizeY; j++)
             {
-                var spawnedTile = Instantiate(TilePrefab, new Vector3(x, y), Quaternion.identity);
-                spawnedTile.transform.parent = Content.transform;
-                spawnedTile.name = $"Tile {count}";
-                spawnedTile.tileNum = count;
-                tileList.Add(spawnedTile.gameObject);
+                bool isWall = false;
+                foreach (Collider2D colider in Physics2D.OverlapCircleAll(new Vector2(i, j), 0.4f))
+                    if (colider.gameObject.layer == LayerMask.NameToLayer("wall")) //레이어가 벽이면
+                        isWall = true; //벽 True
 
-                if (count == PlayerSpawnTN)
-                {
-                    Player = Instantiate(Player, spawnedTile.transform);
-                    Player.transform.position = spawnedTile.transform.position;
-                }
-
-                foreach(int value in EnemySpawnTN)
-                {
-                    if(value == count)
-                    {
-                        var sEnemy = Instantiate(Enemy, spawnedTile.transform);
-                        sEnemy.transform.position = spawnedTile.transform.position;
-                    }
-                }
-
-                if (tileActiveList[count - 1] == true)
-                {
-                    spawnedTile.notActive();
-                    spawnedTile.GetComponent<SpriteRenderer>().color = Color.gray;
-                }
-                
-                count++;
-                if(i == 0) yield return new WaitForSeconds(0.08f);
-                x += 1.1f;
+                NodeArray[i, j] = new Node(isWall, i, j); // 벽여부, x좌표, y좌표
             }
-            yield return new WaitForSeconds(0.08f);
-            y -= 1.1f;
+        }
+
+        // 시작 끝 노트, 리스트들 초기화
+        StartNode = NodeArray[StartNode.x, StartNode.y]; //시작노드 정보
+        TargetNode = NodeArray[TargetNode.x, TargetNode.y]; //끝노드 정보
+
+        OpenList = new List<Node>() { StartNode }; //스타트노드에서 시작하니까, 오픈리스트에 초기화
+        ClosedList = new List<Node>();
+        FinalNodeList = new List<Node>();
+
+        while(OpenList.Count > 0)
+        {
+            CurNode = OpenList[0];
+            for (i = 1; i < OpenList.Count; i++)
+                if (OpenList[i].A <= CurNode.A && OpenList[i].T < CurNode.T)
+                    CurNode = OpenList[i];
+
+            OpenList.Remove(CurNode);
+            ClosedList.Add(CurNode);
+
+            //지정한 타일로 왔을때
+            if(CurNode == TargetNode)
+            {
+                Node TargetCurNode = TargetNode;
+                //시작지점부터 목표지점까지
+                //경로 순서대로 FinalNodeList에 넣기
+                while(TargetCurNode != StartNode)
+                {
+                    FinalNodeList.Add(TargetCurNode);
+                    TargetCurNode = TargetCurNode.ParentNode;
+                }
+                FinalNodeList.Add(StartNode);
+                FinalNodeList.Reverse();
+
+                for (i = 0; i < FinalNodeList.Count; i++)
+                    Debug.Log($"{i}번째는 {FinalNodeList[i].x}, {FinalNodeList[i].y}");
+                return;
+            }
+
+            // 위 오른쪽 아래 왼쪽
+            OpenListAdd(CurNode.x, CurNode.y + 1);
+            OpenListAdd(CurNode.x + 1, CurNode.y);
+            OpenListAdd(CurNode.x, CurNode.y - 1);
+            OpenListAdd(CurNode.x - 1, CurNode.y);  
+        }
+
+    }
+
+    void OpenListAdd(int checkX, int checkY)
+    {
+        //범위안에 있고, 벽이 아니고, 닫힌 리스트에 없다면
+        if(checkX >= 0 && checkX < sizeX && checkY >= 0 && checkY < sizeY && !NodeArray[checkX, checkY].isWall && !ClosedList.Contains(NodeArray[checkX, checkY]))
+        {
+
         }
     }
 
-    IEnumerator DestroyTile()
+    private void OnDrawGizmos()
     {
-        foreach(var tile in tileList)
-        {
-            Destroy(tile);
-            yield return new WaitForSeconds(0.1f);
-        }
-    }
-
-    public void PlayerMove(int tileNum)
-    {
-        GameObject obj = tileList[tileNum - 1].gameObject;
-        
-        if (energy < MoveEnergy)
-        {
-            energy--;
-            turn--;
-        }
-        else if (obj.GetComponent<SpriteRenderer>().color == Color.yellow)
-        {
-            energy -= MoveEnergy;
-            Player.transform.DOMove(obj.transform.position, 1.0f)
-                    .OnComplete(() => Player.transform.SetParent(obj.transform));
-        }
-        else if (obj.GetComponent<SpriteRenderer>().color == Color.red)
-        {
-            TextMeshProUGUI textMesh = obj.transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>();
-            int damage = System.Convert.ToInt32(textMesh.text);
-            energy -= damage / 2;
-            enemyCount--;
-            AttackEnemy(obj.transform.GetChild(1).gameObject);
-        }
-
-        OnClickPlayer();
-        csTileNum = tileNum;
-        turn--;
-        if (turn == 0)
-        {
-            StartCoroutine(DestroyTile());
-            Debug.Log("Stage Over");
-        }
-        UpdateUI();
-    }
-
-    private void UpdateUI()
-    {
-        turnText.text = string.Format("앞으로 {0}턴", turn);
-        StartCoroutine(SoftTileValueChange());
-        StartCoroutine(SoftGoalValueChange());
-    }
-
-    private IEnumerator SoftTileValueChange()
-    {
-        int value = (int)TileUI.transform.GetChild(2).GetComponent<Slider>().value;
-        Text energyText = TileUI.transform.GetChild(1).GetComponent<Text>();
-        while (value != energy)
-        {
-            TileUI.transform.GetChild(2).GetComponent<Slider>().value--;
-            value = (int)TileUI.transform.GetChild(2).GetComponent<Slider>().value;
-            energyText.text = string.Format("{0} / 100", value);
-            yield return new WaitForSeconds(0.2f);
-        }
-    }
-
-    private IEnumerator SoftGoalValueChange()
-    {
-        float value = GoalUI.transform.GetChild(2).GetComponent<Slider>().value;
-        Text countText = GoalUI.transform.GetChild(1).GetComponent<Text>();
-        while (value != enemyCount)
-        {
-            GoalUI.transform.GetChild(2).GetComponent<Slider>().value--;
-            value = GoalUI.transform.GetChild(2).GetComponent<Slider>().value;
-            countText.text = string.Format("{0} / 3", value);
-            yield return new WaitForSeconds(0.2f);
-        }
-    }
-
-    public void OnClickPlayer()
-    {
-        _playerClick = !_playerClick;
-
-        if (_playerClick) //플레이어 클릭시, 이동가능거리 표시
-        {
-            if (csTileNum % 8 != 0) tileList[csTileNum].GetComponent<Tile>().enter(true); //우측표시
-            if ((csTileNum - 1) % 8 != 0) tileList[csTileNum - 2].GetComponent<Tile>().enter(true); //좌측표시
-            if (csTileNum <= 56) tileList[csTileNum + 7].GetComponent<Tile>().enter(true); //하단표시
-            if (csTileNum > 8) tileList[csTileNum - 9].GetComponent<Tile>().enter(true); //상단표시
-        }
-        else //플레이어를 한번 더 클릭시, 이동가능거리 표시제거
-        {
-            if (csTileNum % 8 != 0) tileList[csTileNum].GetComponent<Tile>().enter(false); //우측표시 제거
-            if ((csTileNum - 1) % 8 != 0) tileList[csTileNum - 2].GetComponent<Tile>().enter(false); //좌측표시 제거
-            if (csTileNum <= 56) tileList[csTileNum + 7].GetComponent<Tile>().enter(false); //하단표시 제거
-            if (csTileNum > 8) tileList[csTileNum - 9].GetComponent<Tile>().enter(false); //상단표시 제거
-        }
-    }
-
-    private void AttackEnemy(GameObject enemy)
-    {
-        Vector3 playerP = Player.transform.position;
-        Vector3 enemyP = enemy.transform.position;
-
-        Player.transform.DOMoveX(playerP.x - 0.4f, 1.5f).
-            OnComplete(() => Player.transform.DOMoveX(playerP.x + 0.2f, 1f)
-            .OnComplete(() => Player.transform.DOMoveX(playerP.x - 0.03f, 0.5f)));
-
-        enemy.transform.DOMoveX(enemyP.x + 0.4f, 1.5f).
-            OnComplete(() => enemy.transform.DOMoveX(enemyP.x - 0.2f, 1f)
-            .OnComplete(() => enemy.transform.DOMoveX(enemyP.x + 0.03f, 0.5f).
-            OnComplete(() => enemy.transform.GetComponent<SpriteRenderer>().DOFade(0, 1f).OnComplete(() => Destroy(enemy)))));
-
+        if (FinalNodeList.Count != 0) //게임시작전 Draw 되는거 방지
+            for (int i = 0; i < FinalNodeList.Count - 1; i++)
+                Gizmos.DrawLine(new Vector2(FinalNodeList[i].x, FinalNodeList[i].y), new Vector2(FinalNodeList[i + 1].x, FinalNodeList[i + 1].y));
     }
 }
