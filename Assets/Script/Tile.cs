@@ -56,8 +56,6 @@ public class Tile : MonoBehaviour
                 FightManager.Instance.PathFinding();
             }
         }
-            
-            
     }
 
     void OnMouseExit()

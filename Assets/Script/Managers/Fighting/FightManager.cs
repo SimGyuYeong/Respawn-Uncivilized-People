@@ -36,6 +36,7 @@ public class FightManager : MonoBehaviour
     public Tile TilePrefab;
     public GameObject moveAni;
     public bool move = false;
+    public bool[] tileActiveList;
 
     private void Awake()
     {
@@ -79,11 +80,11 @@ public class FightManager : MonoBehaviour
                 //    }
                 //}
 
-                //if (tileActiveList[count - 1] == true)
-                //{
-                //    spawnedTile.notActive();
-                //    spawnedTile.GetComponent<SpriteRenderer>().color = Color.gray;
-                //}
+                if (tileActiveList[count - 1] == true)
+                {
+                    spawnedTile.tile.isWall = true;
+                    spawnedTile.GetComponent<SpriteRenderer>().color = Color.gray;
+                }
 
                 count++;
                 if (i == 0) yield return new WaitForSeconds(0.08f);
@@ -106,9 +107,14 @@ public class FightManager : MonoBehaviour
             for (int j = 0; j < sizeY; j++)
             {
                 bool isWall = false;
-                foreach (Collider2D colider in Physics2D.OverlapCircleAll(new Vector2(i, j), 0.4f))
+                int slot = (56 + i) - j * 8; 
+                if (tileActiveList[slot] == true)
+                {
+                    isWall = true;
+                }
+                /* foreach (Collider2D colider in Physics2D.OverlapCircleAll(new Vector2(i, j), 0.4f))
                     if (colider.gameObject.layer == LayerMask.NameToLayer("wall")) //레이어가 벽이면
-                        isWall = true; //벽 True
+                        isWall = true; //벽 True */
 
                 NodeArray[i, j] = new Node(isWall, i, j); // 벽여부, x좌표, y좌표
             }
@@ -177,18 +183,6 @@ public class FightManager : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmos()
-    {
-        if (FinalNodeList.Count != 0) //게임시작전 Draw 되는거 방지
-        {
-            for (int i = 0; i < FinalNodeList.Count - 1; i++)
-            {
-                Gizmos.DrawLine(new Vector2(FinalNodeList[i].x, FinalNodeList[i].y), new Vector2(FinalNodeList[i + 1].x, FinalNodeList[i + 1].y));
-                
-            }
-        }
-    }
-
     public IEnumerator movePlayer()
     {
         int _x = 0, _Y = 0;
@@ -200,7 +194,7 @@ public class FightManager : MonoBehaviour
             _Y = FinalNodeList[i].y;
             yield return new WaitForSeconds(0.2f);
         }
-
+        
         yield return new WaitForSeconds(0.8f);
         playerPos.x = _x;
         playerPos.y = _Y;
