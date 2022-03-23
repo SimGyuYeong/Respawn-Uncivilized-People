@@ -54,6 +54,7 @@ public class Tile : MonoBehaviour
                 FightManager.Instance.targetPos.x = tile.x;
                 FightManager.Instance.targetPos.y = tile.y;
                 FightManager.Instance.PathFinding();
+                FightManager.Instance.DrawLine();
             }
         }
     }

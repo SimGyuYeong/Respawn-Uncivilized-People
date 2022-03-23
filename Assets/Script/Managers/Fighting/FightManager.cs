@@ -24,39 +24,44 @@ public class FightManager : MonoBehaviour
 {
     public static FightManager Instance;
 
-    public Vector2Int minPos, maxPos, playerPos, targetPos;
+    private int i;
+    public Vector2Int playerPos, targetPos, minPos, maxPos;
+
     public List<Node> FinalNodeList = new List<Node>();
 
-    int sizeX, sizeY, i;
+    int sizeX, sizeY;
     Node[,] NodeArray;
     Node StartNode, TargetNode, CurNode;
     List<Node> OpenList, ClosedList;
 
-    public GameObject Content;
+    public GameObject Content, Player;
     public Tile TilePrefab;
     public GameObject moveAni;
     public bool move = false;
-    public bool[] tileActiveList;
+    public bool[] isWallList;
+
+    private LineRenderer _lineRenderer;
 
     private void Awake()
     {
         Instance = this;
+        _lineRenderer = GetComponent<LineRenderer>();
     }
 
     private void Start()
     {
-        PathFinding();
         StartCoroutine(spawnTile());
+
+        _lineRenderer.startWidth = .05f;
+        _lineRenderer.endWidth = .05f;
     }
 
     IEnumerator spawnTile()
     {
         int count = 1;
-        int y = 7;
-        for (int i = 0; i < 8; i++)
+        for (int y = 7; y >= 0; y--)
         {
-            int x = 0;
-            for (int j = 0; j < 8; j++)
+            for (int x = 0; x < 8; x++)
             {
                 var spawnedTile = Instantiate(TilePrefab, new Vector3(x, y), Quaternion.identity);
                 spawnedTile.transform.parent = Content.transform;
@@ -65,11 +70,11 @@ public class FightManager : MonoBehaviour
 
                 //tileList.Add(spawnedTile.gameObject);
 
-                //if (count == PlayerSpawnTN)
-                //{
-                //    Player = Instantiate(Player, spawnedTile.transform);
-                //    Player.transform.position = spawnedTile.transform.position;
-                //}
+                if (playerPos.x == x && playerPos.y == y)
+                {
+                    Player = Instantiate(Player, spawnedTile.transform);
+                    Player.transform.position = spawnedTile.transform.position;
+                }
 
                 //foreach (int value in EnemySpawnTN)
                 //{
@@ -80,20 +85,20 @@ public class FightManager : MonoBehaviour
                 //    }
                 //}
 
-                if (tileActiveList[count - 1] == true)
+                if (isWallList[count - 1] == true)
                 {
                     spawnedTile.tile.isWall = true;
                     spawnedTile.GetComponent<SpriteRenderer>().color = Color.gray;
                 }
 
                 count++;
-                if (i == 0) yield return new WaitForSeconds(0.08f);
-                x++;
+                if (y == 7) yield return new WaitForSeconds(0.08f);
             }
             yield return new WaitForSeconds(0.08f);
-            y--;
         }
     }
+
+    
 
     public void PathFinding()
     {
@@ -107,8 +112,8 @@ public class FightManager : MonoBehaviour
             for (int j = 0; j < sizeY; j++)
             {
                 bool isWall = false;
-                int slot = (56 + i) - j * 8; 
-                if (tileActiveList[slot] == true)
+                int slot = (56 + i) - j * 8;
+                if (isWallList[slot] == true)
                 {
                     isWall = true;
                 }
@@ -128,9 +133,9 @@ public class FightManager : MonoBehaviour
         ClosedList = new List<Node>();
         FinalNodeList = new List<Node>();
 
-        while(OpenList.Count > 0)
+        while (OpenList.Count > 0)
         {
-           
+
             CurNode = OpenList[0];
             for (i = 1; i < OpenList.Count; i++)
                 if (OpenList[i].F <= CurNode.F && OpenList[i].H < CurNode.H)
@@ -140,12 +145,12 @@ public class FightManager : MonoBehaviour
             ClosedList.Add(CurNode);
 
             //지정한 타일로 왔을때
-            if(CurNode == TargetNode)
+            if (CurNode == TargetNode)
             {
                 Node TargetCurNode = TargetNode;
                 //시작지점부터 목표지점까지
                 //경로 순서대로 FinalNodeList에 넣기
-                while(TargetCurNode != StartNode)
+                while (TargetCurNode != StartNode)
                 {
                     FinalNodeList.Add(TargetCurNode);
                     TargetCurNode = TargetCurNode.ParentNode;
@@ -160,8 +165,9 @@ public class FightManager : MonoBehaviour
             OpenListAdd(CurNode.x, CurNode.y + 1);
             OpenListAdd(CurNode.x + 1, CurNode.y);
             OpenListAdd(CurNode.x, CurNode.y - 1);
-            OpenListAdd(CurNode.x - 1, CurNode.y);  
+            OpenListAdd(CurNode.x - 1, CurNode.y);
         }
+        
     }
 
     void OpenListAdd(int checkX, int checkY)
@@ -172,7 +178,7 @@ public class FightManager : MonoBehaviour
             Node NeighborNode = NodeArray[checkX, checkY];
             int MoveConst = CurNode.G + (CurNode.x - checkX == 0 || CurNode.y - checkY == 0 ? 10 : 14);
 
-            if(MoveConst < NeighborNode.G || !OpenList.Contains(NeighborNode))
+            if (MoveConst < NeighborNode.G || !OpenList.Contains(NeighborNode))
             {
                 NeighborNode.G = MoveConst;
                 NeighborNode.H = (Mathf.Abs(NeighborNode.x - TargetNode.x) + Mathf.Abs(NeighborNode.y - TargetNode.y)) * 10;
@@ -183,21 +189,38 @@ public class FightManager : MonoBehaviour
         }
     }
 
+    public void DrawLine()
+    {
+        _lineRenderer.positionCount = 0;
+        for (int i = 0; i < FinalNodeList.Count; i++)
+        {
+            Vector2 pos = new Vector2(FinalNodeList[i].x, FinalNodeList[i].y);
+            _lineRenderer.positionCount++;
+            _lineRenderer.SetPosition(i, pos);
+        }
+    }
+
     public IEnumerator movePlayer()
     {
-        int _x = 0, _Y = 0;
+        _lineRenderer.positionCount = 0;
+        Player.SetActive(false);
+
+        int _x = 0, _y = 0;
         for(int i = 0; i < FinalNodeList.Count; i++)
         {
             var obj = Instantiate(moveAni);
             obj.transform.position = new Vector2(FinalNodeList[i].x, FinalNodeList[i].y);
             _x = FinalNodeList[i].x;
-            _Y = FinalNodeList[i].y;
+            _y = FinalNodeList[i].y;
+
             yield return new WaitForSeconds(0.2f);
         }
-        
+        Player.transform.position = new Vector2(_x, _y);
+        Player.SetActive(true);
         yield return new WaitForSeconds(0.8f);
         playerPos.x = _x;
-        playerPos.y = _Y;
+        playerPos.y = _y;
         move = false;
+        
     }
 }

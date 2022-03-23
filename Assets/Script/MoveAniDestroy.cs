@@ -12,7 +12,7 @@ public class MoveAniDestroy : MonoBehaviour
 
     IEnumerator destroy()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.9f);
         Destroy(gameObject);
     }
 }
