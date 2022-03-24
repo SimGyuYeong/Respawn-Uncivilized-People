@@ -40,8 +40,10 @@ public class FightManager : MonoBehaviour
     public bool move = false;
     public bool[] isWallList;
 
+    private List<Tile> _tileList = new List<Tile>();
+
     public bool isClickPlayer = false;
-    public int distance = 4;
+    public int distance = 2;
 
     private LineRenderer _lineRenderer;
 
@@ -71,7 +73,7 @@ public class FightManager : MonoBehaviour
                 spawnedTile.name = $"Tile {count}";
                 spawnedTile.tile = new TileInform(count, x, y, false);
 
-                //tileList.Add(spawnedTile.gameObject);
+                _tileList.Add(spawnedTile);
 
                 if (playerPos.x == x && playerPos.y == y)
                 {
@@ -192,6 +194,37 @@ public class FightManager : MonoBehaviour
         }
     }
 
+    public void ShowMoveDistance(bool view)
+    {
+        Vector2 pPos = playerPos, dPos;
+        int count = 0;
+        for (int y = 7; y >= 0; y--)
+        {
+            for (int x = 0; x < 8; x++)
+            {
+                if (!isWallList[count])
+                {
+                    dPos = new Vector2(x, y);
+                    dPos -= pPos;
+                    float _distance = Mathf.Abs(dPos.x) + Mathf.Abs(dPos.y);
+                    if (_distance <= distance)
+                    {
+                        if (view)
+                        {
+                            _tileList[count].GetComponent<SpriteRenderer>().color = Color.yellow;
+                        }
+                        else
+                        {
+                            _tileList[count].GetComponent<SpriteRenderer>().color = Color.white;
+                        }
+                    }
+                    
+                }
+                count++;
+            }
+        }
+    }
+
     public void DrawLine()
     {
         _lineRenderer.positionCount = 0;
@@ -234,5 +267,6 @@ public class FightManager : MonoBehaviour
         {
             _lineRenderer.positionCount = 0;
         }
+        ShowMoveDistance(isClickPlayer);
     }
 }

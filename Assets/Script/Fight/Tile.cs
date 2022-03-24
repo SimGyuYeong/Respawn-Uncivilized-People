@@ -55,24 +55,27 @@ public class Tile : MonoBehaviour
     /// </summary>
     private void OnMouseDown()
     {
-        _highlight.SetActive(false);
-        if (transform.childCount >= 2)
+        if (!FightManager.Instance.move)
         {
-            if (transform.GetChild(1).GetComponent<SpriteRenderer>().color == FightManager.Instance.Player.GetComponent<SpriteRenderer>().color)
+            _highlight.SetActive(false);
+            if (transform.childCount >= 2)
+            {
+                if (transform.GetChild(1).GetComponent<SpriteRenderer>().color == FightManager.Instance.Player.GetComponent<SpriteRenderer>().color)
+                {
+                    FightManager.Instance.ClickPlayer();
+                    return;
+                }
+            }
+
+            if (distanceCheck(transform.position))
             {
                 FightManager.Instance.ClickPlayer();
-                return;
-            }
-        }
-
-        if (moveCheck())
-        {
-            if(distanceCheck(transform.position))
-            {
+                FightManager.Instance.Player.transform.SetParent(transform);
                 StartCoroutine(FightManager.Instance.movePlayer());
                 FightManager.Instance.move = true;
             }
         }
+            
     }
 
     /// <summary>
