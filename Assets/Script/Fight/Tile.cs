@@ -67,12 +67,15 @@ public class Tile : MonoBehaviour
                 }
             }
 
-            if (distanceCheck(transform.position))
+            if(moveCheck())
             {
-                FightManager.Instance.ClickPlayer();
-                FightManager.Instance.Player.transform.SetParent(transform);
-                StartCoroutine(FightManager.Instance.movePlayer());
-                FightManager.Instance.move = true;
+                if (distanceCheck(transform.position))
+                {
+                    FightManager.Instance.ClickPlayer();
+                    FightManager.Instance.Player.transform.SetParent(transform);
+                    StartCoroutine(FightManager.Instance.movePlayer());
+                    FightManager.Instance.move = true;
+                }
             }
         }
             
