@@ -22,62 +22,96 @@ public class Tile : MonoBehaviour
     public GameObject _highlight;
     public TileInform tile;
 
-    public void enter(bool ck)
-    {
-        if(FightManager.Instance.move == false)
-        {
-            SpriteRenderer color = gameObject.GetComponent<SpriteRenderer>();
-            if (!tile.isWall)
-            {
-                if (ck)
-                {
-                    if (gameObject.transform.childCount >= 2)
-                        color.color = Color.red;
-                    else
-                        color.color = Color.yellow;
-                }
-
-                else
-                    color.color = Color.white;
-            }
-        }
-        
-    }
-
+    /// <summary>
+    /// 마우스 커서가 위에 있을때
+    /// </summary>
     void OnMouseEnter()
     {
-        if (FightManager.Instance.move == false)
+        if (moveCheck())
         {
-            if (!tile.isWall)
+            if(distanceCheck(transform.position))
             {
                 _highlight.SetActive(true);
-                FightManager.Instance.targetPos.x = tile.x;
-                FightManager.Instance.targetPos.y = tile.y;
+                FightManager.Instance.targetPos = new Vector2Int(tile.x, tile.y);
                 FightManager.Instance.PathFinding();
                 FightManager.Instance.DrawLine();
             }
         }
     }
 
+    /// <summary>
+    /// 마우스 커서가 나갔을 때
+    /// </summary>
     void OnMouseExit()
     {
-        if (FightManager.Instance.move == false)
-        {
-            if (!tile.isWall)
-                _highlight.SetActive(false);
-        }
-            
-    }
-
-    private void OnMouseDown()
-    {
-        if (FightManager.Instance.move == false)
+        if (moveCheck())
         {
             _highlight.SetActive(false);
-            FightManager.Instance.move = true;
-            StartCoroutine(FightManager.Instance.movePlayer());
         }
-            
+    }
+
+    /// <summary>
+    /// 타일을 눌렀을 때 실행
+    /// </summary>
+    private void OnMouseDown()
+    {
+        _highlight.SetActive(false);
+        if (transform.childCount >= 2)
+        {
+            if (transform.GetChild(1).GetComponent<SpriteRenderer>().color == FightManager.Instance.Player.GetComponent<SpriteRenderer>().color)
+            {
+                FightManager.Instance.ClickPlayer();
+                return;
+            }
+        }
+
+        if (moveCheck())
+        {
+            if(distanceCheck(transform.position))
+            {
+                StartCoroutine(FightManager.Instance.movePlayer());
+                FightManager.Instance.move = true;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 플레이어가 움직일 수 있는 상태인지 체크
+    /// </summary>
+    /// <returns></returns>
+    private bool moveCheck()
+    {
+        if (FightManager.Instance.isClickPlayer)
+        {
+            if (!FightManager.Instance.move)
+            {
+                if (!tile.isWall)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// 플레이어와 tPos와의 거리체크
+    /// </summary>
+    /// <param name="tPos"></param>
+    /// <returns></returns>
+    private bool distanceCheck(Vector2 tPos)
+    {
+        Vector2 pPos = FightManager.Instance.playerPos;
+        Vector2 dPos = tPos - pPos;
+        float distance = Mathf.Abs(dPos.x) + Mathf.Abs(dPos.y);
+        if(distance <= FightManager.Instance.distance)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     //void OnMouseDown()

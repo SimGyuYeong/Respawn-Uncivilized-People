@@ -24,21 +24,24 @@ public class FightManager : MonoBehaviour
 {
     public static FightManager Instance;
 
-    private int i;
     public Vector2Int playerPos, targetPos, minPos, maxPos;
+    private int i;
 
-    public List<Node> FinalNodeList = new List<Node>();
+    private List<Node> FinalNodeList = new List<Node>();
 
-    int sizeX, sizeY;
-    Node[,] NodeArray;
-    Node StartNode, TargetNode, CurNode;
-    List<Node> OpenList, ClosedList;
+    private int sizeX, sizeY;
+    private Node[,] NodeArray;
+    private Node StartNode, TargetNode, CurNode;
+    private List<Node> OpenList, ClosedList;
 
     public GameObject Content, Player;
     public Tile TilePrefab;
     public GameObject moveAni;
     public bool move = false;
     public bool[] isWallList;
+
+    public bool isClickPlayer = false;
+    public int distance = 4;
 
     private LineRenderer _lineRenderer;
 
@@ -222,5 +225,14 @@ public class FightManager : MonoBehaviour
         playerPos.y = _y;
         move = false;
         
+    }
+
+    public void ClickPlayer()
+    {
+        isClickPlayer = !isClickPlayer;
+        if(!isClickPlayer)
+        {
+            _lineRenderer.positionCount = 0;
+        }
     }
 }
