@@ -8,16 +8,25 @@ public class CafeTextOutput : MonoBehaviour
     public CafeTextInput texts;
     [SerializeField] private Text outputText;
     string[] text;
+    bool textSkip = false;
 
-    void TextLoad()
+    private void Start()
     {
-        for (int i = 0; i < texts.CafeAlbaText.Length; i++)
+        texts = GetComponent<CafeTextInput>();
+    }
+
+    /// <summary>
+    /// 텍스트 나오게 해주는 함수
+    /// </summary>
+    public void TextLoad(int charName, int backgroundtext)
+    {
+        for (int i = 0; i < texts.CafeText.Length; i++)
         {
-            text[i] = texts.CafeAlbaText[i];
-        }
-        for (int i = 0; i < texts.MyText.Length; i++)
-        {
-            text[i] = texts.MyText[1];
+            if(textSkip)
+            {
+                outputText.text = string.Format("{0}\n{1}", texts.CharacterName[charName], texts.CafeText[backgroundtext]);
+            }
+            text[i] = texts.CafeText[i];
         }
     }
 
