@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [System.Serializable]
 public class Node
@@ -49,8 +50,17 @@ public class FightManager : MonoBehaviour
 
     private List<Tile> _tileList = new List<Tile>();
 
+    [SerializeField] Text turnText;
+
+    [SerializeField] GameObject TileUI;
+    [SerializeField] GameObject GoalUI;
+
+    private int energy = 100;
+    private int enemyCount = 3;
+    [SerializeField] int turn = 10;
+
     public bool isClickPlayer = false;
-    public int distance = 2;
+    public int distance = 4;
 
     public LineRenderer _lineRenderer;
 
@@ -128,6 +138,13 @@ public class FightManager : MonoBehaviour
                 if (isWallList[slot] == true)
                 {
                     isWall = true;
+                }
+                foreach(Vector2 pos in enemyPos)
+                {
+                    if(pos == new Vector2(i, j))
+                    {
+                        isWall = true;
+                    }
                 }
                 /* foreach (Collider2D colider in Physics2D.OverlapCircleAll(new Vector2(i, j), 0.4f))
                     if (colider.gameObject.layer == LayerMask.NameToLayer("wall")) //레이어가 벽이면
@@ -247,6 +264,8 @@ public class FightManager : MonoBehaviour
 
     public void DrawLine()
     {
+        _lineRenderer.startColor = Color.white;
+        _lineRenderer.endColor = Color.white;
         _lineRenderer.positionCount = 0;
         for (int i = 0; i < FinalNodeList.Count; i++)
         {
@@ -259,6 +278,8 @@ public class FightManager : MonoBehaviour
     public void EnemyDraw()
     {
         _lineRenderer.positionCount = 2;
+        _lineRenderer.startColor = Color.red;
+        _lineRenderer.endColor = Color.red;
         _lineRenderer.SetPosition(0, new Vector3(playerPos.x, playerPos.y, 0));
         _lineRenderer.SetPosition(1, new Vector3(targetPos.x, targetPos.y, 0));
     }
@@ -279,7 +300,7 @@ public class FightManager : MonoBehaviour
             obj.transform.position = new Vector2(FinalNodeList[i].x, FinalNodeList[i].y);
             _x = FinalNodeList[i].x;
             _y = FinalNodeList[i].y;
-
+            energy -= 2;
             yield return new WaitForSeconds(0.2f);
         }
         Player.transform.position = new Vector2(_x, _y);
@@ -288,7 +309,8 @@ public class FightManager : MonoBehaviour
         playerPos.x = _x;
         playerPos.y = _y;
         move = false;
-        
+        turn--;
+        UpdateUI();
     }
 
     /// <summary>
@@ -302,5 +324,38 @@ public class FightManager : MonoBehaviour
             _lineRenderer.positionCount = 0;
         }
         ShowMoveDistance(isClickPlayer);
+    }
+
+    private void UpdateUI()
+    {
+        turnText.text = string.Format("앞으로 {0}턴", turn);
+        StartCoroutine(SoftTileValueChange());
+        StartCoroutine(SoftGoalValueChange());
+    }
+
+    private IEnumerator SoftTileValueChange()
+    {
+        int value = (int)TileUI.transform.GetChild(2).GetComponent<Slider>().value;
+        Text energyText = TileUI.transform.GetChild(1).GetComponent<Text>();
+        while (value != energy)
+        {
+            TileUI.transform.GetChild(2).GetComponent<Slider>().value--;
+            value = (int)TileUI.transform.GetChild(2).GetComponent<Slider>().value;
+            energyText.text = string.Format("{0} / 100", value);
+            yield return new WaitForSeconds(0.2f);
+        }
+    }
+
+    private IEnumerator SoftGoalValueChange()
+    {
+        float value = GoalUI.transform.GetChild(2).GetComponent<Slider>().value;
+        Text countText = GoalUI.transform.GetChild(1).GetComponent<Text>();
+        while (value != enemyCount)
+        {
+            GoalUI.transform.GetChild(2).GetComponent<Slider>().value--;
+            value = GoalUI.transform.GetChild(2).GetComponent<Slider>().value;
+            countText.text = string.Format("{0} / 3", value);
+            yield return new WaitForSeconds(0.2f);
+        }
     }
 }
