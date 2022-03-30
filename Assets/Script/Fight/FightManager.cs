@@ -78,7 +78,7 @@ public class FightManager : MonoBehaviour
                 var spawnedTile = Instantiate(TilePrefab, new Vector3(x, y), Quaternion.identity);
                 spawnedTile.transform.parent = Content.transform;
                 spawnedTile.name = $"Tile {count}";
-                spawnedTile.tile = new TileInform(count, x, y, false);
+                spawnedTile.tile = new TileInform(count, x, y, false, false);
 
                 _tileList.Add(spawnedTile);
 
@@ -94,6 +94,7 @@ public class FightManager : MonoBehaviour
                     {
                         var enemy = Instantiate(Enemy, spawnedTile.transform);
                         enemy.transform.position = spawnedTile.transform.position;
+                        spawnedTile.tile.isEnemy = true;
                     }
                 }
 
@@ -203,8 +204,6 @@ public class FightManager : MonoBehaviour
 
     public void ShowMoveDistance(bool view)
     {
-        List<Vector2Int> _enemyPosList = enemyPos;
-
         int count = 0;
 
         for (int y = 7; y >= 0; y--)
@@ -218,17 +217,7 @@ public class FightManager : MonoBehaviour
                         SpriteRenderer _spriteRenderer = _tileList[count].GetComponent<SpriteRenderer>();
                         if (view)
                         {
-                            bool enemy = false;
-                            foreach(Vector2Int vec in _enemyPosList)
-                            {
-                                if (vec == new Vector2Int(x, y))
-                                {
-                                    enemy = true;
-                                    _enemyPosList.Remove(vec);
-                                }
-                            }
-
-                            if (enemy)
+                            if(_tileList[count].tile.isEnemy)
                                 _spriteRenderer.color = Color.red;
                             else
                                 _spriteRenderer.color = Color.yellow;
@@ -265,6 +254,13 @@ public class FightManager : MonoBehaviour
             _lineRenderer.positionCount++;
             _lineRenderer.SetPosition(i, pos);
         }
+    }
+
+    public void EnemyDraw()
+    {
+        _lineRenderer.positionCount = 2;
+        _lineRenderer.SetPosition(0, new Vector3(playerPos.x, playerPos.y, 0));
+        _lineRenderer.SetPosition(1, new Vector3(targetPos.x, targetPos.y, 0));
     }
 
     /// <summary>

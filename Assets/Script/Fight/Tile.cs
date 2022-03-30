@@ -15,7 +15,10 @@ public class Tile : MonoBehaviour
         if (moveCheck())
         {
             _highlight.SetActive(true);
-            FightManager.Instance.DrawLine();
+            if (tile.isEnemy)
+                FightManager.Instance.EnemyDraw();
+            else
+                FightManager.Instance.DrawLine();
         }
         else
             FightManager.Instance._lineRenderer.positionCount = 0;
