@@ -607,7 +607,7 @@ MonoBehaviour:
   TilePrefab: {fileID: 2317601914350064403, guid: 1d6d0f545e3055240bcab4713ac88eaf, type: 3}
   moveAni: {fileID: 4460019810026274728, guid: 94cd5b94ebda27547838fdb3e82373ac, type: 3}
   move: 0
-  isWallList: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001010000000001010100000000010101
+  isWallList: 00000000000000000000000000000000000000000000000100000000000000010000000000000101010000000001010101010000010101010101010101010101
   isClickPlayer: 0
   distance: 4
 --- !u!4 &668040824
@@ -664,17 +664,7 @@ LineRenderer:
   m_SortingLayerID: 1358221797
   m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Positions:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 1}
-  - {x: 0, y: 0, z: 1}
-  - {x: 0, y: 0, z: 1}
-  - {x: 0, y: 0, z: 1}
-  - {x: 0, y: 0, z: 1}
-  - {x: 0, y: 0, z: 1}
-  - {x: 0, y: 0, z: 1}
-  - {x: 0, y: 0, z: 1}
-  - {x: 0, y: 0, z: 1}
+  m_Positions: []
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1

@@ -2,21 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class TileInform
-{
-    public TileInform(int _num, int _x, int _y, bool _wall)
-    {
-        tileNum = _num;
-        x = _x;
-        y = _y;
-        isWall = _wall;
-    }
-
-    public int tileNum, x, y;
-    public bool isWall;
-}
-
 public class Tile : MonoBehaviour
 {
     public GameObject _highlight;
@@ -29,14 +14,11 @@ public class Tile : MonoBehaviour
     {
         if (moveCheck())
         {
-            if(distanceCheck(transform.position))
-            {
-                _highlight.SetActive(true);
-                FightManager.Instance.targetPos = new Vector2Int(tile.x, tile.y);
-                FightManager.Instance.PathFinding();
-                FightManager.Instance.DrawLine();
-            }
+            _highlight.SetActive(true);
+            FightManager.Instance.DrawLine();
         }
+        else
+            FightManager.Instance._lineRenderer.positionCount = 0;
     }
 
     /// <summary>
@@ -45,9 +27,7 @@ public class Tile : MonoBehaviour
     void OnMouseExit()
     {
         if (moveCheck())
-        {
             _highlight.SetActive(false);
-        }
     }
 
     /// <summary>
@@ -60,7 +40,7 @@ public class Tile : MonoBehaviour
             _highlight.SetActive(false);
             if (transform.childCount >= 2)
             {
-                if (transform.GetChild(1).GetComponent<SpriteRenderer>().color == FightManager.Instance.Player.GetComponent<SpriteRenderer>().color)
+                if (tile.Position == FightManager.Instance.playerPos)
                 {
                     FightManager.Instance.ClickPlayer();
                     return;
@@ -69,9 +49,11 @@ public class Tile : MonoBehaviour
 
             if(moveCheck())
             {
-                if (distanceCheck(transform.position))
+                if (FightManager.Instance.DistanceCheck(tile.Position))
                 {
                     FightManager.Instance.ClickPlayer();
+                    FightManager.Instance.targetPos = tile.Position;
+                    FightManager.Instance.PathFinding();
                     FightManager.Instance.Player.transform.SetParent(transform);
                     StartCoroutine(FightManager.Instance.movePlayer());
                     FightManager.Instance.move = true;
@@ -93,31 +75,12 @@ public class Tile : MonoBehaviour
             {
                 if (!tile.isWall)
                 {
-                    return true;
+                    if(FightManager.Instance.DistanceCheck(tile.Position))
+                        return true;
                 }
             }
         }
         return false;
-    }
-
-    /// <summary>
-    /// 플레이어와 tPos와의 거리체크
-    /// </summary>
-    /// <param name="tPos"></param>
-    /// <returns></returns>
-    private bool distanceCheck(Vector2 tPos)
-    {
-        Vector2 pPos = FightManager.Instance.playerPos;
-        Vector2 dPos = tPos - pPos;
-        float distance = Mathf.Abs(dPos.x) + Mathf.Abs(dPos.y);
-        if(distance <= FightManager.Instance.distance)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
     }
 
     //void OnMouseDown()

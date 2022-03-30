@@ -24,7 +24,11 @@ public class FightManager : MonoBehaviour
 {
     public static FightManager Instance;
 
-    public Vector2Int playerPos, targetPos, minPos, maxPos;
+    #region A* 알고리즘
+    [Range(0f, 7f)]
+    public Vector2Int playerPos, targetPos;
+     
+    public Vector2Int minPos, maxPos;
     private int i;
 
     private List<Node> FinalNodeList = new List<Node>();
@@ -33,8 +37,11 @@ public class FightManager : MonoBehaviour
     private Node[,] NodeArray;
     private Node StartNode, TargetNode, CurNode;
     private List<Node> OpenList, ClosedList;
+    #endregion
 
-    public GameObject Content, Player;
+    public List<Vector2Int> enemyPos = new List<Vector2Int>();
+
+    public GameObject Content, Player, Enemy;
     public Tile TilePrefab;
     public GameObject moveAni;
     public bool move = false;
@@ -45,7 +52,7 @@ public class FightManager : MonoBehaviour
     public bool isClickPlayer = false;
     public int distance = 2;
 
-    private LineRenderer _lineRenderer;
+    public LineRenderer _lineRenderer;
 
     private void Awake()
     {
@@ -81,14 +88,14 @@ public class FightManager : MonoBehaviour
                     Player.transform.position = spawnedTile.transform.position;
                 }
 
-                //foreach (int value in EnemySpawnTN)
-                //{
-                //    if (value == count)
-                //    {
-                //        var sEnemy = Instantiate(Enemy, spawnedTile.transform);
-                //        sEnemy.transform.position = spawnedTile.transform.position;
-                //    }
-                //}
+                foreach(Vector2Int pos in enemyPos)
+                {
+                    if(pos == new Vector2Int(x, y))
+                    {
+                        var enemy = Instantiate(Enemy, spawnedTile.transform);
+                        enemy.transform.position = spawnedTile.transform.position;
+                    }
+                }
 
                 if (isWallList[count - 1] == true)
                 {
@@ -103,8 +110,7 @@ public class FightManager : MonoBehaviour
         }
     }
 
-    
-
+    #region A* 알고리즘
     public void PathFinding()
     {
         sizeX = maxPos.x - minPos.x + 1;
@@ -193,36 +199,61 @@ public class FightManager : MonoBehaviour
             }
         }
     }
+    #endregion
 
     public void ShowMoveDistance(bool view)
     {
-        Vector2 pPos = playerPos, dPos;
+        List<Vector2Int> _enemyPosList = enemyPos;
+
         int count = 0;
+
         for (int y = 7; y >= 0; y--)
         {
             for (int x = 0; x < 8; x++)
             {
                 if (!isWallList[count])
                 {
-                    dPos = new Vector2(x, y);
-                    dPos -= pPos;
-                    float _distance = Mathf.Abs(dPos.x) + Mathf.Abs(dPos.y);
-                    if (_distance <= distance)
+                    if (DistanceCheck(new Vector2(x, y)))
                     {
+                        SpriteRenderer _spriteRenderer = _tileList[count].GetComponent<SpriteRenderer>();
                         if (view)
                         {
-                            _tileList[count].GetComponent<SpriteRenderer>().color = Color.yellow;
+                            bool enemy = false;
+                            foreach(Vector2Int vec in _enemyPosList)
+                            {
+                                if (vec == new Vector2Int(x, y))
+                                {
+                                    enemy = true;
+                                    _enemyPosList.Remove(vec);
+                                }
+                            }
+
+                            if (enemy)
+                                _spriteRenderer.color = Color.red;
+                            else
+                                _spriteRenderer.color = Color.yellow;
                         }
+                            
                         else
-                        {
-                            _tileList[count].GetComponent<SpriteRenderer>().color = Color.white;
-                        }
+                            _spriteRenderer.color = Color.white;
                     }
-                    
                 }
                 count++;
             }
         }
+    }
+
+    /// <summary>
+    /// 이동가능 거리체크
+    /// </summary>
+    /// <param name="pos"></param>
+    /// <returns></returns>
+    public bool DistanceCheck(Vector2 pos)
+    {
+        targetPos = new Vector2Int((int)pos.x, (int)pos.y);
+        PathFinding();
+        if (FinalNodeList.Count <= distance+1) return true;
+        else return false;
     }
 
     public void DrawLine()
@@ -236,6 +267,10 @@ public class FightManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 플레이어 이동 코루틴
+    /// </summary>
+    /// <returns></returns>
     public IEnumerator movePlayer()
     {
         _lineRenderer.positionCount = 0;
@@ -260,6 +295,9 @@ public class FightManager : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// 플레이어를 클릭했을 때
+    /// </summary>
     public void ClickPlayer()
     {
         isClickPlayer = !isClickPlayer;
