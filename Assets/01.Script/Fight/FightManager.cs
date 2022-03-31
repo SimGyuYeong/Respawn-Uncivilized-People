@@ -42,13 +42,15 @@ public class FightManager : MonoBehaviour
 
     public List<Vector2Int> enemyPos = new List<Vector2Int>();
 
-    public GameObject Content, Player, Enemy;
+    public GameObject Content, Player;
     public Tile TilePrefab;
+    public AI Enemy;
     public GameObject moveAni;
     public bool move = false;
     public bool[] isWallList;
 
     private List<Tile> _tileList = new List<Tile>();
+    private List<AI> _aiList = new List<AI>();
 
     [SerializeField] Text turnText;
 
@@ -80,12 +82,12 @@ public class FightManager : MonoBehaviour
 
     IEnumerator spawnTile()
     {
-        int count = 1;
+        int count = 1, aiCount = 1;
         for (int y = 7; y >= 0; y--)
         {
             for (int x = 0; x < 8; x++)
             {
-                var spawnedTile = Instantiate(TilePrefab, new Vector3(x, y), Quaternion.identity);
+                var spawnedTile = Instantiate(TilePrefab, new Vector3(x, y, 0), Quaternion.identity);
                 spawnedTile.transform.parent = Content.transform;
                 spawnedTile.name = $"Tile {count}";
                 spawnedTile.tile = new TileInform(count, x, y, false, false);
@@ -105,6 +107,9 @@ public class FightManager : MonoBehaviour
                         var enemy = Instantiate(Enemy, spawnedTile.transform);
                         enemy.transform.position = spawnedTile.transform.position;
                         spawnedTile.tile.isEnemy = true;
+                        enemy.ai = new AIInform(aiCount, x, y, 45);
+                        _aiList.Add(enemy);
+                        aiCount++;
                     }
                 }
 
@@ -308,8 +313,6 @@ public class FightManager : MonoBehaviour
         yield return new WaitForSeconds(0.8f);
         playerPos.x = _x;
         playerPos.y = _y;
-        move = false;
-        turn--;
         UpdateUI();
     }
 
