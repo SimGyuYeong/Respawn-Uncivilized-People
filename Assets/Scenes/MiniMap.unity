@@ -635,8 +635,9 @@ GameObject:
   - component: {fileID: 316006277}
   - component: {fileID: 316006278}
   - component: {fileID: 316006279}
+  - component: {fileID: 316006280}
   m_Layer: 0
-  m_Name: "\uBC31\uD654\uC810"
+  m_Name: DepartmentStore
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -722,6 +723,19 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: 1, y: -1}
   m_UseGraphicAlpha: 1
+--- !u!114 &316006280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 316006276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12a17efeba4f3c840bb9e1d9e88845d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BTNtypeManager: 1
 --- !u!224 &323624739 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 49780291490172336, guid: bb53fe61630a4784ab6320bed3d4ec86, type: 3}
@@ -1031,8 +1045,9 @@ GameObject:
   - component: {fileID: 392938830}
   - component: {fileID: 392938828}
   - component: {fileID: 392938831}
+  - component: {fileID: 392938832}
   m_Layer: 0
-  m_Name: "\uCE74\uD398"
+  m_Name: Cafe
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1166,6 +1181,19 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: 0.1, y: -0.1}
   m_UseGraphicAlpha: 1
+--- !u!114 &392938832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 392938826}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12a17efeba4f3c840bb9e1d9e88845d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BTNtypeManager: 0
 --- !u!224 &394611062 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 49780291490172336, guid: bb53fe61630a4784ab6320bed3d4ec86, type: 3}
@@ -3200,6 +3228,7 @@ MonoBehaviour:
   storeColor: {fileID: 944880151}
   gay: {fileID: 221510305}
   textPanel: {fileID: 404166061}
+  BTNtypeManager: 0
 --- !u!4 &1180294900
 Transform:
   m_ObjectHideFlags: 0
@@ -3934,8 +3963,9 @@ GameObject:
   - component: {fileID: 1745783341}
   - component: {fileID: 1745783342}
   - component: {fileID: 1745783344}
+  - component: {fileID: 1745783343}
   m_Layer: 0
-  m_Name: "\uB808\uC2A4\uD1A0\uB791"
+  m_Name: Restaurant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4021,6 +4051,19 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: 1, y: -1}
   m_UseGraphicAlpha: 1
+--- !u!114 &1745783343
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1745783339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12a17efeba4f3c840bb9e1d9e88845d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BTNtypeManager: 2
 --- !u!114 &1745783344
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4206,8 +4249,9 @@ GameObject:
   - component: {fileID: 2011875810}
   - component: {fileID: 2011875809}
   - component: {fileID: 2011875812}
+  - component: {fileID: 2011875813}
   m_Layer: 0
-  m_Name: "\uACF5\uC6D0"
+  m_Name: Park
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4329,6 +4373,19 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: 0.05, y: -0.05}
   m_UseGraphicAlpha: 1
+--- !u!114 &2011875813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2011875807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12a17efeba4f3c840bb9e1d9e88845d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BTNtypeManager: 3
 --- !u!224 &2026957523 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 49780291490172336, guid: bb53fe61630a4784ab6320bed3d4ec86, type: 3}

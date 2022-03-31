@@ -6,7 +6,8 @@ using UnityEngine;
 public class CafeTextInput : ScriptableObject
 {
     [SerializeField]
-    public string[] CafeAlbaText;
+    public string[] CharacterName;  //누가 대사를 치는 것인가..이름
     [SerializeField]
-    public string[] MyText;  
+    public string[] CafeText;  //어디서 무슨 대사를 치는 것인가... 대사
+    
 }

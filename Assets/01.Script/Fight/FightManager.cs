@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [System.Serializable]
 public class Node
@@ -24,7 +25,11 @@ public class FightManager : MonoBehaviour
 {
     public static FightManager Instance;
 
-    public Vector2Int playerPos, targetPos, minPos, maxPos;
+    #region A* 알고리즘
+    [Range(0f, 7f)]
+    public Vector2Int playerPos, targetPos;
+     
+    public Vector2Int minPos, maxPos;
     private int i;
 
     private List<Node> FinalNodeList = new List<Node>();
@@ -33,19 +38,33 @@ public class FightManager : MonoBehaviour
     private Node[,] NodeArray;
     private Node StartNode, TargetNode, CurNode;
     private List<Node> OpenList, ClosedList;
+    #endregion
+
+    public List<Vector2Int> enemyPos = new List<Vector2Int>();
 
     public GameObject Content, Player;
     public Tile TilePrefab;
+    public AI Enemy;
     public GameObject moveAni;
     public bool move = false;
     public bool[] isWallList;
 
     private List<Tile> _tileList = new List<Tile>();
+    private List<AI> _aiList = new List<AI>();
+
+    [SerializeField] Text turnText;
+
+    [SerializeField] GameObject TileUI;
+    [SerializeField] GameObject GoalUI;
+
+    private int energy = 100;
+    private int enemyCount = 3;
+    [SerializeField] int turn = 10;
 
     public bool isClickPlayer = false;
-    public int distance = 2;
+    public int distance = 4;
 
-    private LineRenderer _lineRenderer;
+    public LineRenderer _lineRenderer;
 
     private void Awake()
     {
@@ -63,15 +82,15 @@ public class FightManager : MonoBehaviour
 
     IEnumerator spawnTile()
     {
-        int count = 1;
+        int count = 1, aiCount = 1;
         for (int y = 7; y >= 0; y--)
         {
             for (int x = 0; x < 8; x++)
             {
-                var spawnedTile = Instantiate(TilePrefab, new Vector3(x, y), Quaternion.identity);
+                var spawnedTile = Instantiate(TilePrefab, new Vector3(x, y, 0), Quaternion.identity);
                 spawnedTile.transform.parent = Content.transform;
                 spawnedTile.name = $"Tile {count}";
-                spawnedTile.tile = new TileInform(count, x, y, false);
+                spawnedTile.tile = new TileInform(count, x, y, false, false);
 
                 _tileList.Add(spawnedTile);
 
@@ -81,14 +100,18 @@ public class FightManager : MonoBehaviour
                     Player.transform.position = spawnedTile.transform.position;
                 }
 
-                //foreach (int value in EnemySpawnTN)
-                //{
-                //    if (value == count)
-                //    {
-                //        var sEnemy = Instantiate(Enemy, spawnedTile.transform);
-                //        sEnemy.transform.position = spawnedTile.transform.position;
-                //    }
-                //}
+                foreach(Vector2Int pos in enemyPos)
+                {
+                    if(pos == new Vector2Int(x, y))
+                    {
+                        var enemy = Instantiate(Enemy, spawnedTile.transform);
+                        enemy.transform.position = spawnedTile.transform.position;
+                        spawnedTile.tile.isEnemy = true;
+                        enemy.ai = new AIInform(aiCount, x, y, 45);
+                        _aiList.Add(enemy);
+                        aiCount++;
+                    }
+                }
 
                 if (isWallList[count - 1] == true)
                 {
@@ -103,8 +126,7 @@ public class FightManager : MonoBehaviour
         }
     }
 
-    
-
+    #region A* 알고리즘
     public void PathFinding()
     {
         sizeX = maxPos.x - minPos.x + 1;
@@ -121,6 +143,13 @@ public class FightManager : MonoBehaviour
                 if (isWallList[slot] == true)
                 {
                     isWall = true;
+                }
+                foreach(Vector2 pos in enemyPos)
+                {
+                    if(pos == new Vector2(i, j))
+                    {
+                        isWall = true;
+                    }
                 }
                 /* foreach (Collider2D colider in Physics2D.OverlapCircleAll(new Vector2(i, j), 0.4f))
                     if (colider.gameObject.layer == LayerMask.NameToLayer("wall")) //레이어가 벽이면
@@ -193,40 +222,55 @@ public class FightManager : MonoBehaviour
             }
         }
     }
+    #endregion
 
     public void ShowMoveDistance(bool view)
     {
-        Vector2 pPos = playerPos, dPos;
         int count = 0;
+
         for (int y = 7; y >= 0; y--)
         {
             for (int x = 0; x < 8; x++)
             {
                 if (!isWallList[count])
                 {
-                    dPos = new Vector2(x, y);
-                    dPos -= pPos;
-                    float _distance = Mathf.Abs(dPos.x) + Mathf.Abs(dPos.y);
-                    if (_distance <= distance)
+                    if (DistanceCheck(new Vector2(x, y)))
                     {
+                        SpriteRenderer _spriteRenderer = _tileList[count].GetComponent<SpriteRenderer>();
                         if (view)
                         {
-                            _tileList[count].GetComponent<SpriteRenderer>().color = Color.yellow;
+                            if(_tileList[count].tile.isEnemy)
+                                _spriteRenderer.color = Color.red;
+                            else
+                                _spriteRenderer.color = Color.yellow;
                         }
+                            
                         else
-                        {
-                            _tileList[count].GetComponent<SpriteRenderer>().color = Color.white;
-                        }
+                            _spriteRenderer.color = Color.white;
                     }
-                    
                 }
                 count++;
             }
         }
     }
 
+    /// <summary>
+    /// 이동가능 거리체크
+    /// </summary>
+    /// <param name="pos"></param>
+    /// <returns></returns>
+    public bool DistanceCheck(Vector2 pos)
+    {
+        targetPos = new Vector2Int((int)pos.x, (int)pos.y);
+        PathFinding();
+        if (FinalNodeList.Count <= distance+1) return true;
+        else return false;
+    }
+
     public void DrawLine()
     {
+        _lineRenderer.startColor = Color.white;
+        _lineRenderer.endColor = Color.white;
         _lineRenderer.positionCount = 0;
         for (int i = 0; i < FinalNodeList.Count; i++)
         {
@@ -236,6 +280,19 @@ public class FightManager : MonoBehaviour
         }
     }
 
+    public void EnemyDraw()
+    {
+        _lineRenderer.positionCount = 2;
+        _lineRenderer.startColor = Color.red;
+        _lineRenderer.endColor = Color.red;
+        _lineRenderer.SetPosition(0, new Vector3(playerPos.x, playerPos.y, 0));
+        _lineRenderer.SetPosition(1, new Vector3(targetPos.x, targetPos.y, 0));
+    }
+
+    /// <summary>
+    /// 플레이어 이동 코루틴
+    /// </summary>
+    /// <returns></returns>
     public IEnumerator movePlayer()
     {
         _lineRenderer.positionCount = 0;
@@ -248,7 +305,7 @@ public class FightManager : MonoBehaviour
             obj.transform.position = new Vector2(FinalNodeList[i].x, FinalNodeList[i].y);
             _x = FinalNodeList[i].x;
             _y = FinalNodeList[i].y;
-
+            energy -= 2;
             yield return new WaitForSeconds(0.2f);
         }
         Player.transform.position = new Vector2(_x, _y);
@@ -256,10 +313,12 @@ public class FightManager : MonoBehaviour
         yield return new WaitForSeconds(0.8f);
         playerPos.x = _x;
         playerPos.y = _y;
-        move = false;
-        
+        UpdateUI();
     }
 
+    /// <summary>
+    /// 플레이어를 클릭했을 때
+    /// </summary>
     public void ClickPlayer()
     {
         isClickPlayer = !isClickPlayer;
@@ -268,5 +327,38 @@ public class FightManager : MonoBehaviour
             _lineRenderer.positionCount = 0;
         }
         ShowMoveDistance(isClickPlayer);
+    }
+
+    private void UpdateUI()
+    {
+        turnText.text = string.Format("앞으로 {0}턴", turn);
+        StartCoroutine(SoftTileValueChange());
+        StartCoroutine(SoftGoalValueChange());
+    }
+
+    private IEnumerator SoftTileValueChange()
+    {
+        int value = (int)TileUI.transform.GetChild(2).GetComponent<Slider>().value;
+        Text energyText = TileUI.transform.GetChild(1).GetComponent<Text>();
+        while (value != energy)
+        {
+            TileUI.transform.GetChild(2).GetComponent<Slider>().value--;
+            value = (int)TileUI.transform.GetChild(2).GetComponent<Slider>().value;
+            energyText.text = string.Format("{0} / 100", value);
+            yield return new WaitForSeconds(0.2f);
+        }
+    }
+
+    private IEnumerator SoftGoalValueChange()
+    {
+        float value = GoalUI.transform.GetChild(2).GetComponent<Slider>().value;
+        Text countText = GoalUI.transform.GetChild(1).GetComponent<Text>();
+        while (value != enemyCount)
+        {
+            GoalUI.transform.GetChild(2).GetComponent<Slider>().value--;
+            value = GoalUI.transform.GetChild(2).GetComponent<Slider>().value;
+            countText.text = string.Format("{0} / 3", value);
+            yield return new WaitForSeconds(0.2f);
+        }
     }
 }

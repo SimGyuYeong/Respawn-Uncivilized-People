@@ -602,14 +602,24 @@ MonoBehaviour:
   targetPos: {x: 2, y: 5}
   minPos: {x: 0, y: 0}
   maxPos: {x: 7, y: 7}
+  enemyPos:
+  - {x: 1, y: 7}
+  - {x: 2, y: 5}
+  - {x: 4, y: 6}
   Content: {fileID: 1718551215}
   Player: {fileID: 5606823143333977831, guid: 17f7354047f4e884e85b8b6444bf56f4, type: 3}
+  Enemy: {fileID: 5261302399730442904, guid: 41f1e032b3f2925449965e949233d550, type: 3}
   TilePrefab: {fileID: 2317601914350064403, guid: 1d6d0f545e3055240bcab4713ac88eaf, type: 3}
   moveAni: {fileID: 4460019810026274728, guid: 94cd5b94ebda27547838fdb3e82373ac, type: 3}
   move: 0
-  isWallList: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001010000000001010100000000010101
+  isWallList: 00000000000000000000000000000000000000000000000100000000000000010000000000000101010000000001010101010000010101010101010101010101
+  turnText: {fileID: 1965038689}
+  TileUI: {fileID: 1739071372}
+  GoalUI: {fileID: 726875288}
+  turn: 10
   isClickPlayer: 0
   distance: 4
+  _lineRenderer: {fileID: 0}
 --- !u!4 &668040824
 Transform:
   m_ObjectHideFlags: 0
@@ -664,17 +674,7 @@ LineRenderer:
   m_SortingLayerID: 1358221797
   m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Positions:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 1}
-  - {x: 0, y: 0, z: 1}
-  - {x: 0, y: 0, z: 1}
-  - {x: 0, y: 0, z: 1}
-  - {x: 0, y: 0, z: 1}
-  - {x: 0, y: 0, z: 1}
-  - {x: 0, y: 0, z: 1}
-  - {x: 0, y: 0, z: 1}
-  - {x: 0, y: 0, z: 1}
+  m_Positions: []
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -958,7 +958,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
-  m_SortingLayerID: 0
+  m_SortingLayerID: 1358221797
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!224 &976441772
@@ -976,6 +976,7 @@ RectTransform:
   - {fileID: 1739071373}
   - {fileID: 726875289}
   - {fileID: 1104973891}
+  - {fileID: 1718551216}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1274,10 +1275,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1718551215}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.4133751, y: 2.4330044, z: 42.52393}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 976441772}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1733617723
