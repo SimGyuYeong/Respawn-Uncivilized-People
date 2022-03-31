@@ -14,7 +14,7 @@ public class CafeStore : MonoBehaviour
     float textalpha = 0;
     public static bool textbool = false;
     CafeTextOutput cafeTextOutput;
-    public MinimapButtonType BTNtypeManager;
+    private MinimapButtonType BTNtypeManager;
 
     int namecode = 0;
     int textcode = 0;
@@ -44,6 +44,27 @@ public class CafeStore : MonoBehaviour
         }
     }
 
+    public void SetCafeEnum()
+    {
+        BTNtypeManager = MinimapButtonType.CAFE;
+        storebutton();
+    }
+    public void SetDepartmentEnum()
+    {
+        BTNtypeManager = MinimapButtonType.DEPARTMENTSTORE;
+        storebutton();
+    }
+    public void SetRestarantEnum()
+    {
+        BTNtypeManager = MinimapButtonType.RESTARANT;
+        storebutton();
+    }
+    public void SetParkEnum()
+    {
+        BTNtypeManager = MinimapButtonType.PARK;
+        storebutton();
+    }
+
     public void storebutton()
     {
         switch(BTNtypeManager)
@@ -56,7 +77,7 @@ public class CafeStore : MonoBehaviour
                 namecode = 1;
                 textcode = 1;
                 break;
-            case MinimapButtonType.RESTRUNT:
+            case MinimapButtonType.RESTARANT:
                 namecode = 2;
                 textcode = 2;
                 break;
@@ -68,7 +89,7 @@ public class CafeStore : MonoBehaviour
 
         storePanel.transform.DOMove(Vector3.zero, 0.4f);
         storeColor.DOFade(1, 0.3f);
-        cafeTextOutput.TextLoad(namecode, textcode);
+        //cafeTextOutput.TextLoad(namecode, textcode);
         gay.value--;
         Invoke("TextPanelOn", .6f);
     }

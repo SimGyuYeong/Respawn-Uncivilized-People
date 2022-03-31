@@ -3,6 +3,6 @@ public enum MinimapButtonType
 {
     CAFE,
     DEPARTMENTSTORE,
-    RESTRUNT,
+    RESTARANT,
     PARK
 }

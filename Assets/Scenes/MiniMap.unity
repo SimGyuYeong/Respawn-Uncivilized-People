@@ -504,8 +504,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 40
+    m_Font: {fileID: 12800000, guid: cc3f27ba41b1ff44db8ee4d810e3f356, type: 3}
+    m_FontSize: 50
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -636,6 +636,7 @@ GameObject:
   - component: {fileID: 316006278}
   - component: {fileID: 316006279}
   - component: {fileID: 316006280}
+  - component: {fileID: 316006281}
   m_Layer: 0
   m_Name: DepartmentStore
   m_TagString: Untagged
@@ -736,6 +737,62 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BTNtypeManager: 1
+--- !u!114 &316006281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 316006276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 0}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1180294899}
+        m_TargetAssemblyTypeName: CafeStore, Assembly-CSharp
+        m_MethodName: SetDepartmentEnum
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!224 &323624739 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 49780291490172336, guid: bb53fe61630a4784ab6320bed3d4ec86, type: 3}
@@ -1148,7 +1205,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1180294899}
         m_TargetAssemblyTypeName: CafeStore, Assembly-CSharp
-        m_MethodName: storebutton
+        m_MethodName: SetCafeEnum
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1257,8 +1314,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -3228,7 +3285,6 @@ MonoBehaviour:
   storeColor: {fileID: 944880151}
   gay: {fileID: 221510305}
   textPanel: {fileID: 404166061}
-  BTNtypeManager: 0
 --- !u!4 &1180294900
 Transform:
   m_ObjectHideFlags: 0
@@ -4110,7 +4166,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1180294899}
         m_TargetAssemblyTypeName: CafeStore, Assembly-CSharp
-        m_MethodName: storebutton
+        m_MethodName: SetRestarantEnum
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4319,7 +4375,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2011875810}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1180294899}
+        m_TargetAssemblyTypeName: CafeStore, Assembly-CSharp
+        m_MethodName: SetParkEnum
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2011875810
 MonoBehaviour:
   m_ObjectHideFlags: 0

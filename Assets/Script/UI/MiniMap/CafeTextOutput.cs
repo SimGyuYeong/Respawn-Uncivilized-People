@@ -8,7 +8,7 @@ public class CafeTextOutput : MonoBehaviour
     public CafeTextInput texts;
     [SerializeField] private Text outputText;
     string[] text;
-    bool textSkip = false;
+    bool textSkip = true;
 
     private void Start()
     {
