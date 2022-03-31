@@ -43,7 +43,7 @@ public class GameManager : MonoBehaviour
         textManager = GetComponent<TextManager>();
         dataManager = GetComponent<DataManager>();
         soundManager = GetComponent<SoundManager>();
-        DontDestroyOnLoad(this);
+        //DontDestroyOnLoad(this); 부서지지 않지 않지 않아요~ 근데~
     }
 
     private void Start()
@@ -78,7 +78,7 @@ public class GameManager : MonoBehaviour
                 Buttons.SetActive(false);
                 textManager.chatID = 1;
                 soundManager.PauseMusic();
-                //soundManager.PlayingMusic(1, 0.01f);
+                soundManager.PlayingMusic(1, 0.01f);
                 StartCoroutine(FadeIn());
                 StartCoroutine(textManager.Typing());
                 break;
