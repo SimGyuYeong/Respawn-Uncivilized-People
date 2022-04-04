@@ -1,0 +1,32 @@
+로빈파츠.png
+size:1973,1207
+filter:Linear,Linear
+pma:true
+back body
+bounds:904,2,612,259
+body
+bounds:2,561,644,928
+offsets:0,0,708,928
+rotate:90
+face
+bounds:580,212,347,322
+rotate:90
+hair
+bounds:1208,452,472,753
+offsets:50,0,522,753
+hide hair
+bounds:1518,23,325,310
+hide head
+bounds:580,49,312,161
+offsets:0,11,312,172
+hide leg
+bounds:1208,335,548,115
+offsets:0,0,548,124
+left arm
+bounds:1682,489,289,716
+offsets:0,521,473,1237
+leg
+bounds:2,4,576,555
+offsets:32,0,706,563
+right arm
+bounds:932,263,274,942
