@@ -12,38 +12,46 @@ public class TextManager : MonoBehaviour
     const string URL = "https://docs.google.com/spreadsheets/d/18d1eO7_f3gewvcBi5MIe0sqh50lp1PF-kkQg2nm03wg/export?format=tsv";
 
     [SerializeField] public GameObject textImage;
-    [SerializeField] private Text textPanel;
-    [SerializeField] private Transform selectPanel;
+    [SerializeField] private Text textPanel; // 텍스트가 나오는 패널
+    [SerializeField] private Transform selectPanel; // 선택 이벤트 시 활성화 되는 패널
     [SerializeField] private GameObject selectButton;
-    [SerializeField] public GameObject[] background;
-    [SerializeField] private GameObject[] image;
-    [SerializeField] private GameObject endObject;
+    [SerializeField] public GameObject[] background; // 게임 배경화면 배열
+    [SerializeField] private GameObject[] image;    // 추가로 띄워둘 이미지 
+    [SerializeField] private GameObject endObject; // 텍스트 끝나면 텍스트 패널 오른쪽 아래에서 뛰옹뛰옹 뱅글뱅글 하는 애
     [SerializeField] private float shakeTime = 0.13f;
     [SerializeField] private float shakestr = 0;
     [SerializeField] private GameObject textlogPrefab;
     [SerializeField] private Transform textlogView;
     [SerializeField] private GameObject textlogScroll;
+    [SerializeField] private CharacterEffect characterEffect; // 캐릭터 이펙트 스크립트 
     
     Dictionary<int, string[,]> Sentence = new Dictionary<int, string[,]>();
     Dictionary<int, int> max = new Dictionary<int, int>();
     List<string> select = new List<string>();
 
-    public int chatID = 1, typingID = 1, backID = 1, slotID = 0;
-    private bool isTyping = false, skip = false;
+    public int chatID = 1, typingID = 1, backID = 1, slotID = 0; // ID 기본 값 설정
+    private bool isTyping = false, skip = false; // 텍스트 스킵 불 기본 값 설정
     string[] imageList;
-    public float chatSpeed = 0.1f, autoSpeed = 1f;
+    public float chatSpeed = 0.1f, autoSpeed = 1f; // 텍스트 나오는 속도와 Auto 속도 기본 값 설정
     public bool Auto = false;
 
-    [SerializeField] private SoundManager soundManager = null;
+    [SerializeField] private SoundManager soundManager = null; // 사운드 매니저 스크립트 넣기
     public SoundManager SOUND { get { return soundManager; } }
+
+    enum CharacterEffectEnum // 캐릭터 이펙트 열거형
+    {
+        MoveX = 1,
+        MoveY
+    };
 
     private void Awake()
     {
-        soundManager = GetComponent<SoundManager>();
-        StartCoroutine(LoadTextData());
-    }
+        characterEffect = GetComponent<CharacterEffect>(); // 캐릭터 이펙트 스크립트 대입
+        soundManager = GetComponent<SoundManager>(); // 사운드 매니저 스크립트 대입
+        StartCoroutine(LoadTextData()); // 텍스트 데이터 읽기
+}
 
-    public IEnumerator LoadTextData()
+public IEnumerator LoadTextData()
     {
         UnityWebRequest www = UnityWebRequest.Get(URL);
         yield return www.SendWebRequest();
@@ -149,16 +157,22 @@ public class TextManager : MonoBehaviour
         }
     }
 
-    public void SkipTextClick()
+    public void SkipTextClick() // 텍스트 패널 클릭 시 스킵
     {
         if (!Auto)
         {
             if (!isTyping) SkipText();
-            else skip = true;
+
+            else
+            {
+                skip = true;
+                characterEffect.DoTweenComplete();
+            }
+            
         }
     }
 
-    public void SkipText()
+    public void SkipText() // 텍스트 진행
     {
         if (backID >= 1) background[backID].SetActive(false);
         if (Sentence[chatID][typingID, 4] != "") imageSetactive(false);
@@ -187,7 +201,7 @@ public class TextManager : MonoBehaviour
             if (typingID != max[chatID]) StartCoroutine(Typing());
             else textImage.SetActive(false);
         }
-    }
+    } 
 
     public void AutoPlay()
     {
@@ -200,7 +214,6 @@ public class TextManager : MonoBehaviour
     {
         textlogScroll.SetActive(check);
     }
-
 
     public void SelectOpen()
     {
@@ -260,4 +273,16 @@ public class TextManager : MonoBehaviour
         GameManager.Instance.InputNameCanvas.SetActive(true);
     }
 
+    private void CharacterEffectFuntion(CharacterEffectEnum effectNumber, float distance, float time, int direct)
+    {
+
+        switch(effectNumber)
+        {
+            case CharacterEffectEnum.MoveX:
+                characterEffect.MoveXposition(distance, time, direct);
+                break;
+            default:
+                break;
+        } 
+    }
 }
