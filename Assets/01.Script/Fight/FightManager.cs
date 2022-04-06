@@ -57,7 +57,7 @@ public class FightManager : MonoBehaviour
     [SerializeField] GameObject TileUI;
     [SerializeField] GameObject GoalUI;
 
-    private int energy = 100;
+    public int energy = 100;
     private int enemyCount = 3;
     [SerializeField] int turn = 10;
 
@@ -104,7 +104,7 @@ public class FightManager : MonoBehaviour
                 {
                     if(pos == new Vector2Int(x, y))
                     {
-                        var enemy = Instantiate(Enemy, spawnedTile.transform);
+                        AI enemy = Instantiate(Enemy, spawnedTile.transform);
                         enemy.transform.position = spawnedTile.transform.position;
                         spawnedTile.tile.isEnemy = true;
                         enemy.ai = new AIInform(aiCount, x, y, 45);
@@ -267,6 +267,45 @@ public class FightManager : MonoBehaviour
         else return false;
     }
 
+
+    /// <summary>
+    /// 지형지물 체크 함수
+    /// </summary>
+    /// <param name="pos"></param>
+    /// <returns>지형지물 여부 반환</returns>
+    public bool ObjCheck(Vector2 pos, char value)
+    {
+        switch(value)
+        {
+            case 'r':
+                pos.x++;
+                break;
+            case 'l':
+                pos.x--;
+                break;
+            case 'u':
+                pos.y++;
+                break;
+            case 'd':
+                pos.y--;
+                break;
+        }    
+
+        if (pos.x < 0 || pos.x > 7 || pos.y > 7 || pos.y < 0)
+            return true;
+
+        if (NodeArray[(int)pos.x, (int)pos.y].isWall)
+            return true;
+
+        foreach(var p in enemyPos)
+        {
+            if (p == pos)
+                return true;
+        }
+
+        return false;
+    }
+
     public void DrawLine()
     {
         _lineRenderer.startColor = Color.white;
@@ -310,10 +349,11 @@ public class FightManager : MonoBehaviour
         }
         Player.transform.position = new Vector2(_x, _y);
         Player.SetActive(true);
+        UpdateUI();
         yield return new WaitForSeconds(0.8f);
         playerPos.x = _x;
         playerPos.y = _y;
-        UpdateUI();
+        _aiList[0].AIMoveStart();
     }
 
     /// <summary>
@@ -329,7 +369,7 @@ public class FightManager : MonoBehaviour
         ShowMoveDistance(isClickPlayer);
     }
 
-    private void UpdateUI()
+    public void UpdateUI()
     {
         turnText.text = string.Format("앞으로 {0}턴", turn);
         StartCoroutine(SoftTileValueChange());
@@ -340,7 +380,7 @@ public class FightManager : MonoBehaviour
     {
         int value = (int)TileUI.transform.GetChild(2).GetComponent<Slider>().value;
         Text energyText = TileUI.transform.GetChild(1).GetComponent<Text>();
-        while (value != energy)
+        while (value >= energy)
         {
             TileUI.transform.GetChild(2).GetComponent<Slider>().value--;
             value = (int)TileUI.transform.GetChild(2).GetComponent<Slider>().value;
