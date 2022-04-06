@@ -149,6 +149,7 @@ public IEnumerator LoadTextData()
         GameObject tl = Instantiate(textlogPrefab, textlogView);
         if (Name == "") tl.GetComponent<Text>().text = string.Format(Sentence[chatID][typingID, 2]);
         else tl.GetComponent<Text>().text = string.Format("{0}: {1}", Name, Sentence[chatID][typingID, 2]);
+        GameObject t2 = Instantiate(textlogPrefab, textlogView);
 
         if (Auto)
         {
