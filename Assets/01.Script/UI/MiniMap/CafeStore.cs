@@ -9,7 +9,7 @@ public class CafeStore : MonoBehaviour
     public GameObject storePanel = null;
     public GameObject itemImage;
     public Image storeColor;
-    public Slider gay;
+    public Slider guage;
     public Image textPanel;
     public Text text;
     float textImageAlpha = 0;
@@ -22,7 +22,7 @@ public class CafeStore : MonoBehaviour
 
     private void Start()
     {
-        gay.value = 3;
+        guage.value = 3;
         textPanel.DOFade(textImageAlpha, 0.3f);
         cafeTextOutput = GetComponent<CafeTextOutput>();
     }
@@ -39,11 +39,12 @@ public class CafeStore : MonoBehaviour
             Sequence seq = DOTween.Sequence();
             seq.Append(textPanel.DOFade(textImageAlpha, 0.3f));
             seq.Append(text.DOFade(textImageAlpha, 0.3f));
-            seq.AppendInterval(.6f);
+            seq.AppendInterval(.3f);
             seq.Append(storePanel.transform.DOMoveX(-20, 0.4f));
             seq.Join(storeColor.DOFade(0, 0.3f));                      //<<- Join은 Append랑 같이 실행하게 해준다.
             seq.AppendCallback(t);
-            
+            seq.Join(textPanel.transform.DOMoveY(-9, .3f));
+            seq.Join(text.transform.DOMoveY(-9, .3f));
         }
     }
 
@@ -75,9 +76,9 @@ public class CafeStore : MonoBehaviour
     {
         storePanel.transform.DOMove(Vector3.zero, 0.4f);
         storeColor.DOFade(1, 0.3f);
-        Debug.Log(namecode + " " +  textIndex);
+        //Debug.Log(namecode + " " +  textIndex);
         //cafeTextOutput.TextLoad(namecode, textcode);
-        gay.value--;
+        guage.value--;
         Invoke("TextPanelOn", .6f);
     }
 
@@ -86,8 +87,12 @@ public class CafeStore : MonoBehaviour
         Sequence seq = DOTween.Sequence();
         textImageAlpha = 0.5f;
         textAlpha = 1;
+        
         textPanel.DOFade(textImageAlpha, 0.3f);
-        textPanel.DOFade(textAlpha, 0.3f);
+        text.DOFade(textAlpha, 0.3f);
+        textPanel.transform.DOMoveY(-4, .3f);
+        text.transform.DOMoveY(-4, .3f);
+
         seq.AppendInterval(1f);
         seq.AppendCallback(() =>  textbool = true);
     }
