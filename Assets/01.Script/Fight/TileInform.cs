@@ -5,14 +5,12 @@ public class TileInform
     public TileInform(int _num, int _x, int _y, bool _wall, bool _enemy)
     {
         tileNum = _num;
-        x = _x;
-        y = _y;
         isWall = _wall;
         isEnemy = _enemy;
-        Position = new Vector2Int(x, y);
+        Position = new Vector2Int(_x, _y);
     }
 
-    public int tileNum, x, y;
+    public int tileNum;
     public bool isWall, isEnemy;
     public Vector2Int Position;
 }

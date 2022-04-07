@@ -74,12 +74,22 @@ public class Tile : MonoBehaviour
     {
         FightManager _fight = FightManager.Instance;
 
-        if( _fight.turnType == FightManager.TurnType.Player
+        if (_fight.turnType == FightManager.TurnType.Player
             && _fight.isClickPlayer
             && !_fight.move
-            && !tile.isWall
-            && _fight.DistanceCheck(tile.Position) )
-            { return true; }
+            && !tile.isWall)
+        {
+            if (tile.isEnemy)
+            {
+                if (_fight.DistanceCheck(tile.Position, 'c'))
+                    return true;
+            }
+            else
+            {
+                if (_fight.DistanceCheck(tile.Position))
+                    return true;
+            }
+        }
             
 
         return false;

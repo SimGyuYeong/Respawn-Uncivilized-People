@@ -139,7 +139,7 @@ public class FightManager : MonoBehaviour
     }
 
     #region A* 알고리즘
-    public void PathFinding()
+    public void PathFinding(char type = 'd')
     {
         sizeX = maxPos.x - minPos.x + 1;
         sizeY = maxPos.y - minPos.y + 1;
@@ -156,17 +156,16 @@ public class FightManager : MonoBehaviour
                 {
                     isWall = true;
                 }
-                foreach(Vector2 pos in enemyPos)
+                if(type == 'd')
                 {
-                    if(pos == new Vector2(i, j))
+                    foreach (Vector2 pos in enemyPos)
                     {
-                        isWall = true;
+                        if (pos == new Vector2(i, j))
+                        {
+                            isWall = true;
+                        }
                     }
                 }
-                /* foreach (Collider2D colider in Physics2D.OverlapCircleAll(new Vector2(i, j), 0.4f))
-                    if (colider.gameObject.layer == LayerMask.NameToLayer("wall")) //레이어가 벽이면
-                        isWall = true; //벽 True */
-
                 NodeArray[i, j] = new Node(isWall, i, j); // 벽여부, x좌표, y좌표
             }
         }
@@ -236,8 +235,13 @@ public class FightManager : MonoBehaviour
     }
     #endregion
 
+    /// <summary>
+    /// 이동 가능 거리 보여주는 함수
+    /// </summary>
+    /// <param name="view"></param>
     public void ShowMoveDistance(bool view)
     {
+        SpriteRenderer _spriteRenderer;
         int count = 0;
 
         for (int y = 7; y >= 0; y--)
@@ -246,37 +250,38 @@ public class FightManager : MonoBehaviour
             {
                 if (!isWallList[count])
                 {
+                    _spriteRenderer = tileList[count].GetComponent<SpriteRenderer>();
+
+                    if (view)
+                    {
+                        foreach (Vector2Int pos in enemyPos)
+                        {
+                            if (pos == new Vector2Int(x, y))
+                            {
+                                if(DistanceCheck(new Vector2(x, y), 'c'))
+                                    _spriteRenderer.color = Color.red;
+                            }
+                        }
+                    }
+
                     if (DistanceCheck(new Vector2(x, y)))
                     {
-                        SpriteRenderer _spriteRenderer = tileList[count].GetComponent<SpriteRenderer>();
-                        if (view)
-                        {
-                            if(tileList[count].tile.isEnemy)
-                                _spriteRenderer.color = Color.red;
-                            else
-                                _spriteRenderer.color = Color.yellow;
-                        }
-                            
-                        else
-                            _spriteRenderer.color = Color.white;
+                        _spriteRenderer.color = view ? Color.yellow : Color.white;
                     }
                 }
                 count++;
             }
         }
+
+        
     }
 
-    /// <summary>
-    /// 이동가능 거리체크
-    /// </summary>
-    /// <param name="pos"></param>
-    /// <returns></returns>
-    public bool DistanceCheck(Vector2 pos)
+    public bool DistanceCheck(Vector2 pos, char type = 'd')
     {
         targetPos = new Vector2Int((int)pos.x, (int)pos.y);
-        PathFinding();
-        if (FinalNodeList.Count <= distance+1) return true;
-        else return false;
+        PathFinding(type);
+        if (FinalNodeList.Count <= distance+1 && FinalNodeList.Count > 0) return true;
+        return false;
     }
 
 
