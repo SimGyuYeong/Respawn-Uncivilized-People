@@ -92,7 +92,7 @@ public class FightManager : MonoBehaviour
 
     IEnumerator spawnTile()
     {
-        int count = 1, aiCount = 1;
+        int count = 1, aiCount = 0;
         for (int y = 7; y >= 0; y--)
         {
             for (int x = 0; x < 8; x++)
@@ -433,7 +433,8 @@ public class FightManager : MonoBehaviour
                 Debug.Log("AI Turn");
                 StartCoroutine(waitSecond(1f));
                 turnType = TurnType.AI;
-                _aiList[0].AIMoveStart();
+                int _num = Random.Range(0, enemyPos.Count);
+                _aiList[_num].AIMoveStart();
                 break;
             case TurnType.AI:
                 turnType = TurnType.Wait_Player;

@@ -150,7 +150,7 @@ public class AI : MonoBehaviour
         else
             ai.Position.y++;
         
-        FightManager.Instance.enemyPos[0] = ai.Position;
+        FightManager.Instance.enemyPos[ai.Number] = ai.Position;
         FightManager.Instance.tileList[ai.TileNum].tile.isEnemy = false;
 
         ai.TileNum += value;

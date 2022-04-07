@@ -613,6 +613,7 @@ MonoBehaviour:
   moveAni: {fileID: 4460019810026274728, guid: 94cd5b94ebda27547838fdb3e82373ac, type: 3}
   move: 0
   isWallList: 00000000000000000000000000000000000000000000000100000000000000010000000000000101010000000001010101010000010101010101010101010101
+  tileList: []
   turnText: {fileID: 1965038689}
   TileUI: {fileID: 1739071372}
   GoalUI: {fileID: 726875288}
@@ -621,6 +622,7 @@ MonoBehaviour:
   isClickPlayer: 0
   distance: 4
   _lineRenderer: {fileID: 0}
+  turnType: 3
 --- !u!4 &668040824
 Transform:
   m_ObjectHideFlags: 0
