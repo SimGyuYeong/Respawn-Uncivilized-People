@@ -11,18 +11,19 @@ public class CafeStore : MonoBehaviour
     public Image storeColor;
     public Slider gay;
     public Image textPanel;
-    float textalpha = 0;
+    public Text text;
+    float textImageAlpha = 0;
+    float textAlpha = 0;
     public static bool textbool = false;
     CafeTextOutput cafeTextOutput;
     private MinimapButtonType BTNtypeManager;
-
     int namecode = 0;
-    int textcode = 0;
+    int textIndex = 0;
 
     private void Start()
     {
         gay.value = 3;
-        textPanel.DOFade(textalpha, 0.3f);
+        textPanel.DOFade(textImageAlpha, 0.3f);
         cafeTextOutput = GetComponent<CafeTextOutput>();
     }
 
@@ -32,10 +33,12 @@ public class CafeStore : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape) && !isSeq)
         {
             TweenCallback t = () => isSeq = false;                     //함수를 변수 안에다가 넣어준다. <<-TweenCallback
-            textalpha = 0;
+            textImageAlpha = 0;
+            textAlpha = 0;
             isSeq = true;
             Sequence seq = DOTween.Sequence();
-            seq.Append(textPanel.DOFade(textalpha, 0.3f));
+            seq.Append(textPanel.DOFade(textImageAlpha, 0.3f));
+            seq.Append(text.DOFade(textImageAlpha, 0.3f));
             seq.AppendInterval(.6f);
             seq.Append(storePanel.transform.DOMoveX(-20, 0.4f));
             seq.Join(storeColor.DOFade(0, 0.3f));                      //<<- Join은 Append랑 같이 실행하게 해준다.
@@ -44,51 +47,35 @@ public class CafeStore : MonoBehaviour
         }
     }
 
-    public void SetCafeEnum()
+    public void OnBuilding(int SelectType)
     {
-        BTNtypeManager = MinimapButtonType.CAFE;
-        storebutton();
-    }
-    public void SetDepartmentEnum()
-    {
-        BTNtypeManager = MinimapButtonType.DEPARTMENTSTORE;
-        storebutton();
-    }
-    public void SetRestarantEnum()
-    {
-        BTNtypeManager = MinimapButtonType.RESTARANT;
-        storebutton();
-    }
-    public void SetParkEnum()
-    {
-        BTNtypeManager = MinimapButtonType.PARK;
-        storebutton();
-    }
-
-    public void storebutton()
-    {
-        switch(BTNtypeManager)
+        switch(SelectType)
         {
-            case MinimapButtonType.CAFE:
+            case (int)MinimapButtonType.CAFE:
                 namecode = 0;
-                textcode = 0;
+                textIndex = 0;
                 break;
-            case MinimapButtonType.DEPARTMENTSTORE:
+            case (int)MinimapButtonType.DEPARTMENTSTORE:
                 namecode = 1;
-                textcode = 1;
+                textIndex = 1;
                 break;
-            case MinimapButtonType.RESTARANT:
+            case (int)MinimapButtonType.RESTARANT:
                 namecode = 2;
-                textcode = 2;
+                textIndex = 2;
                 break;
-            case MinimapButtonType.PARK:
+            case (int)MinimapButtonType.PARK:
                 namecode = 3;
-                textcode = 3;
+                textIndex = 3;
                 break;
         }
+        Storebutton(); 
+    }
 
+    public void Storebutton()
+    {
         storePanel.transform.DOMove(Vector3.zero, 0.4f);
         storeColor.DOFade(1, 0.3f);
+        Debug.Log(namecode + " " +  textIndex);
         //cafeTextOutput.TextLoad(namecode, textcode);
         gay.value--;
         Invoke("TextPanelOn", .6f);
@@ -97,8 +84,10 @@ public class CafeStore : MonoBehaviour
     void TextPanelOn()
     {
         Sequence seq = DOTween.Sequence();
-        textalpha = 0.5f;
-        textPanel.DOFade(textalpha, 0.3f);
+        textImageAlpha = 0.5f;
+        textAlpha = 1;
+        textPanel.DOFade(textImageAlpha, 0.3f);
+        textPanel.DOFade(textAlpha, 0.3f);
         seq.AppendInterval(1f);
         seq.AppendCallback(() =>  textbool = true);
     }
