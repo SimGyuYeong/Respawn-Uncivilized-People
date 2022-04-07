@@ -72,17 +72,16 @@ public class Tile : MonoBehaviour
     /// <returns></returns>
     private bool moveCheck()
     {
-        if (FightManager.Instance.isClickPlayer)
-        {
-            if (!FightManager.Instance.move)
-            {
-                if (!tile.isWall)
-                {
-                    if(FightManager.Instance.DistanceCheck(tile.Position))
-                        return true;
-                }
-            }
-        }
+        FightManager _fight = FightManager.Instance;
+
+        if( _fight.turnType == FightManager.TurnType.Player
+            && _fight.isClickPlayer
+            && !_fight.move
+            && !tile.isWall
+            && _fight.DistanceCheck(tile.Position) )
+            { return true; }
+            
+
         return false;
     }
 

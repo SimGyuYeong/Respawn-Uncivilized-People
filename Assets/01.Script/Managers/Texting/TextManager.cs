@@ -34,6 +34,7 @@ public class TextManager : MonoBehaviour
     string[] imageList;
     public float chatSpeed = 0.1f, autoSpeed = 1f; // 텍스트 나오는 속도와 Auto 속도 기본 값 설정
     public bool Auto = false;
+    private float originalChatSpeed; // 원래 텍스트 속도 기억하는 변수
 
     [SerializeField] private SoundManager soundManager = null; // 사운드 매니저 스크립트 넣기
     public SoundManager SOUND { get { return soundManager; } }
@@ -167,9 +168,21 @@ public IEnumerator LoadTextData()
             else
             {
                 skip = true;
-                characterEffect.DoTweenComplete();
+                CharacterEffect.SkipDotweenAnimation = true;
             }
-            
+        }
+    }
+
+    public void FastSkipText() // 텍스트 빠른 재생
+    {
+        if (chatSpeed != 0.01f)
+        {
+            originalChatSpeed = chatSpeed;
+            chatSpeed = 0.01f;
+        }
+        else if(chatSpeed == 0.01f)
+        {
+            chatSpeed = originalChatSpeed;
         }
     }
 

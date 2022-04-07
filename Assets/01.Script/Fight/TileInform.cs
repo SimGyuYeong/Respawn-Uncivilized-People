@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class TileInform : MonoBehaviour
+public class TileInform
 {
     public TileInform(int _num, int _x, int _y, bool _wall, bool _enemy)
     {

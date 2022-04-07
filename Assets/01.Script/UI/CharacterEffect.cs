@@ -5,13 +5,15 @@ using DG.Tweening;
 
 public class CharacterEffect : MonoBehaviour
 {
-    public void MoveXposition(float distance, float time, int direct)
+    static public bool SkipDotweenAnimation = false; // 닷트윈 스킵 여부 확인 불 값
+
+    public void MoveXposition(float distance, float time, int direct) // 가로로 움직이는 닷트윈 애니메이션
     {
-        gameObject.transform.DOMoveX((distance * direct), time);
+        gameObject.transform.DOMoveX((distance * direct), time).From(distance * direct, SkipDotweenAnimation).OnComplete(() => DoTweenComplete());
     }
 
     public void DoTweenComplete()
     {
-        DoTweenComplete();
+        SkipDotweenAnimation = false;
     }
 }
