@@ -41,6 +41,7 @@ public class FightManager : MonoBehaviour
     #endregion
 
     public List<Vector2Int> enemyPos = new List<Vector2Int>();
+    public List<int> noneMoveEnemy = new List<int>();
 
     public GameObject Content, Player;
     public Tile TilePrefab;
@@ -425,17 +426,30 @@ public class FightManager : MonoBehaviour
                 StartCoroutine(waitSecond(1f));
                 turnType = TurnType.Player;
                 break;
+
             case TurnType.Player:
                 turnType = TurnType.Wait_AI;
                 TurnChange();
                 break;
+
             case TurnType.Wait_AI:
                 Debug.Log("AI Turn");
                 StartCoroutine(waitSecond(1f));
                 turnType = TurnType.AI;
-                int _num = Random.Range(0, enemyPos.Count);
-                _aiList[_num].AIMoveStart();
+
+                if(noneMoveEnemy.Count <= 0)
+                {
+                    for (int i = 0; i < enemyPos.Count; i++)
+                        noneMoveEnemy.Add(i);
+                }
+
+                int _num = Random.Range(0, noneMoveEnemy.Count);
+                _aiList[noneMoveEnemy[_num]].AIMoveStart();
+                if (noneMoveEnemy.Count < 1)
+                    noneMoveEnemy.Clear();
+
                 break;
+
             case TurnType.AI:
                 turnType = TurnType.Wait_Player;
                 move = false;
