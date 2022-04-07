@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class AIInform : MonoBehaviour
+public class AIInform
 {
     public AIInform(int _num, int _x, int _y, int _health, int _timeNum)
     {
