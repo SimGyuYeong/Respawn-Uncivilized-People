@@ -49,7 +49,7 @@ public class FightManager : MonoBehaviour
     public bool move = false;
     public bool[] isWallList;
 
-    private List<Tile> _tileList = new List<Tile>();
+    public List<Tile> tileList = new List<Tile>();
     private List<AI> _aiList = new List<AI>();
 
     [SerializeField] Text turnText;
@@ -66,6 +66,15 @@ public class FightManager : MonoBehaviour
 
     public LineRenderer _lineRenderer;
 
+    public enum TurnType
+    {
+        Player,
+        Wait_AI,
+        AI,
+        Wait_Player
+    }
+    public TurnType turnType = TurnType.Wait_Player;
+
     private void Awake()
     {
         Instance = this;
@@ -75,6 +84,7 @@ public class FightManager : MonoBehaviour
     private void Start()
     {
         StartCoroutine(spawnTile());
+        UpdateUI();
 
         _lineRenderer.startWidth = .05f;
         _lineRenderer.endWidth = .05f;
@@ -92,7 +102,7 @@ public class FightManager : MonoBehaviour
                 spawnedTile.name = $"Tile {count}";
                 spawnedTile.tile = new TileInform(count, x, y, false, false);
 
-                _tileList.Add(spawnedTile);
+                tileList.Add(spawnedTile);
 
                 if (playerPos.x == x && playerPos.y == y)
                 {
@@ -107,7 +117,8 @@ public class FightManager : MonoBehaviour
                         AI enemy = Instantiate(Enemy, spawnedTile.transform);
                         enemy.transform.position = spawnedTile.transform.position;
                         spawnedTile.tile.isEnemy = true;
-                        enemy.ai = new AIInform(aiCount, x, y, 45);
+                        int _c = count;
+                        enemy.ai = new AIInform(aiCount, x, y, 45, --_c);
                         _aiList.Add(enemy);
                         aiCount++;
                     }
@@ -236,10 +247,10 @@ public class FightManager : MonoBehaviour
                 {
                     if (DistanceCheck(new Vector2(x, y)))
                     {
-                        SpriteRenderer _spriteRenderer = _tileList[count].GetComponent<SpriteRenderer>();
+                        SpriteRenderer _spriteRenderer = tileList[count].GetComponent<SpriteRenderer>();
                         if (view)
                         {
-                            if(_tileList[count].tile.isEnemy)
+                            if(tileList[count].tile.isEnemy)
                                 _spriteRenderer.color = Color.red;
                             else
                                 _spriteRenderer.color = Color.yellow;
@@ -353,7 +364,7 @@ public class FightManager : MonoBehaviour
         yield return new WaitForSeconds(0.8f);
         playerPos.x = _x;
         playerPos.y = _y;
-        _aiList[0].AIMoveStart();
+        
     }
 
     /// <summary>
@@ -387,6 +398,8 @@ public class FightManager : MonoBehaviour
             energyText.text = string.Format("{0} / 100", value);
             yield return new WaitForSeconds(0.2f);
         }
+
+        TurnChange();
     }
 
     private IEnumerator SoftGoalValueChange()
@@ -400,5 +413,37 @@ public class FightManager : MonoBehaviour
             countText.text = string.Format("{0} / 3", value);
             yield return new WaitForSeconds(0.2f);
         }
+    }
+
+    private void TurnChange()
+    {
+        switch(turnType)
+        {
+            case TurnType.Wait_Player:
+                Debug.Log("Player Turn");
+                StartCoroutine(waitSecond(1f));
+                turnType = TurnType.Player;
+                break;
+            case TurnType.Player:
+                turnType = TurnType.Wait_AI;
+                TurnChange();
+                break;
+            case TurnType.Wait_AI:
+                Debug.Log("AI Turn");
+                StartCoroutine(waitSecond(1f));
+                turnType = TurnType.AI;
+                _aiList[0].AIMoveStart();
+                break;
+            case TurnType.AI:
+                turnType = TurnType.Wait_Player;
+                move = false;
+                TurnChange();
+                break;
+        }
+    }
+
+    private IEnumerator waitSecond(float time)
+    {
+        yield return new WaitForSeconds(time);
     }
 }
