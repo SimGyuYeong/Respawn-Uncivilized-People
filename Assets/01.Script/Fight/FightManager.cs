@@ -437,16 +437,19 @@ public class FightManager : MonoBehaviour
                 StartCoroutine(waitSecond(1f));
                 turnType = TurnType.AI;
 
+                //움직이지 않는 적이 없다면
                 if(noneMoveEnemy.Count <= 0)
                 {
+                    //모든 적들을 움직이지 않는 적 리스트에 다시 넣는다.
                     for (int i = 0; i < enemyPos.Count; i++)
                         noneMoveEnemy.Add(i);
                 }
 
                 int _num = Random.Range(0, noneMoveEnemy.Count);
-                _aiList[noneMoveEnemy[_num]].AIMoveStart();
-                if (noneMoveEnemy.Count < 1)
-                    noneMoveEnemy.Clear();
+                _aiList[noneMoveEnemy[_num]].AIMoveStart(); //랜덤으로 지정한 적을 움직인다.
+                noneMoveEnemy.RemoveAt(_num); //움직인 적은 움직이지 않은 적 리스트에서 제거
+                if (noneMoveEnemy.Count < 1) //모든 적이 움직였다면
+                    noneMoveEnemy.Clear(); //움직이지 않은 적 리스트 초기화
 
                 break;
 
