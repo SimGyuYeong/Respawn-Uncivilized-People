@@ -5,14 +5,15 @@ using UnityEngine.UI;
 
 public class CafeTextOutput : MonoBehaviour
 {
-    public CafeTextInput texts;
+    [SerializeField]
+    private CafeTextInput texts;
     [SerializeField] private Text outputText;
     string[] text;
-    bool textSkip = true;
+    public bool textSkip = true;
 
     private void Start()
     {
-        texts = GetComponent<CafeTextInput>();
+
     }
 
     /// <summary>

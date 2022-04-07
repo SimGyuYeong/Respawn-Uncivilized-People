@@ -127,7 +127,7 @@ public class TextManager : MonoBehaviour
         {
             if (skip)
             {
-                textPanel.text = string.Format("{0}\n{1}", Name, Sentence[chatID][typingID, 2]);              // 텍스트 넘김.....누르면 한줄이 한번에 딱
+                textPanel.text = string.Format("{0}\n{1}", Name, Sentence[chatID][typingID, 2]);           // 텍스트 넘김.....누르면 한줄이 한번에 딱
                 skip = false;
                 break;
             }
