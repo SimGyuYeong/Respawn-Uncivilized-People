@@ -38,6 +38,7 @@ public class AI : MonoBehaviour
     /// <returns></returns>
     private IEnumerator AIMove()
     {
+
         if (_attackObj != gameObject) //공격대상이 본인 오브젝트가 아니라면 (공격대상이 지정됬다면)
         {
             _stamina = 2; 
@@ -54,22 +55,38 @@ public class AI : MonoBehaviour
                     if (ai.Position.x == FightManager.Instance.playerPos.x)
                     {
                         if (ai.Position.y - FightManager.Instance.playerPos.y > 0)
-                            ai.Position.y++;
+                        {
+                            if (!FightManager.Instance.ObjCheck(ai.Position, 'd'))
+                                ObjMove(8);
+                        }
+                            
                         else
-                            ai.Position.y--;
+                        {
+                            if (!FightManager.Instance.ObjCheck(ai.Position, 'u'))
+                                ObjMove(-8);
+                        }
+                            
                     }
                     else
                     {
                         if (ai.Position.x - FightManager.Instance.playerPos.x > 0)
-                            ai.Position.x++;
+                        {
+                            
+                            if (!FightManager.Instance.ObjCheck(ai.Position, 'l'))
+                                ObjMove(-1);
+                        }
+                            
                         else
-                            ai.Position.x--;
+                        {
+                            if (!FightManager.Instance.ObjCheck(ai.Position, 'r'))
+                                ObjMove(1);
+                        }
+                            
                     }
                     _stamina--;
-                    transform.position = new Vector3(ai.Position.x, ai.Position.y);
                 }
 
-                yield return new WaitForSeconds(0.8f);
+                yield return new WaitForSeconds(1f);
             }
         }
 
@@ -115,6 +132,9 @@ public class AI : MonoBehaviour
             }
             yield return new WaitForSeconds(0.1f);
         }
+
+        yield return new WaitForSeconds(1f);
+        FightManager.Instance.UpdateUI();
     }
 
     /// <summary>
@@ -123,7 +143,12 @@ public class AI : MonoBehaviour
     /// <param name="value"></param>
     private void ObjMove(int value)
     {
-        ai.Position.x += value;
+        if (value == 1 || value == -1)
+            ai.Position.x += value;
+        else if (value == 8)
+            ai.Position.y--;
+        else
+            ai.Position.y++;
         
         FightManager.Instance.enemyPos[0] = ai.Position;
         FightManager.Instance.tileList[ai.TileNum].tile.isEnemy = false;
@@ -132,7 +157,7 @@ public class AI : MonoBehaviour
         FightManager.Instance.tileList[ai.TileNum].tile.isEnemy = true;
         transform.SetParent(FightManager.Instance.tileList[ai.TileNum].gameObject.transform);
 
-        transform.DOMoveX(ai.Position.x, 1F).OnComplete(() => FightManager.Instance.UpdateUI() );
+        transform.DOMove(new Vector3(ai.Position.x, ai.Position.y), 1F);
     }
 
     /// <summary>

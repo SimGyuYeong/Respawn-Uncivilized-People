@@ -389,9 +389,10 @@ public class FightManager : MonoBehaviour
 
     private IEnumerator SoftTileValueChange()
     {
+       
         int value = (int)TileUI.transform.GetChild(2).GetComponent<Slider>().value;
         Text energyText = TileUI.transform.GetChild(1).GetComponent<Text>();
-        while (value >= energy)
+        while (value > energy)
         {
             TileUI.transform.GetChild(2).GetComponent<Slider>().value--;
             value = (int)TileUI.transform.GetChild(2).GetComponent<Slider>().value;
