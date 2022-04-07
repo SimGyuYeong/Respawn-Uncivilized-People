@@ -7,12 +7,10 @@ public class AIInform : MonoBehaviour
     public AIInform(int _num, int _x, int _y, int _health)
     {
         Number = _num;
-        x = _x;
-        y = _y;
         Health = _health;
-        Position = new Vector2(x, y);
+        Position = new Vector2(_x, _y);
     }
 
-    int Number, x, y, Health;
-    Vector2 Position;
+    public int Number, Health;
+    public Vector2 Position;
 }
