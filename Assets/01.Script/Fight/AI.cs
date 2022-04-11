@@ -41,61 +41,54 @@ public class AI : MonoBehaviour
 
         if (_attackObj != gameObject) //공격대상이 본인 오브젝트가 아니라면 (공격대상이 지정됬다면)
         {
-            _stamina = 2; 
-            while (_stamina > 0)
+            if (AttackDistanceCheck())
             {
-                if (AttackDistanceCheck())
+                _stamina--;
+                FightManager.Instance.energy -= ai.Health;
+                ai.Health /= 2;
+            }
+            else
+            {
+                if (ai.Position.x == FightManager.Instance.playerPos.x)
                 {
-                    _stamina--;
-                    FightManager.Instance.energy -= ai.Health;
-                    ai.Health /= 2;
+                    if (ai.Position.y - FightManager.Instance.playerPos.y > 0)
+                    {
+                        if (!FightManager.Instance.ObjCheck(ai.Position, 'd'))
+                            ObjMove(8);
+                    }
+
+                    else
+                    {
+                        if (!FightManager.Instance.ObjCheck(ai.Position, 'u'))
+                            ObjMove(-8);
+                    }
+
                 }
                 else
                 {
-                    if (ai.Position.x == FightManager.Instance.playerPos.x)
+                    if (ai.Position.x - FightManager.Instance.playerPos.x > 0)
                     {
-                        if (ai.Position.y - FightManager.Instance.playerPos.y > 0)
-                        {
-                            if (!FightManager.Instance.ObjCheck(ai.Position, 'd'))
-                                ObjMove(8);
-                        }
-                            
-                        else
-                        {
-                            if (!FightManager.Instance.ObjCheck(ai.Position, 'u'))
-                                ObjMove(-8);
-                        }
-                            
+
+                        if (!FightManager.Instance.ObjCheck(ai.Position, 'l'))
+                            ObjMove(-1);
                     }
+
                     else
                     {
-                        if (ai.Position.x - FightManager.Instance.playerPos.x > 0)
-                        {
-                            
-                            if (!FightManager.Instance.ObjCheck(ai.Position, 'l'))
-                                ObjMove(-1);
-                        }
-                            
-                        else
-                        {
-                            if (!FightManager.Instance.ObjCheck(ai.Position, 'r'))
-                                ObjMove(1);
-                        }
-                            
+                        if (!FightManager.Instance.ObjCheck(ai.Position, 'r'))
+                            ObjMove(1);
                     }
-                    _stamina--;
+
                 }
-
-                yield return new WaitForSeconds(1f);
             }
+            yield return new WaitForSeconds(0.1f);
         }
-
         else
         {
 
             if (FightManager.Instance.ObjCheck(ai.Position, 'r')
                 && FightManager.Instance.ObjCheck(ai.Position, 'l'))
-                {
+            {
                 _state = AI_STATE.WAIT_S;
             }
 
@@ -112,7 +105,7 @@ public class AI : MonoBehaviour
                     ObjMove(-1);
                     if (FightManager.Instance.ObjCheck(ai.Position, 'l'))
                         _state = AI_STATE.WAIT_R;
-                        
+
                     break;
 
                 case AI_STATE.WAIT_S:
