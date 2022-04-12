@@ -156,14 +156,11 @@ public class FightManager : MonoBehaviour
                 {
                     isWall = true;
                 }
-                if(type == 'd')
+                foreach (Vector2 pos in enemyPos)
                 {
-                    foreach (Vector2 pos in enemyPos)
+                    if (pos == new Vector2(i, j))
                     {
-                        if (pos == new Vector2(i, j))
-                        {
-                            isWall = true;
-                        }
+                        isWall = true;
                     }
                 }
                 NodeArray[i, j] = new Node(isWall, i, j); // 벽여부, x좌표, y좌표
@@ -252,18 +249,6 @@ public class FightManager : MonoBehaviour
                 {
                     _spriteRenderer = tileList[count].GetComponent<SpriteRenderer>();
 
-                    if (view)
-                    {
-                        foreach (Vector2Int pos in enemyPos)
-                        {
-                            if (pos == new Vector2Int(x, y))
-                            {
-                                if(DistanceCheck(new Vector2(x, y), 'c'))
-                                    _spriteRenderer.color = Color.red;
-                            }
-                        }
-                    }
-
                     if (DistanceCheck(new Vector2(x, y)))
                     {
                         _spriteRenderer.color = view ? Color.yellow : Color.white;
@@ -272,14 +257,12 @@ public class FightManager : MonoBehaviour
                 count++;
             }
         }
-
-        
     }
 
-    public bool DistanceCheck(Vector2 pos, char type = 'd')
+    public bool DistanceCheck(Vector2 pos)
     {
         targetPos = new Vector2Int((int)pos.x, (int)pos.y);
-        PathFinding(type);
+        PathFinding();
         if (FinalNodeList.Count <= distance+1 && FinalNodeList.Count > 0) return true;
         return false;
     }
@@ -384,6 +367,19 @@ public class FightManager : MonoBehaviour
             _lineRenderer.positionCount = 0;
         }
         ShowMoveDistance(isClickPlayer);
+    }
+
+    /// <summary>
+    /// 캐릭터 이동 함수
+    /// </summary>
+    public void PlayerMove(Vector2Int pos, Transform parent)
+    {
+        move = true;
+        ClickPlayer();
+        targetPos = pos;
+        PathFinding();
+        Player.transform.SetParent(parent);
+        StartCoroutine(movePlayer());
     }
 
     public void UpdateUI()

@@ -54,12 +54,7 @@ public class Tile : MonoBehaviour
             {
                 if (FightManager.Instance.DistanceCheck(tile.Position))
                 {
-                    FightManager.Instance.ClickPlayer();
-                    FightManager.Instance.targetPos = tile.Position;
-                    FightManager.Instance.PathFinding();
-                    FightManager.Instance.Player.transform.SetParent(transform);
-                    StartCoroutine(FightManager.Instance.movePlayer());
-                    FightManager.Instance.move = true;
+                    FightManager.Instance.PlayerMove(tile.Position, transform);
                 }
             }
         }
@@ -81,7 +76,7 @@ public class Tile : MonoBehaviour
         {
             if (tile.isEnemy)
             {
-                if (_fight.DistanceCheck(tile.Position, 'c'))
+                if (_fight.DistanceCheck(tile.Position))
                     return true;
             }
             else
