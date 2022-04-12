@@ -62,7 +62,10 @@ public class FightManager : MonoBehaviour
     public int Energy
     {
         get => _energy;
-        set => _energy = value;
+        set
+        {
+            _energy = Mathf.Clamp(value, 0, 100);
+        }
     }
 
     private int _enemyCount = 3;
