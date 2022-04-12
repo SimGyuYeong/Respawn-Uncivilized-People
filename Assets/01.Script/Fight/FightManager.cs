@@ -58,12 +58,18 @@ public class FightManager : MonoBehaviour
     [SerializeField] GameObject TileUI;
     [SerializeField] GameObject GoalUI;
 
-    public int energy = 100;
-    private int enemyCount = 3;
+    private int _energy = 100;
+    public int Energy
+    {
+        get => _energy;
+        set => _energy = value;
+    }
+
+    private int _enemyCount = 3;
     [SerializeField] int turn = 10;
 
     public bool isClickPlayer = false;
-    public int distance = 4;
+    public int moveDistance = 4;
 
     public LineRenderer _lineRenderer;
 
@@ -263,7 +269,7 @@ public class FightManager : MonoBehaviour
     {
         targetPos = new Vector2Int((int)pos.x, (int)pos.y);
         PathFinding();
-        if (FinalNodeList.Count <= distance+1 && FinalNodeList.Count > 0) return true;
+        if (FinalNodeList.Count <= moveDistance+1 && FinalNodeList.Count > 0) return true;
         return false;
     }
 
@@ -344,7 +350,7 @@ public class FightManager : MonoBehaviour
             obj.transform.position = new Vector2(FinalNodeList[i].x, FinalNodeList[i].y);
             _x = FinalNodeList[i].x;
             _y = FinalNodeList[i].y;
-            energy -= 2;
+            Energy -= 2;
             yield return new WaitForSeconds(0.2f);
         }
         Player.transform.position = new Vector2(_x, _y);
@@ -394,7 +400,7 @@ public class FightManager : MonoBehaviour
        
         int value = (int)TileUI.transform.GetChild(2).GetComponent<Slider>().value;
         Text energyText = TileUI.transform.GetChild(1).GetComponent<Text>();
-        while (value > energy)
+        while (value > Energy)
         {
             TileUI.transform.GetChild(2).GetComponent<Slider>().value--;
             value = (int)TileUI.transform.GetChild(2).GetComponent<Slider>().value;
@@ -409,7 +415,7 @@ public class FightManager : MonoBehaviour
     {
         float value = GoalUI.transform.GetChild(2).GetComponent<Slider>().value;
         Text countText = GoalUI.transform.GetChild(1).GetComponent<Text>();
-        while (value != enemyCount)
+        while (value != _enemyCount)
         {
             GoalUI.transform.GetChild(2).GetComponent<Slider>().value--;
             value = GoalUI.transform.GetChild(2).GetComponent<Slider>().value;

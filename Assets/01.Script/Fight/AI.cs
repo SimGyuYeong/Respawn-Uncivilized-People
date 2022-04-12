@@ -46,7 +46,7 @@ public class AI : MonoBehaviour
             {
                 if (AttackDistanceCheck())
                 {
-                    FightManager.Instance.energy -= ai.Health/2;
+                    FightManager.Instance.Energy -= ai.Health/2;
                     ai.Health /= 2;
                     break;
                 }
