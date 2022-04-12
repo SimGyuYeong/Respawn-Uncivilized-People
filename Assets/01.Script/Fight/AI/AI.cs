@@ -52,9 +52,9 @@ public class AI : MonoBehaviour
                 }
                 else
                 {
-                    if (ai.Position.x == FightManager.Instance.playerPos.x)
+                    if (ai.Position.x == FightManager.Instance.pPos.x)
                     {
-                        if (ai.Position.y - FightManager.Instance.playerPos.y > 0)
+                        if (ai.Position.y - FightManager.Instance.pPos.y > 0)
                         {
                             if (!FightManager.Instance.ObjCheck(ai.Position, 'd'))
                                 ObjMove(8);
@@ -69,7 +69,7 @@ public class AI : MonoBehaviour
                     }
                     else
                     {
-                        if (ai.Position.x - FightManager.Instance.playerPos.x > 0)
+                        if (ai.Position.x - FightManager.Instance.pPos.x > 0)
                         {
                             
                             if (!FightManager.Instance.ObjCheck(ai.Position, 'l'))
@@ -169,20 +169,20 @@ public class AI : MonoBehaviour
         Vector2 _pos = ai.Position;
 
         _pos.x--;
-        if (_pos == FightManager.Instance.playerPos)
+        if (_pos == FightManager.Instance.pPos)
             return true;
 
         _pos.x += 2;
-        if (_pos == FightManager.Instance.playerPos)
+        if (_pos == FightManager.Instance.pPos)
             return true;
 
         _pos.x--;
         _pos.y++;
-        if (_pos == FightManager.Instance.playerPos)
+        if (_pos == FightManager.Instance.pPos)
             return true;
 
         _pos.y -= 2;
-        if (_pos == FightManager.Instance.playerPos)
+        if (_pos == FightManager.Instance.pPos)
             return true;
 
         return false;
@@ -192,7 +192,7 @@ public class AI : MonoBehaviour
     {
         _attackObj = gameObject;
 
-        Vector2 vec = ai.Position - FightManager.Instance.playerPos;
+        Vector2 vec = ai.Position - FightManager.Instance.pPos;
         float distance = Mathf.Abs(vec.x) + Mathf.Abs(vec.y);
 
         if (distance <= 3)
