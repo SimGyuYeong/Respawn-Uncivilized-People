@@ -12,7 +12,7 @@ public class Tile : MonoBehaviour
     /// </summary>
     void OnMouseEnter()
     {
-        if (moveCheck())
+        if (MoveCheck())
         {
             _highlight.SetActive(true);
             if (tile.isEnemy)
@@ -29,7 +29,7 @@ public class Tile : MonoBehaviour
     /// </summary>
     void OnMouseExit()
     {
-        if (moveCheck())
+        if (MoveCheck())
             _highlight.SetActive(false);
     }
 
@@ -50,7 +50,7 @@ public class Tile : MonoBehaviour
                 }
             }
 
-            if(moveCheck())
+            if(MoveCheck())
             {
                 if (FightManager.Instance.DistanceCheck(tile.Position))
                 {
@@ -64,8 +64,8 @@ public class Tile : MonoBehaviour
     /// <summary>
     /// 플레이어가 움직일 수 있는 상태인지 체크
     /// </summary>
-    /// <returns></returns>
-    private bool moveCheck()
+    /// <returns>움직일 수 있다면 True, 아니면 False</returns>
+    private bool MoveCheck()
     {
         FightManager _fight = FightManager.Instance;
 
@@ -85,29 +85,6 @@ public class Tile : MonoBehaviour
                     return true;
             }
         }
-            
-
         return false;
     }
-
-    //void OnMouseDown()
-    //{
-    //    if (gameObject.transform.childCount >= 2)
-    //    {
-    //        if (gameObject.transform.GetChild(1).GetComponent<SpriteRenderer>().color == FightManager.Instance.Player.GetComponent<SpriteRenderer>().color)
-    //        {
-    //            FightManager.Instance.csTileNum = tileNum;
-    //            FightManager.Instance.OnClickPlayer();
-    //        }
-    //    }
-
-    //    if (FightManager.Instance._playerClick)
-    //    {
-    //        if (_active)
-    //        {
-    //            if (FightManager.Instance.csTileNum != tileNum)
-    //                FightManager.Instance.PlayerMove(tileNum);
-    //        }
-    //    }
-    //}
 }
