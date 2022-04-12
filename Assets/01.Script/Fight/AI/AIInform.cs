@@ -1,5 +1,12 @@
 using UnityEngine;
 
+public enum AI_STATE
+{
+    WAIT_L = 1,
+    WAIT_R,
+    WAIT_S
+}
+
 public class AIInform
 {
     public AIInform(int _num, int _x, int _y, int _health, int _timeNum)

@@ -22,9 +22,7 @@ public class Node
 
 public class AStarAlgorithm : MonoBehaviour
 {
-    public Vector2Int playerPos, targetPos;
-
-    private Vector2Int minPos, maxPos;
+    public Vector2Int playerPos, targetPos, maxPos, minPos;
     private int i;
 
     public List<Node> FinalNodeList = new List<Node>();

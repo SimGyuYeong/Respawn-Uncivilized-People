@@ -41,13 +41,10 @@ public class Tile : MonoBehaviour
         if (!FightManager.Instance.move)
         {
             _highlight.SetActive(false);
-            if (transform.childCount >= 2)
+            if (tile.Position == FightManager.Instance.pPos)
             {
-                if (tile.Position == FightManager.Instance.pPos)
-                {
-                    FightManager.Instance.ClickPlayer();
-                    return;
-                }
+                FightManager.Instance.ClickPlayer();
+                return;
             }
 
             if(MoveCheck())

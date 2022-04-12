@@ -3,13 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-enum AI_STATE
-{
-    WAIT_L = 1,
-    WAIT_R,
-    WAIT_S
-}
-
 public class AI : MonoBehaviour
 {
     public AIInform ai;
