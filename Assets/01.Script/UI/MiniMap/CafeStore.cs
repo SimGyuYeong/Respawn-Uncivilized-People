@@ -16,15 +16,19 @@ public class CafeStore : MonoBehaviour
     float textAlpha = 0;
     public static bool textbool = false;
     CafeTextOutput cafeTextOutput;
+    ChangeImage changeImage;
     private MinimapButtonType BTNtypeManager;
     int namecode = 0;
     int textIndex = 0;
+    private SpawnItemPanel spawnItemPanel;
 
     private void Start()
     {
         guage.value = 3;
         textPanel.DOFade(textImageAlpha, 0.3f);
         cafeTextOutput = GetComponent<CafeTextOutput>();
+        changeImage = GetComponent<ChangeImage>();
+        spawnItemPanel = GetComponent<SpawnItemPanel>();
     }
 
     bool isSeq = false;
@@ -69,6 +73,7 @@ public class CafeStore : MonoBehaviour
                 textIndex = 3;
                 break;
         }
+        changeImage.ChangeStorePanel(SelectType);
         Storebutton(); 
     }
 
@@ -78,6 +83,7 @@ public class CafeStore : MonoBehaviour
         storeColor.DOFade(1, 0.3f);
         //Debug.Log(namecode + " " +  textIndex);
         //cafeTextOutput.TextLoad(namecode, textcode);
+        spawnItemPanel.SpawnPanel();
         guage.value--;
         Invoke("TextPanelOn", .6f);
     }
