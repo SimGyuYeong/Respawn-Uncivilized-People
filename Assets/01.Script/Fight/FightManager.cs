@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class FightManager : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class FightManager : MonoBehaviour
     public AStarAlgorithm _AStar;
 
     public List<Vector2Int> enemyPos = new List<Vector2Int>();
+    public List<Vector2Int> playerPos = new List<Vector2Int>();
     public List<int> noneMoveEnemy = new List<int>();
     public List<Node> finalNodeList
     {
@@ -29,7 +31,10 @@ public class FightManager : MonoBehaviour
     public Tile TilePrefab;
     public AI Enemy;
     public bool move = false;
+    public bool isIng = false;
     public bool[] isWallList;
+    
+    private int TurnPlayerCount = 2;
 
     public List<Tile> tileList = new List<Tile>();
     private List<AI> _aiList = new List<AI>();
@@ -38,6 +43,8 @@ public class FightManager : MonoBehaviour
 
     [SerializeField] GameObject TileUI;
     [SerializeField] GameObject GoalUI;
+
+    private Text _energyText;
 
     private int _energy = 100;
     public int Energy
@@ -71,6 +78,7 @@ public class FightManager : MonoBehaviour
         Instance = this;
         _lineRenderer = GetComponent<LineRenderer>();
         _AStar = GetComponent<AStarAlgorithm>();
+        _energyText = TileUI.transform.GetChild(1).GetComponent<Text>();
     }
 
     private void Start()
@@ -127,6 +135,7 @@ public class FightManager : MonoBehaviour
             }
             yield return new WaitForSeconds(0.08f);
         }
+        TurnChange();
     }
 
     /// <summary>
@@ -234,6 +243,7 @@ public class FightManager : MonoBehaviour
     /// <returns></returns>
     public IEnumerator movePlayer()
     {
+        isIng = true;
         _lineRenderer.positionCount = 0;
         Player.SetActive(false);
 
@@ -247,12 +257,34 @@ public class FightManager : MonoBehaviour
             Energy -= 2;
             yield return new WaitForSeconds(0.2f);
         }
+        Energy += 2;
         Player.transform.position = new Vector2(_x, _y);
         Player.SetActive(true);
         UpdateUI();
-        yield return new WaitForSeconds(0.8f);
+        yield return new WaitForSeconds(2f);
         pPos = new Vector2Int(_x, _y);
-        
+        NextPlayerTurn();
+    }
+
+    /// <summary>
+    /// 플레이어 행동 후 진행함수
+    /// </summary>
+    private void NextPlayerTurn()
+    {
+        TurnPlayerCount--;
+        isIng = false;
+        if (TurnPlayerCount > 0)
+        {
+            foreach (Vector2 pos in enemyPos)
+            {
+                if ((int)Vector2.Distance(pos, pPos) <= 1)
+                {
+                    return;
+                }
+            }
+        }
+
+        TurnChange();
     }
 
     /// <summary>
@@ -284,47 +316,29 @@ public class FightManager : MonoBehaviour
     public void UpdateUI()
     {
         turnText.text = string.Format("앞으로 {0}턴", turn);
-        StartCoroutine(SoftTileValueChange());
-        StartCoroutine(SoftGoalValueChange());
+        UpdateEnergyUI();
     }
 
-    private IEnumerator SoftTileValueChange()
+    private void UpdateEnergyUI()
     {
-       
-        int value = (int)TileUI.transform.GetChild(2).GetComponent<Slider>().value;
-        Text energyText = TileUI.transform.GetChild(1).GetComponent<Text>();
-        while (value > Energy)
-        {
-            TileUI.transform.GetChild(2).GetComponent<Slider>().value--;
-            value = (int)TileUI.transform.GetChild(2).GetComponent<Slider>().value;
-            energyText.text = string.Format("{0} / 100", value);
-            yield return new WaitForSeconds(0.2f);
-        }
-
-        TurnChange();
+        TileUI.transform.GetChild(3).transform.DOScaleX((float)Energy / 100, 1.5f)
+            .OnComplete(()=>scaleChange());
     }
 
-    private IEnumerator SoftGoalValueChange()
+    private void scaleChange()
     {
-        float value = GoalUI.transform.GetChild(2).GetComponent<Slider>().value;
-        Text countText = GoalUI.transform.GetChild(1).GetComponent<Text>();
-        while (value != _enemyCount)
-        {
-            GoalUI.transform.GetChild(2).GetComponent<Slider>().value--;
-            value = GoalUI.transform.GetChild(2).GetComponent<Slider>().value;
-            countText.text = string.Format("{0} / 3", value);
-            yield return new WaitForSeconds(0.2f);
-        }
+        _energyText.transform.DOShakeScale(0.4f, 0.7f, 5);
+        _energyText.text = Energy.ToString();
     }
 
-    private void TurnChange()
+    public void TurnChange()
     {
         switch(turnType)
         {
             case TurnType.Wait_Player:
                 Debug.Log("Player Turn");
-                StartCoroutine(waitSecond(1f));
                 turnType = TurnType.Player;
+                TurnPlayerCount = playerPos.Count*2;
                 break;
 
             case TurnType.Player:
@@ -334,7 +348,6 @@ public class FightManager : MonoBehaviour
 
             case TurnType.Wait_AI:
                 Debug.Log("AI Turn");
-                StartCoroutine(waitSecond(1f));
                 turnType = TurnType.AI;
 
                 //움직이지 않는 적이 없다면
@@ -354,15 +367,18 @@ public class FightManager : MonoBehaviour
                 break;
 
             case TurnType.AI:
-                turnType = TurnType.Wait_Player;
-                move = false;
-                TurnChange();
+                UpdateUI();
+                StartCoroutine(playerTurn());
                 break;
         }
     }
 
-    private IEnumerator waitSecond(float time)
+    private IEnumerator playerTurn()
     {
-        yield return new WaitForSeconds(time);
+        yield return new WaitForSeconds(2f);
+        turnType = TurnType.Wait_Player;
+        move = false;
+        TurnChange();
     }
+
 }
