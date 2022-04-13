@@ -127,7 +127,7 @@ public class AI : MonoBehaviour
         }
 
         yield return new WaitForSeconds(1f);
-        FightManager.Instance.UpdateUI();
+        FightManager.Instance.TurnChange();
     }
 
     /// <summary>
@@ -142,7 +142,7 @@ public class AI : MonoBehaviour
             ai.Position.y--;
         else
             ai.Position.y++;
-        
+
         FightManager.Instance.enemyPos[ai.Number] = ai.Position;
         FightManager.Instance.tileList[ai.TileNum].tile.isEnemy = false;
 
@@ -161,21 +161,8 @@ public class AI : MonoBehaviour
     {
         Vector2 _pos = ai.Position;
 
-        _pos.x--;
-        if (_pos == FightManager.Instance.pPos)
-            return true;
-
-        _pos.x += 2;
-        if (_pos == FightManager.Instance.pPos)
-            return true;
-
-        _pos.x--;
-        _pos.y++;
-        if (_pos == FightManager.Instance.pPos)
-            return true;
-
-        _pos.y -= 2;
-        if (_pos == FightManager.Instance.pPos)
+        int distance = (int)Vector2.Distance(_pos, FightManager.Instance.pPos);
+        if (distance == 1)
             return true;
 
         return false;
@@ -185,9 +172,7 @@ public class AI : MonoBehaviour
     {
         _attackObj = gameObject;
 
-        Vector2 vec = ai.Position - FightManager.Instance.pPos;
-        float distance = Mathf.Abs(vec.x) + Mathf.Abs(vec.y);
-
+        int distance = (int)Vector2.Distance(ai.Position, FightManager.Instance.pPos);
         if (distance <= 3)
         {
             _attackObj = FightManager.Instance.Player;

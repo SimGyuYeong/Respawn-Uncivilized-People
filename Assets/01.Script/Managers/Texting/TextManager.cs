@@ -45,6 +45,12 @@ public class TextManager : MonoBehaviour
         MoveY
     };
 
+    enum SceneEffectEnum // 화면 이펙트 열거형
+    {
+        FadeIn = 1,
+        FadeOut
+    };
+
     private void Awake()
     {
         characterEffect = GetComponent<CharacterEffect>(); // 캐릭터 이펙트 스크립트 대입
@@ -144,8 +150,12 @@ public IEnumerator LoadTextData()
             textPanel.text = string.Format("{0}\n{1}", Name, Sentence[chatID][typingID, 2].Substring(0, i));  // 텍스트 출력....따따따따
             yield return new WaitForSeconds(chatSpeed);
         }
+
+        ///↓↓↓ 타이핑 끝난 후 실행
         if (!Auto) endObject.SetActive(true);
         isTyping = false;
+
+        characterEffect.DoTweenComplete();
 
         GameObject tl = Instantiate(textlogPrefab, textlogView);
         if (Name == "") tl.GetComponent<Text>().text = string.Format(Sentence[chatID][typingID, 2]);
@@ -287,9 +297,8 @@ public IEnumerator LoadTextData()
         GameManager.Instance.InputNameCanvas.SetActive(true);
     }
 
-    private void CharacterEffectFuntion(CharacterEffectEnum effectNumber, float distance, float time, int direct)
+    private void CharacterEffectFuntion(CharacterEffectEnum effectNumber = 0, float distance = 0, float time = 0, int direct = 1)
     {
-
         switch(effectNumber)
         {
             case CharacterEffectEnum.MoveX:
@@ -298,5 +307,17 @@ public IEnumerator LoadTextData()
             default:
                 break;
         } 
+    }
+
+    private void SceneEffectFuntion(SceneEffectEnum effectNumber = 0, float distance = 0, float time = 0, int direct = 1)
+    {
+        switch (effectNumber)
+        {
+            case SceneEffectEnum.FadeIn:
+                characterEffect.FadeIn(time);
+                break;
+            default:
+                break;
+        }
     }
 }

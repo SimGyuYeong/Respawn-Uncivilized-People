@@ -38,7 +38,7 @@ public class Tile : MonoBehaviour
     /// </summary>
     private void OnMouseDown()
     {
-        if (!FightManager.Instance.move)
+        if (!FightManager.Instance.isIng && FightManager.Instance.turnType == FightManager.TurnType.Player)
         {
             _highlight.SetActive(false);
             if (tile.Position == FightManager.Instance.pPos)
@@ -68,7 +68,7 @@ public class Tile : MonoBehaviour
 
         if (_fight.turnType == FightManager.TurnType.Player
             && _fight.isClickPlayer
-            && !_fight.move
+            && !_fight.isIng
             && !tile.isWall)
         {
             if (tile.isEnemy)
