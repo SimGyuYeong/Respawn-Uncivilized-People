@@ -6,37 +6,57 @@ using DG.Tweening;
 
 public class FightManager : MonoBehaviour
 {
+    //싱글톤
     public static FightManager Instance;
-    public AStarAlgorithm _AStar;
 
-    public List<Vector2Int> enemyPos = new List<Vector2Int>();
-    public List<Vector2Int> playerPos = new List<Vector2Int>();
-    public List<int> noneMoveEnemy = new List<int>();
-    public List<Node> finalNodeList
-    {
-        get => _AStar.FinalNodeList;
-    }
+    #region A* 알고리즘
+    
+    public AStarAlgorithm _AStar; // A* 알고리즘 캐싱
+
+    //A* 알고리즘에서 길정보를 가져옴
+    public List<Node> finalNodeList { get => _AStar.FinalNodeList; }
+
+    //A* 알고리즘에 등록된 플레이어 부대의 좌표를 가져오거나 설정
     public Vector2Int pPos
     {
         get => _AStar.playerPos;
         set => _AStar.playerPos = value;
     }
+
+    //A* 알고리즘에 등록된 타켓 좌표를 가져오거나 설정
     public Vector2Int tPos
     {
         get => _AStar.targetPos;
         set => _AStar.targetPos = value;
     }
+    #endregion
 
+    public List<Vector2Int> enemyPos = new List<Vector2Int>(); //적들의 좌표 리스트
+    public List<Vector2Int> playerPos = new List<Vector2Int>(); //플레이어 부대들의 좌표 리스트
+    public List<int> noneMoveEnemy = new List<int>(); //움직이지 않은 적들 리스트
+
+    //타일이 생성될 오브젝트 부모, 플레이어 프리팹, 플레이어가 움직이는 애니메이션 오브젝트
     public GameObject Content, Player, moveAni;
+
+    //타일 프리팹
     public Tile TilePrefab;
+
+    //적 프리팹
     public AI Enemy;
-    public bool move = false;
+
+    //현재 플레이어 애니메이션이 작동중인지
     public bool isIng = false;
+
+    //벽 정보 리스트
     public bool[] isWallList;
     
+    //플레이어가 한턴에 몇번 행동할 수 있는지
     private int TurnPlayerCount = 2;
 
+    //타일 리스트
     public List<Tile> tileList = new List<Tile>();
+
+    //적 리스트
     private List<AI> _aiList = new List<AI>();
 
     [SerializeField] Text turnText;
@@ -46,6 +66,9 @@ public class FightManager : MonoBehaviour
 
     private Text _energyText;
 
+    //나중에 플레이어 스크립트 옮길 예정
+    //움직였는지, 싸웠는지 체크하는 변수
+    public bool move = false, fight = false;
     private int _energy = 100;
     public int Energy
     {
@@ -53,6 +76,10 @@ public class FightManager : MonoBehaviour
         set
         {
             _energy = Mathf.Clamp(value, 0, 100);
+            if(_energy==0)
+            {
+                Debug.Log("게임종료");
+            }
         }
     }
 
@@ -71,7 +98,10 @@ public class FightManager : MonoBehaviour
         AI,
         Wait_Player
     }
+
     public TurnType turnType = TurnType.Wait_Player;
+
+
 
     private void Awake()
     {
@@ -275,13 +305,13 @@ public class FightManager : MonoBehaviour
         isIng = false;
         if (TurnPlayerCount > 0)
         {
-            foreach (Vector2 pos in enemyPos)
+            if(!fight)
             {
-                if ((int)Vector2.Distance(pos, pPos) <= 1)
+                foreach (Vector2 pos in enemyPos)
                 {
-                    return;
+                    if (Vector2.Distance(pos, pPos) <= 1) return;
                 }
-            }
+            }        
         }
 
         TurnChange();
@@ -315,7 +345,6 @@ public class FightManager : MonoBehaviour
 
     public void UpdateUI()
     {
-        turnText.text = string.Format("앞으로 {0}턴", turn);
         UpdateEnergyUI();
     }
 
@@ -333,7 +362,16 @@ public class FightManager : MonoBehaviour
 
     public void TurnChange()
     {
-        switch(turnType)
+        turn--;
+        turnText.text = string.Format("앞으로 {0}턴", turn);
+
+        if(turn==0)
+        {
+            Debug.Log("게임종료");
+            return;
+        }
+
+        switch (turnType)
         {
             case TurnType.Wait_Player:
                 Debug.Log("Player Turn");
