@@ -7,9 +7,9 @@ using UnityEngine.UI;
 public class CharacterEffect : MonoBehaviour
 {
     [SerializeField]
-    private Image FadeInOutImage = null;
+    private Image BackGroundImage = null;
     [SerializeField]
-    private GameObject FadeInOutObject = null;
+    private GameObject BackGroundObject = null;
 
     static public bool SkipDotweenAnimation = false; // ´åÆ®À© ½ºÅµ ¿©ºÎ È®ÀÎ ºÒ °ª
 
@@ -27,13 +27,13 @@ public class CharacterEffect : MonoBehaviour
     // È­¸é ÀÌÆåÆ®
     public void FadeIn(float time)
     {
-        FadeInOutObject.SetActive(true);
-        FadeInOutImage.DOFade(1, time).OnComplete(() => FadeInOutObject.SetActive(false)); 
+        //FadeInOutObject.SetActive(true);
+        BackGroundImage.DOFade(1, time).OnComplete(() => FadeInOutObject.SetActive(false)); 
     }
 
     public void Fadeout(float time)
     {
-        FadeInOutObject.SetActive(true);
-        FadeInOutImage.DOFade(0, time).OnComplete(() => FadeInOutObject.SetActive(false)); ;
+        //FadeInOutObject.SetActive(true);
+        BackGroundImage.DOFade(0, time).OnComplete(() => FadeInOutObject.SetActive(false)); ;
     }
 }
