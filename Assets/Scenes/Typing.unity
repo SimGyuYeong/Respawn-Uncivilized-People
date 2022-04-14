@@ -3916,8 +3916,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 170d45c3acc8f2245ab017f6feefff29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FadeInOutImage: {fileID: 0}
-  FadeInOutObject: {fileID: 0}
+  BackGroundImage: {fileID: 0}
+  BackGroundObject: {fileID: 0}
 --- !u!1 &726335349
 GameObject:
   m_ObjectHideFlags: 0
@@ -9999,8 +9999,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 170d45c3acc8f2245ab017f6feefff29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FadeInOutImage: {fileID: 217013561}
-  FadeInOutObject: {fileID: 0}
+  BackGroundImage: {fileID: 217013561}
+  BackGroundObject: {fileID: 217013560}
 --- !u!1 &1762896567
 GameObject:
   m_ObjectHideFlags: 0

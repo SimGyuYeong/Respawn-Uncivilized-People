@@ -27,13 +27,11 @@ public class CharacterEffect : MonoBehaviour
     // È­¸é ÀÌÆåÆ®
     public void FadeIn(float time)
     {
-        //FadeInOutObject.SetActive(true);
-        BackGroundImage.DOFade(1, time).OnComplete(() => FadeInOutObject.SetActive(false)); 
+        BackGroundImage.DOFade(1, time).From(SkipDotweenAnimation).OnComplete(() => DoTweenComplete());
     }
 
     public void Fadeout(float time)
     {
-        //FadeInOutObject.SetActive(true);
-        BackGroundImage.DOFade(0, time).OnComplete(() => FadeInOutObject.SetActive(false)); ;
+        BackGroundImage.DOFade(0, time).OnComplete(() => BackGroundObject.SetActive(false)); ;
     }
 }
