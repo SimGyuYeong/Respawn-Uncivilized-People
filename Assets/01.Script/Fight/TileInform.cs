@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class TileInform
 {
-    public TileInform(int _num, int _x, int _y, bool _wall, bool _enemy)
+    public TileInform(int _num, int _x, int _y, bool _wall = false, bool _enemy = false)
     {
         tileNum = _num;
         isWall = _wall;

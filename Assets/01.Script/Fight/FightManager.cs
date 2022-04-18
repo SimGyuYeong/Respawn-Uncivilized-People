@@ -130,7 +130,7 @@ public class FightManager : MonoBehaviour
                 var spawnedTile = Instantiate(TilePrefab, new Vector3(x, y, 0), Quaternion.identity);
                 spawnedTile.transform.parent = Content.transform;
                 spawnedTile.name = $"Tile {count}";
-                spawnedTile.tile = new TileInform(count, x, y, false, false);
+                spawnedTile.tile = new TileInform(count, x, y);
 
                 tileList.Add(spawnedTile);
 
