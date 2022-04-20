@@ -35,21 +35,34 @@ public class TextManager : MonoBehaviour
     public float chatSpeed = 0.1f, autoSpeed = 1f; // 텍스트 나오는 속도와 Auto 속도 기본 값 설정
     public bool Auto = false;
     private float originalChatSpeed; // 원래 텍스트 속도 기억하는 변수
+    private GameObject effectObject; //이미지의 인덱스 값
 
     [SerializeField] private SoundManager soundManager = null; // 사운드 매니저 스크립트 넣기
     public SoundManager SOUND { get { return soundManager; } }
 
-    enum CharacterEffectEnum // 캐릭터 이펙트 열거형
-    {
-        MoveX = 1,
-        MoveY
-    };
+    private static TextManager instance;
 
-    enum SceneEffectEnum // 화면 이펙트 열거형
+
+    public delegate void EffectObject(GameObject g);
+    public event EffectObject OnEffectObject;
+
+    public static TextManager Instance
     {
-        FadeIn = 1,
-        FadeOut
-    };
+        get
+        {
+            if (instance == null)
+            {
+                instance = FindObjectOfType<TextManager>();
+                if (instance == null)
+                {
+                    GameObject container = new GameObject("TextManager");
+                    instance = container.AddComponent<TextManager>();
+                }
+            }
+            return instance;
+        }
+    }
+
 
     private void Awake()
     {
@@ -102,11 +115,11 @@ public IEnumerator LoadTextData()
                         vText = vertualText.Split('N');
                         if (vText[1] != null)
                         {
-                            Sentence[chatID][lineCount, 2] = string.Format("{0}{1}{2}", vText[0], GameManager.Instance.PlayerName, vText[1]);
+                            Sentence[chatID][lineCount, 2] = string.Format("{0}{1}{2}", vText[0], GameManager.GameManagerInstance.PlayerName, vText[1]);
                         }
                         else
                         {
-                            Sentence[chatID][lineCount, 2] = string.Format("{0}{1}", GameManager.Instance.PlayerName, vText[0]);
+                            Sentence[chatID][lineCount, 2] = string.Format("{0}{1}", GameManager.GameManagerInstance.PlayerName, vText[0]);
                         }
                         break;
                     }
@@ -137,7 +150,7 @@ public IEnumerator LoadTextData()
         }
         if (Sentence[chatID][typingID, 4] != "") imageSetactive(true);
         string Name = Sentence[chatID][typingID, 1];
-        if (Name == "당신") Name = GameManager.Instance.PlayerName;
+        if (Name == "당신") Name = GameManager.GameManagerInstance.PlayerName;
         for (int i = 0; i < Sentence[chatID][typingID, 2].Length + 1; i++)
         {
             if (skip)
@@ -155,7 +168,7 @@ public IEnumerator LoadTextData()
         if (!Auto) endObject.SetActive(true);
         isTyping = false;
 
-        characterEffect.DoTweenComplete();
+        OnEffectObject(effectObject);
 
         GameObject tl = Instantiate(textlogPrefab, textlogView);
         if (Name == "") tl.GetComponent<Text>().text = string.Format(Sentence[chatID][typingID, 2]);
@@ -275,6 +288,7 @@ public IEnumerator LoadTextData()
         foreach (string x in imageList)
         {
             image[Convert.ToInt32(x) - 1].SetActive(set);
+            effectObject = image[Convert.ToInt32(x) - 1];
             //image[Convert.ToInt32(x) - 1].transform.DOMoveX(0, 0.7f);
             //image[Convert.ToInt32(x)].transform.position = image[Convert.ToInt32(x) - 1].transform.position;
         }
@@ -282,8 +296,8 @@ public IEnumerator LoadTextData()
 
     private void PlayMusic(int num)
     {
-        GameManager.Instance.SOUND.PauseMusic();
-        GameManager.Instance.SOUND.PlayingMusic(num, 0.5f);
+        GameManager.GameManagerInstance.SOUND.PauseMusic();
+        GameManager.GameManagerInstance.SOUND.PlayingMusic(num, 0.5f);
     }
 
     public void CallCameraShake()
@@ -294,30 +308,31 @@ public IEnumerator LoadTextData()
 
     public void InputNameCanvasOpen()
     {
-        GameManager.Instance.InputNameCanvas.SetActive(true);
+        GameManager.GameManagerInstance.InputNameCanvas.SetActive(true);
     }
 
-    private void CharacterEffectFuntion(CharacterEffectEnum effectNumber = 0, float distance = 0, float time = 0, int direct = 1)
-    {
-        switch(effectNumber)
-        {
-            case CharacterEffectEnum.MoveX:
-                characterEffect.MoveXposition(distance, time, direct);
-                break;
-            default:
-                break;
-        } 
-    }
+    //캐릭터 & 배경 연출 이였던 것.
+    //private void CharacterEffectFuntion(CharacterEffectEnum effectNumber = 0, float distance = 0, float time = 0, int direct = 1)
+    //{
+    //    switch(effectNumber)
+    //    {
+    //        case CharacterEffectEnum.MoveX:
+    //            characterEffect.MoveXposition(distance, time, direct);
+    //            break;
+    //        default:
+    //            break;
+    //    } 
+    //}
 
-    private void SceneEffectFuntion(SceneEffectEnum effectNumber = 0, float distance = 0, float time = 0, int direct = 1)
-    {
-        switch (effectNumber)
-        {
-            case SceneEffectEnum.FadeIn:
-                characterEffect.FadeIn(time);
-                break;
-            default:
-                break;
-        }
-    }
+    //private void SceneEffectFuntion(SceneEffectEnum effectNumber = 0, float distance = 0, float time = 0, int direct = 1)
+    //{
+    //    switch (effectNumber)
+    //    {
+    //        case SceneEffectEnum.FadeIn:
+    //            characterEffect.FadeIn(time);
+    //            break;
+    //        default:
+    //            break;
+    //    }
+    //}
 }

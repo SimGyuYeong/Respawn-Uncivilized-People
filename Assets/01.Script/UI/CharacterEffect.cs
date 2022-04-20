@@ -18,7 +18,7 @@ public class CharacterEffect : MonoBehaviour
     {
         gameObject.transform.DOMoveX((distance * direct), time).From(distance * direct, SkipDotweenAnimation).OnComplete(() => DoTweenComplete());
     }
-
+    
     public void DoTweenComplete()
     {
         SkipDotweenAnimation = false;
