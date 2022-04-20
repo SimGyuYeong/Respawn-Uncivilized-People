@@ -133,7 +133,11 @@ public class FightManager : MonoBehaviour
         _lineRenderer.endWidth = .05f;
     }
 
-    IEnumerator spawnTile()
+    /// <summary>
+    /// 타일 생성 코루틴 함수
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator spawnTile()
     {
         int count = 1, aiCount = 0;
         for (int y = 7; y >= 0; y--)
@@ -181,33 +185,39 @@ public class FightManager : MonoBehaviour
         TurnChange();
     }
 
-    /// <summary>
-    /// 이동 가능 거리 보여주는 함수
-    /// </summary>
-    /// <param name="view"></param>
-    public void ShowMoveDistance(bool view)
+    #region 라인 그리기
+    public void DrawLine()
     {
-        SpriteRenderer _spriteRenderer;
-        int count = 0;
-
-        for (int y = 7; y >= 0; y--)
+        _lineRenderer.startColor = Color.white;
+        _lineRenderer.endColor = Color.white;
+        _lineRenderer.positionCount = 0;
+        for (int i = 0; i < finalNodeList.Count; i++)
         {
-            for (int x = 0; x < 8; x++)
-            {
-                if (!isWallList[count])
-                {
-                    _spriteRenderer = tileList[count].GetComponent<SpriteRenderer>();
-
-                    if (DistanceCheck(new Vector2(x, y)))
-                    {
-                        _spriteRenderer.color = view ? Color.yellow : Color.white;
-                    }
-                }
-                count++;
-            }
+            Vector2 pos = new Vector2(finalNodeList[i].x, finalNodeList[i].y);
+            _lineRenderer.positionCount++;
+            _lineRenderer.SetPosition(i, pos);
         }
     }
 
+    public void EnemyDraw()
+    {
+        _lineRenderer.positionCount = 2;
+        _lineRenderer.startColor = Color.red;
+        _lineRenderer.endColor = Color.red;
+
+        Vector2Int pos = pPos;
+        _lineRenderer.SetPosition(0, new Vector3(pos.x, pos.y));
+        pos = tPos;
+        _lineRenderer.SetPosition(1, new Vector3(pos.x, pos.y));
+    }
+    #endregion
+
+    #region Check
+    /// <summary>
+    /// 이동가능한 거리인지 체크하는 함수
+    /// </summary>
+    /// <param name="pos">이동할 좌표</param>
+    /// <returns>이동가능하면 True, 불가능하면 False</returns>
     public bool DistanceCheck(Vector2 pos)
     {
         tPos = new Vector2Int((int)pos.x, (int)pos.y);
@@ -215,7 +225,6 @@ public class FightManager : MonoBehaviour
         if (finalNodeList.Count <= moveDistance+1 && finalNodeList.Count > 0) return true;
         return false;
     }
-
 
     /// <summary>
     /// 지형지물 체크 함수
@@ -255,29 +264,49 @@ public class FightManager : MonoBehaviour
         return false;
     }
 
-    public void DrawLine()
+    /// <summary>
+    /// 공격이 가능한지 체크하는 함수
+    /// </summary>
+    /// <returns></returns>
+    private bool AttackCheck()
     {
-        _lineRenderer.startColor = Color.white;
-        _lineRenderer.endColor = Color.white;
-        _lineRenderer.positionCount = 0;
-        for (int i = 0; i < finalNodeList.Count; i++)
+        if (fight == false)
         {
-            Vector2 pos = new Vector2(finalNodeList[i].x, finalNodeList[i].y);
-            _lineRenderer.positionCount++;
-            _lineRenderer.SetPosition(i, pos);
+            foreach (Vector2 pos in enemyPos)
+            {
+                if (Vector2.Distance(pos, pPos) <= 1) return true;
+            }
         }
+
+        return false;
     }
+    #endregion
 
-    public void EnemyDraw()
+    /// <summary>
+    /// 이동 가능 거리 보여주는 함수
+    /// </summary>
+    /// <param name="view"></param>
+    public void ShowMoveDistance(bool view)
     {
-        _lineRenderer.positionCount = 2;
-        _lineRenderer.startColor = Color.red;
-        _lineRenderer.endColor = Color.red;
+        SpriteRenderer _spriteRenderer;
+        int count = 0;
 
-        Vector2Int pos = pPos;
-        _lineRenderer.SetPosition(0, new Vector3(pos.x, pos.y));
-        pos = tPos;
-        _lineRenderer.SetPosition(1, new Vector3(pos.x, pos.y));
+        for (int y = 7; y >= 0; y--)
+        {
+            for (int x = 0; x < 8; x++)
+            {
+                if (!isWallList[count])
+                {
+                    _spriteRenderer = tileList[count].GetComponent<SpriteRenderer>();
+
+                    if (DistanceCheck(new Vector2(x, y)))
+                    {
+                        _spriteRenderer.color = view ? Color.yellow : Color.white;
+                    }
+                }
+                count++;
+            }
+        }
     }
 
     /// <summary>
@@ -337,18 +366,7 @@ public class FightManager : MonoBehaviour
         TurnChange();
     }
 
-    private bool AttackCheck()
-    {
-        if(fight == false)
-        {
-            foreach (Vector2 pos in enemyPos)
-            {
-                if (Vector2.Distance(pos, pPos) <= 1) return true;
-            }
-        }
-
-        return false;
-    }
+    
 
     /// <summary>
     /// 플레이어를 클릭했을 때
@@ -439,23 +457,6 @@ public class FightManager : MonoBehaviour
         StartCoroutine(movePlayer());
     }
 
-    public void UpdateUI()
-    {
-        UpdateEnergyUI();
-    }
-
-    private void UpdateEnergyUI()
-    {
-        TileUI.transform.GetChild(3).transform.DOScaleX((float)Energy / 100, 1.5f)
-            .OnComplete(()=>scaleChange());
-    }
-
-    private void scaleChange()
-    {
-        _energyText.transform.DOShakeScale(0.4f, 0.7f, 5);
-        _energyText.text = Energy.ToString();
-    }
-
     public void TurnChange()
     {
         turnText.text = string.Format("앞으로 {0}턴", turn);
@@ -516,5 +517,21 @@ public class FightManager : MonoBehaviour
         fight = false;
         TurnChange();
     }
+    
+    public void UpdateUI()
+    {
+        UpdateEnergyUI();
+    }
 
+    private void UpdateEnergyUI()
+    {
+        TileUI.transform.GetChild(3).transform.DOScaleX((float)Energy / 100, 1.5f)
+            .OnComplete(() => scaleChange());
+    }
+
+    private void scaleChange()
+    {
+        _energyText.transform.DOShakeScale(0.4f, 0.7f, 5);
+        _energyText.text = Energy.ToString();
+    }
 }
