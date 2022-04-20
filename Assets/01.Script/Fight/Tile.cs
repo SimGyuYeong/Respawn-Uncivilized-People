@@ -38,18 +38,21 @@ public class Tile : MonoBehaviour
     /// </summary>
     private void OnMouseDown()
     {
-        if (!FightManager.Instance.isIng && FightManager.Instance.turnType == FightManager.TurnType.Player)
+        if (!FightManager.Instance.isIng)
         {
             _highlight.SetActive(false);
-            if (tile.Position == FightManager.Instance.pPos)
+            if (FightManager.Instance.turnType == FightManager.TurnType.Input_Action)
             {
-                FightManager.Instance.ClickPlayer();
-                return;
+                
+                if (tile.Position == FightManager.Instance.pPos)
+                {
+                    FightManager.Instance.ClickPlayer();
+                    return;
+                }
             }
-
-            if(MoveCheck())
+            else if (FightManager.Instance.turnType == FightManager.TurnType.Player_Move)
             {
-                if (FightManager.Instance.DistanceCheck(tile.Position))
+                if (MoveCheck() && FightManager.Instance.DistanceCheck(tile.Position))
                 {
                     FightManager.Instance.PlayerMove(tile.Position, transform);
                 }
@@ -66,7 +69,7 @@ public class Tile : MonoBehaviour
     {
         FightManager _fight = FightManager.Instance;
 
-        if (_fight.turnType == FightManager.TurnType.Player
+        if (_fight.turnType == FightManager.TurnType.Player_Move
             && _fight.isClickPlayer
             && !_fight.isIng
             && !tile.isWall)
