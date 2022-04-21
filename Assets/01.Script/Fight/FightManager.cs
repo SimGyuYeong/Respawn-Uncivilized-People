@@ -99,7 +99,7 @@ public class FightManager : MonoBehaviour
 
     public enum TurnType
     {
-        Wait_AI,
+        Wait_AI = 0,
         AI,
         Wait_Player,
         Input_Action,

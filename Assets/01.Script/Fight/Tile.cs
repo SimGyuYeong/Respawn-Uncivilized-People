@@ -12,9 +12,13 @@ public class Tile : MonoBehaviour
     /// </summary>
     void OnMouseEnter()
     {
-        if (MoveCheck())
+        if(FightManager.Instance.turnType == FightManager.TurnType.Player_Move || FightManager.Instance.turnType == FightManager.TurnType.Player_Attack)
         {
             _highlight.SetActive(true);
+        }
+
+        if (MoveCheck())
+        {
             if (tile.isEnemy)
                 FightManager.Instance.EnemyDraw();
             else
@@ -29,8 +33,7 @@ public class Tile : MonoBehaviour
     /// </summary>
     void OnMouseExit()
     {
-        if (MoveCheck())
-            _highlight.SetActive(false);
+        _highlight.SetActive(false);
     }
 
     /// <summary>
