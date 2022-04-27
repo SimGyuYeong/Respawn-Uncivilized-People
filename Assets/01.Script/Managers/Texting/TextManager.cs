@@ -67,7 +67,6 @@ public class TextManager : MonoBehaviour
 
     private void Awake()
     {
-        DontDestroyOnLoad(this);
         characterEffect = GetComponent<CharacterEffect>(); // 캐릭터 이펙트 스크립트 대입
         soundManager = GetComponent<SoundManager>(); // 사운드 매니저 스크립트 대입
         StartCoroutine(LoadTextData()); // 텍스트 데이터 읽기
@@ -149,6 +148,8 @@ public IEnumerator LoadTextData()
         {
             backID = Convert.ToInt32(Sentence[chatID][typingID, 3]) - 1;
             background[backID].SetActive(true);
+            //StartCoroutine(GameManager.Instance.FadeIn());
+            StartCoroutine(GameManager.Instance.FadeOut());
         }
         if (Sentence[chatID][typingID, 4] != "") imageSetactive(true);
         string Name = Sentence[chatID][typingID, 1];
@@ -280,6 +281,7 @@ public IEnumerator LoadTextData()
                 chatID = Convert.ToInt32(select[num + 1]);
                 selectPanel.gameObject.SetActive(false);
                 textImage.SetActive(true);
+                
                 typingID = 1;
                 StartCoroutine(Typing());
             }
