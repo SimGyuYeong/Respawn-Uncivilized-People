@@ -12,6 +12,18 @@ public class InputButton : ButtonManager
         StartCoroutine(ButtonMove());       //버튼들이 올라감
     }
 
+    public void InputSettingButton()
+    {
+        settingPanel.transform.DOMoveY(0, 0.3f).SetEase(Ease.InCirc);
+        
+    }
+    public void InputContinueButton()
+    {
+        settingPanel.transform.DOMoveY(11, 0.3f).SetEase(Ease.InCirc);
+        //settingPanel.rectTransform.DOMoveY(11, 0.3f);
+        //settingPanel.rectTransform.DOAnchorPosY(11, 0.3f);
+    }
+
     IEnumerator ButtonMove()
     {
         //Sequence seq = DOTween.Sequence();
@@ -37,8 +49,8 @@ public class InputButton : ButtonManager
             yield return new WaitForSeconds(0.005f);
         }
 
-        StartCoroutine(PopUp());
-        yield return new WaitForSeconds(1.4f);
+        StartCoroutine(PopUpBackGround());
+        yield return new WaitForSeconds(1.2f);
 
         while (fadeImage.color.a >= 0)
         {
@@ -46,12 +58,19 @@ public class InputButton : ButtonManager
             fadeImage.color = color;
             yield return new WaitForSeconds(0.005f);
         }
+
+        StartCoroutine(PopUpTextPanel());
     }
 
-
-    IEnumerator PopUp()
+    IEnumerator PopUpBackGround()
     {
         GameScreen.transform.position = Vector3.zero;
         yield return new WaitForSeconds(1.1f);
+    }
+
+    IEnumerator PopUpTextPanel()
+    {
+        textPanel.transform.DOMoveY(-3.6f, 0.3f).SetEase(Ease.InOutQuart);
+        yield return new WaitForSeconds(0.12f);
     }
 }
