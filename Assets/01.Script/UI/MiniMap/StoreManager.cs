@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
-public class CafeStore : MonoBehaviour
+public class StoreManager : MonoBehaviour
 {
-    Tweener store;
     public GameObject storePanel = null;
-    public GameObject itemImage;
     public Image storeColor;
     public Slider guage;
     public Image textPanel;
@@ -73,6 +71,7 @@ public class CafeStore : MonoBehaviour
                 textIndex = 3;
                 break;
         }
+
         changeImage.ChangeStorePanel(SelectType);
         Storebutton(); 
     }
@@ -81,8 +80,8 @@ public class CafeStore : MonoBehaviour
     {
         storePanel.transform.DOMove(Vector3.zero, 0.4f);
         storeColor.DOFade(1, 0.3f);
-        //Debug.Log(namecode + " " +  textIndex);
-        //cafeTextOutput.TextLoad(namecode, textcode);
+        //Debug.Log(namecode + " " + textIndex);
+        //cafeTextOutput.TextLoad(namecode, textIndex);
         spawnItemPanel.SpawnPanel();
         guage.value--;
         Invoke("TextPanelOn", .6f);

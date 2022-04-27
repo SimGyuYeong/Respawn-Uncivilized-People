@@ -67,6 +67,7 @@ public class TextManager : MonoBehaviour
 
     private void Awake()
     {
+        DontDestroyOnLoad(this);
         characterEffect = GetComponent<CharacterEffect>(); // 캐릭터 이펙트 스크립트 대입
         soundManager = GetComponent<SoundManager>(); // 사운드 매니저 스크립트 대입
         StartCoroutine(LoadTextData()); // 텍스트 데이터 읽기
