@@ -4,13 +4,25 @@ using UnityEngine;
 
 public class SpawnItemPanel : MonoBehaviour
 {
-    private List<ItemPanel> itemPanels = new List<ItemPanel>();
-    public ItemPanel itemPanel;
+    private List<ItemPanelSetting> itemPanelsList = new List<ItemPanelSetting>();
+    public GameObject content;
+    public ItemPanelSetting itemPanel;
+
     public void SpawnPanel()
     {
-        for(int i = 0; i < 18; i++)
+        StartCoroutine(PanelOn());
+    }
+
+
+    IEnumerator PanelOn()
+    {
+        for (int i = 0; i < 18; i++)
         {
-            //var spawnItemPanel = Instantiate(itemPanel, )
+            var spawnItemPanel = Instantiate(itemPanel, Vector3.zero, Quaternion.identity);
+            spawnItemPanel.transform.parent = content.transform;
+            yield return new WaitForSeconds(0.2f);
+
+            itemPanelsList.Add(spawnItemPanel);
         }
     }
 }

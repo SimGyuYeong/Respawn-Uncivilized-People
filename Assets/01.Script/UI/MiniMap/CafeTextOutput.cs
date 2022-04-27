@@ -33,7 +33,7 @@ public class CafeTextOutput : MonoBehaviour
 
     void Update()
     {
-        if (CafeStore.textbool == true)
+        if (StoreManager.textbool == true)
         {
             outputText.text = string.Format("{0}\n", texts);
         }
