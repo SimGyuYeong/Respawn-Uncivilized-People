@@ -66,6 +66,7 @@ public class FightManager : MonoBehaviour
     [SerializeField] GameObject GoalUI;
 
     private Text _energyText;
+    private Text _goalText;
 
     //나중에 플레이어 스크립트 옮길 예정
     //움직였는지, 싸웠는지 체크하는 변수
@@ -122,6 +123,7 @@ public class FightManager : MonoBehaviour
         _lineRenderer = GetComponent<LineRenderer>();
         _AStar = GetComponent<AStarAlgorithm>();
         _energyText = TileUI.transform.GetChild(1).GetComponent<Text>();
+        _goalText = GoalUI.transform.GetChild(1).GetComponent<Text>();
     }
 
     private void Start()
@@ -513,7 +515,7 @@ public class FightManager : MonoBehaviour
             }
             num++;
         }
-
+        _enemyCount--;
         ClickPlayer();
         UpdateUI();
         StartCoroutine(AfterAttack());
@@ -570,7 +572,6 @@ public class FightManager : MonoBehaviour
                 break;
 
             case TurnType.AI:
-                UpdateUI();
                 turn--;
                 StartCoroutine(playerTurn());
                 break;
@@ -579,7 +580,7 @@ public class FightManager : MonoBehaviour
 
     private IEnumerator playerTurn()
     {
-        yield return new WaitForSeconds(2f);
+        yield return null;   
         turnType = TurnType.Wait_Player;
         move = false;
         fight = false;
@@ -589,17 +590,29 @@ public class FightManager : MonoBehaviour
     public void UpdateUI()
     {
         UpdateEnergyUI();
+        UpdateGoalUI();
+    }
+
+    private void UpdateGoalUI()
+    {
+        Sequence seq = DOTween.Sequence();
+        seq.Append(GoalUI.transform.GetChild(3).transform.DOScaleX((float)_enemyCount / 3, 1.5f));
+        seq.Append(_goalText.transform.DOShakeScale(0.4f, 0.7f, 5));
+        seq.AppendCallback(() =>
+        {
+            _goalText.text = _enemyCount.ToString();
+        });
     }
 
     private void UpdateEnergyUI()
     {
-        TileUI.transform.GetChild(3).transform.DOScaleX((float)Energy / 100, 1.5f)
-            .OnComplete(() => scaleChange());
-    }
-
-    private void scaleChange()
-    {
-        _energyText.transform.DOShakeScale(0.4f, 0.7f, 5);
-        _energyText.text = Energy.ToString();
+        Sequence seq = DOTween.Sequence();
+        seq.Append(TileUI.transform.GetChild(3).transform.DOScaleX((float)Energy / 100, 1.5f));
+        seq.Append(_energyText.transform.DOShakeScale(0.4f, 0.7f, 5));
+        seq.AppendCallback(() =>
+        {
+            _energyText.text = Energy.ToString();
+        });
+        
     }
 }
