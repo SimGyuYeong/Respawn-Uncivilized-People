@@ -309,6 +309,11 @@ public class FightManager : MonoBehaviour
         }
     }
 
+    public void ShowAttackDistance(bool view)
+    {
+
+    }
+
     /// <summary>
     /// 플레이어 이동 코루틴
     /// </summary>

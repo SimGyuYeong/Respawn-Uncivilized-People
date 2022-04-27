@@ -115,11 +115,11 @@ public IEnumerator LoadTextData()
                         vText = vertualText.Split('N');
                         if (vText[1] != null)
                         {
-                            Sentence[chatID][lineCount, 2] = string.Format("{0}{1}{2}", vText[0], GameManager.GameManagerInstance.PlayerName, vText[1]);
+                            Sentence[chatID][lineCount, 2] = string.Format("{0}{1}{2}", vText[0], GameManager.Instance.PlayerName, vText[1]);
                         }
                         else
                         {
-                            Sentence[chatID][lineCount, 2] = string.Format("{0}{1}", GameManager.GameManagerInstance.PlayerName, vText[0]);
+                            Sentence[chatID][lineCount, 2] = string.Format("{0}{1}", GameManager.Instance.PlayerName, vText[0]);
                         }
                         break;
                     }
@@ -150,7 +150,7 @@ public IEnumerator LoadTextData()
         }
         if (Sentence[chatID][typingID, 4] != "") imageSetactive(true);
         string Name = Sentence[chatID][typingID, 1];
-        if (Name == "당신") Name = GameManager.GameManagerInstance.PlayerName;
+        if (Name == "당신") Name = GameManager.Instance.PlayerName;
         for (int i = 0; i < Sentence[chatID][typingID, 2].Length + 1; i++)
         {
             if (skip)
@@ -296,8 +296,8 @@ public IEnumerator LoadTextData()
 
     private void PlayMusic(int num)
     {
-        GameManager.GameManagerInstance.SOUND.PauseMusic();
-        GameManager.GameManagerInstance.SOUND.PlayingMusic(num, 0.5f);
+        GameManager.Instance.SOUND.PauseMusic();
+        GameManager.Instance.SOUND.PlayingMusic(num, 0.5f);
     }
 
     public void CallCameraShake()
@@ -308,7 +308,7 @@ public IEnumerator LoadTextData()
 
     public void InputNameCanvasOpen()
     {
-        GameManager.GameManagerInstance.InputNameCanvas.SetActive(true);
+        GameManager.Instance.InputNameCanvas.SetActive(true);
     }
 
     //캐릭터 & 배경 연출 이였던 것.

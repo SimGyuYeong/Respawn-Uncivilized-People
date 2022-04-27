@@ -5,7 +5,8 @@ using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager GameManagerInstance;
+
+    public static GameManager Instance;
 
     [SerializeField] private TextManager textManager = null;
     public TextManager TEXT { get { return textManager; } }
@@ -37,10 +38,10 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        if (GameManagerInstance != this)
+        if (Instance != this)
         {
-            Destroy(GameManagerInstance);
-            GameManagerInstance = this;
+            Destroy(Instance);
+            Instance = this;
         }
 
         DontDestroyOnLoad(this.gameObject);
