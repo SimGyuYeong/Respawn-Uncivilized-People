@@ -42,9 +42,10 @@ public class TextManager : MonoBehaviour
 
     private static TextManager instance;
 
+    public Action<GameObject> OnEffectObject;
 
-    public delegate void EffectObject(GameObject g);
-    public event EffectObject OnEffectObject;
+    //public delegate void EffectObject(GameObject g);
+    //public event EffectObject OnEffectObject;
 
     public static TextManager Instance
     {
@@ -168,7 +169,9 @@ public IEnumerator LoadTextData()
         if (!Auto) endObject.SetActive(true);
         isTyping = false;
 
-        OnEffectObject(effectObject);
+        OnEffectObject?.Invoke(effectObject);
+
+        //if(OnEffectObject!=null)
 
         GameObject tl = Instantiate(textlogPrefab, textlogView);
         if (Name == "") tl.GetComponent<Text>().text = string.Format(Sentence[chatID][typingID, 2]);
