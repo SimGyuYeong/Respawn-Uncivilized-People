@@ -17,12 +17,25 @@ public class Tile : MonoBehaviour
             _highlight.SetActive(true);
         }
 
-        if (MoveCheck())
+        if(FightManager.Instance.turnType == FightManager.TurnType.Player_Attack)
         {
             if (tile.isEnemy)
-                FightManager.Instance.EnemyDraw();
+            {
+                if (Vector2Int.Distance(tile.Position, FightManager.Instance.pPos) <= 1)
+                {
+                    FightManager.Instance.tPos = tile.Position;
+                    FightManager.Instance.EnemyDraw();
+                }
+            }
             else
-                FightManager.Instance.DrawLine();
+            {
+                if(FightManager.Instance._lineRenderer.positionCount > 0)
+                    FightManager.Instance._lineRenderer.positionCount = 0;
+            }
+        }
+        else if (MoveCheck())
+        {
+            FightManager.Instance.DrawLine();
         }
         else
             FightManager.Instance._lineRenderer.positionCount = 0;
@@ -55,9 +68,31 @@ public class Tile : MonoBehaviour
             }
             else if (FightManager.Instance.turnType == FightManager.TurnType.Player_Move)
             {
+                if (tile.Position == FightManager.Instance.pPos)
+                {
+                    FightManager.Instance.turnType = FightManager.TurnType.Input_Action;
+                    FightManager.Instance.HideDistance();
+                    return;
+                }
+
                 if (MoveCheck() && FightManager.Instance.DistanceCheck(tile.Position))
                 {
                     FightManager.Instance.PlayerMove(tile.Position, transform);
+                }
+            }
+            else if (FightManager.Instance.turnType == FightManager.TurnType.Player_Attack)
+            {
+                if (tile.Position == FightManager.Instance.pPos)
+                {
+                    FightManager.Instance.turnType = FightManager.TurnType.Input_Action;
+                    FightManager.Instance.HideDistance();
+                    return;
+                }
+
+                if (tile.isEnemy)
+                {
+                    if (Vector2Int.Distance(tile.Position, FightManager.Instance.pPos) <= 1)
+                        FightManager.Instance.PlayerAttack(transform.GetChild(1).GetComponent<AI>().ai.Number);
                 }
             }
         }
