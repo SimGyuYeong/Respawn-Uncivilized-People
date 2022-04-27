@@ -58,7 +58,7 @@ public class FightManager : MonoBehaviour
     public List<Tile> tileList = new List<Tile>();
 
     //적 리스트
-    private List<AI> _aiList = new List<AI>();
+    public List<AI> enemyList = new List<AI>();
 
     [SerializeField] Text turnText;
 
@@ -66,6 +66,7 @@ public class FightManager : MonoBehaviour
     [SerializeField] GameObject GoalUI;
 
     private Text _energyText;
+    private Text _goalText;
 
     //나중에 플레이어 스크립트 옮길 예정
     //움직였는지, 싸웠는지 체크하는 변수
@@ -122,6 +123,7 @@ public class FightManager : MonoBehaviour
         _lineRenderer = GetComponent<LineRenderer>();
         _AStar = GetComponent<AStarAlgorithm>();
         _energyText = TileUI.transform.GetChild(1).GetComponent<Text>();
+        _goalText = GoalUI.transform.GetChild(1).GetComponent<Text>();
     }
 
     private void Start()
@@ -151,10 +153,14 @@ public class FightManager : MonoBehaviour
 
                 tileList.Add(spawnedTile);
 
-                if (_AStar.playerPos.x == x && _AStar.playerPos.y == y)
+                foreach(Vector2Int pos in playerPos)
                 {
-                    Player = Instantiate(Player, spawnedTile.transform);
-                    Player.transform.position = spawnedTile.transform.position;
+                    if (pos == new Vector2Int(x, y))
+                    {
+                        Player = Instantiate(Player, spawnedTile.transform);
+                        Player.transform.position = spawnedTile.transform.position;
+                        pPos = pos;
+                    }
                 }
 
                 foreach(Vector2Int pos in enemyPos)
@@ -166,7 +172,7 @@ public class FightManager : MonoBehaviour
                         spawnedTile.tile.isEnemy = true;
                         int _c = count;
                         enemy.ai = new AIInform(aiCount, x, y, 45, --_c);
-                        _aiList.Add(enemy);
+                        enemyList.Add(enemy);
                         aiCount++;
                     }
                 }
@@ -205,10 +211,8 @@ public class FightManager : MonoBehaviour
         _lineRenderer.startColor = Color.red;
         _lineRenderer.endColor = Color.red;
 
-        Vector2Int pos = pPos;
-        _lineRenderer.SetPosition(0, new Vector3(pos.x, pos.y));
-        pos = tPos;
-        _lineRenderer.SetPosition(1, new Vector3(pos.x, pos.y));
+        _lineRenderer.SetPosition(0, new Vector3(pPos.x, pPos.y));
+        _lineRenderer.SetPosition(1, new Vector3(tPos.x, tPos.y));
     }
     #endregion
 
@@ -282,11 +286,7 @@ public class FightManager : MonoBehaviour
     }
     #endregion
 
-    /// <summary>
-    /// 이동 가능 거리 보여주는 함수
-    /// </summary>
-    /// <param name="view"></param>
-    public void ShowMoveDistance(bool view)
+    public void ShowDistance(string type)
     {
         SpriteRenderer _spriteRenderer;
         int count = 0;
@@ -299,19 +299,44 @@ public class FightManager : MonoBehaviour
                 {
                     _spriteRenderer = tileList[count].GetComponent<SpriteRenderer>();
 
-                    if (DistanceCheck(new Vector2(x, y)))
+                    Vector2 pos = new Vector2(x, y);
+
+                    if (type == "Move")
                     {
-                        _spriteRenderer.color = view ? Color.yellow : Color.white;
+                        if (DistanceCheck(pos))
+                        {
+                            _spriteRenderer.color = Color.yellow;
+                        }
+                    }
+                    else if (type == "Attack")
+                    {
+                        if (Vector2.Distance(pos, pPos) <= 1)
+                        {
+                            _spriteRenderer.color = Color.red;
+                        }
                     }
                 }
                 count++;
             }
         }
     }
-
-    public void ShowAttackDistance(bool view)
+    public void HideDistance()
     {
+        SpriteRenderer _spriteRenderer;
+        int count = 0;
 
+        for (int y = 7; y >= 0; y--)
+        {
+            for (int x = 0; x < 8; x++)
+            {
+                if (!isWallList[count])
+                {
+                    _spriteRenderer = tileList[count].GetComponent<SpriteRenderer>();
+                    _spriteRenderer.color = Color.white;
+                }
+                count++;
+            }
+        }
     }
 
     /// <summary>
@@ -364,7 +389,11 @@ public class FightManager : MonoBehaviour
             else if (action == Action.Attack)
             {
                 fight = true;
-                if (move == false) return;
+                if (move == false)
+                {
+                    turnType = TurnType.Input_Action;
+                    return;
+                }
             }
         }
 
@@ -383,7 +412,7 @@ public class FightManager : MonoBehaviour
         {
             _lineRenderer.positionCount = 0;
             _ActionButton.SetActive(false);
-            ShowMoveDistance(false);
+            HideDistance();
         }
         else
         {
@@ -434,11 +463,12 @@ public class FightManager : MonoBehaviour
         switch(value)
         {
             case Action.Move:
-                ShowMoveDistance(isClickPlayer);
+                ShowDistance("Move");
                 turnType = TurnType.Player_Move;
                 break;
             case Action.Attack:
-
+                ShowDistance("Attack");
+                turnType = TurnType.Player_Attack;
                 break;
             case Action.Stop:
                 turnType = TurnType.Player_Move;
@@ -460,6 +490,41 @@ public class FightManager : MonoBehaviour
         _AStar.PathFinding();
         Player.transform.SetParent(parent);
         StartCoroutine(movePlayer());
+    }
+
+    public void PlayerAttack(int enemyCount)
+    {
+        Energy -= enemyList[enemyCount].ai.Health;
+        enemyPos.RemoveAt(enemyCount);
+        
+        if(noneMoveEnemy.Count > 0)
+        {
+            noneMoveEnemy.RemoveAt(enemyCount);
+        }
+        
+        Destroy(enemyList[enemyCount].gameObject);
+        enemyList.RemoveAt(enemyCount);
+
+        int num = 0;
+        foreach(var e in enemyList)
+        {
+            AI _ai = e.GetComponent<AI>();
+            if (_ai.ai.Number - num != 0)
+            {
+                _ai.ai.Number--;
+            }
+            num++;
+        }
+        _enemyCount--;
+        ClickPlayer();
+        UpdateUI();
+        StartCoroutine(AfterAttack());
+    }
+
+    IEnumerator AfterAttack()
+    {
+        yield return new WaitForSeconds(2f);
+        NextPlayerTurn(Action.Attack);
     }
 
     public void TurnChange()
@@ -499,7 +564,7 @@ public class FightManager : MonoBehaviour
                 }
 
                 int _num = Random.Range(0, noneMoveEnemy.Count);
-                _aiList[noneMoveEnemy[_num]].AIMoveStart(); //랜덤으로 지정한 적을 움직인다.
+                enemyList[noneMoveEnemy[_num]].AIMoveStart(); //랜덤으로 지정한 적을 움직인다.
                 noneMoveEnemy.RemoveAt(_num); //움직인 적은 움직이지 않은 적 리스트에서 제거
                 if (noneMoveEnemy.Count < 1) //모든 적이 움직였다면
                     noneMoveEnemy.Clear(); //움직이지 않은 적 리스트 초기화
@@ -507,7 +572,6 @@ public class FightManager : MonoBehaviour
                 break;
 
             case TurnType.AI:
-                UpdateUI();
                 turn--;
                 StartCoroutine(playerTurn());
                 break;
@@ -516,7 +580,7 @@ public class FightManager : MonoBehaviour
 
     private IEnumerator playerTurn()
     {
-        yield return new WaitForSeconds(2f);
+        yield return null;   
         turnType = TurnType.Wait_Player;
         move = false;
         fight = false;
@@ -526,17 +590,29 @@ public class FightManager : MonoBehaviour
     public void UpdateUI()
     {
         UpdateEnergyUI();
+        UpdateGoalUI();
+    }
+
+    private void UpdateGoalUI()
+    {
+        Sequence seq = DOTween.Sequence();
+        seq.Append(GoalUI.transform.GetChild(3).transform.DOScaleX((float)_enemyCount / 3, 1.5f));
+        seq.Append(_goalText.transform.DOShakeScale(0.4f, 0.7f, 5));
+        seq.AppendCallback(() =>
+        {
+            _goalText.text = _enemyCount.ToString();
+        });
     }
 
     private void UpdateEnergyUI()
     {
-        TileUI.transform.GetChild(3).transform.DOScaleX((float)Energy / 100, 1.5f)
-            .OnComplete(() => scaleChange());
-    }
-
-    private void scaleChange()
-    {
-        _energyText.transform.DOShakeScale(0.4f, 0.7f, 5);
-        _energyText.text = Energy.ToString();
+        Sequence seq = DOTween.Sequence();
+        seq.Append(TileUI.transform.GetChild(3).transform.DOScaleX((float)Energy / 100, 1.5f));
+        seq.Append(_energyText.transform.DOShakeScale(0.4f, 0.7f, 5));
+        seq.AppendCallback(() =>
+        {
+            _energyText.text = Energy.ToString();
+        });
+        
     }
 }

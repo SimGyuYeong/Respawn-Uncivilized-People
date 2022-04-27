@@ -13,6 +13,8 @@ public class EffectObject : MonoBehaviour
     [SerializeField]
     private bool boolWalk = false;
 
+    //[Header("실행하고 싶은 ")]
+
 
     void Start()
     {
@@ -23,7 +25,33 @@ public class EffectObject : MonoBehaviour
     {
         if(g == this.gameObject)
         {
-
+            if(boolFadeIn == true)
+            {
+                BoolFadeIn();
+            }
+            if (boolFadeOut == true)
+            {
+                BoolFadeOut();
+            }
+            if (boolWalk == true)
+            {
+                BoolWalk();
+            }
         }
+    }
+
+    private void BoolFadeIn()
+    {
+
+    }
+
+    private void BoolFadeOut()
+    {
+
+    }
+
+    private void BoolWalk()
+    {
+
     }
 }

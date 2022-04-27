@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Button : MonoBehaviour
+public class ButtonScript : MonoBehaviour
 {
     public FightManager.Action actionName;
 
