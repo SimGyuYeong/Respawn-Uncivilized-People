@@ -39,46 +39,43 @@ public class AI : MonoBehaviour
             {
                 if (AttackDistanceCheck())
                 {
-                    FightManager.Instance.Energy -= ai.Health/2;
-                    ai.Health /= 2;
+                    FightManager.Instance.Energy -= ai.Health;
                     break;
+                }
+
+                if (ai.Position.x == FightManager.Instance.pPos.x)
+                {
+                    if (ai.Position.y - FightManager.Instance.pPos.y > 0)
+                    {
+                        if (!FightManager.Instance.ObjCheck(ai.Position, 'd'))
+                            ObjMove(8);
+                    }
+
+                    else
+                    {
+                        if (!FightManager.Instance.ObjCheck(ai.Position, 'u'))
+                            ObjMove(-8);
+                    }
+
                 }
                 else
                 {
-                    if (ai.Position.x == FightManager.Instance.pPos.x)
+                    if (ai.Position.x - FightManager.Instance.pPos.x > 0)
                     {
-                        if (ai.Position.y - FightManager.Instance.pPos.y > 0)
-                        {
-                            if (!FightManager.Instance.ObjCheck(ai.Position, 'd'))
-                                ObjMove(8);
-                        }
-                            
-                        else
-                        {
-                            if (!FightManager.Instance.ObjCheck(ai.Position, 'u'))
-                                ObjMove(-8);
-                        }
-                            
+
+                        if (!FightManager.Instance.ObjCheck(ai.Position, 'l'))
+                            ObjMove(-1);
                     }
+
                     else
                     {
-                        if (ai.Position.x - FightManager.Instance.pPos.x > 0)
-                        {
-                            
-                            if (!FightManager.Instance.ObjCheck(ai.Position, 'l'))
-                                ObjMove(-1);
-                        }
-                            
-                        else
-                        {
-                            if (!FightManager.Instance.ObjCheck(ai.Position, 'r'))
-                                ObjMove(1);
-                        }
-                            
+                        if (!FightManager.Instance.ObjCheck(ai.Position, 'r'))
+                            ObjMove(1);
                     }
-                    _stamina--;
+
                 }
 
+                _stamina--;
                 yield return new WaitForSeconds(1f);
             }
         }

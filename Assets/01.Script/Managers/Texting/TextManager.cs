@@ -35,21 +35,34 @@ public class TextManager : MonoBehaviour
     public float chatSpeed = 0.1f, autoSpeed = 1f; // 텍스트 나오는 속도와 Auto 속도 기본 값 설정
     public bool Auto = false;
     private float originalChatSpeed; // 원래 텍스트 속도 기억하는 변수
+    private GameObject effectObject; //이미지의 인덱스 값
 
     [SerializeField] private SoundManager soundManager = null; // 사운드 매니저 스크립트 넣기
     public SoundManager SOUND { get { return soundManager; } }
 
-    enum CharacterEffectEnum // 캐릭터 이펙트 열거형
-    {
-        MoveX = 1,
-        MoveY
-    };
+    private static TextManager instance;
 
-    enum SceneEffectEnum // 화면 이펙트 열거형
+
+    public delegate void EffectObject(GameObject g);
+    public event EffectObject OnEffectObject;
+
+    public static TextManager Instance
     {
-        FadeIn = 1,
-        FadeOut
-    };
+        get
+        {
+            if (instance == null)
+            {
+                instance = FindObjectOfType<TextManager>();
+                if (instance == null)
+                {
+                    GameObject container = new GameObject("TextManager");
+                    instance = container.AddComponent<TextManager>();
+                }
+            }
+            return instance;
+        }
+    }
+
 
     private void Awake()
     {
@@ -156,7 +169,7 @@ public IEnumerator LoadTextData()
         if (!Auto) endObject.SetActive(true);
         isTyping = false;
 
-        characterEffect.DoTweenComplete();
+        OnEffectObject(effectObject);
 
         GameObject tl = Instantiate(textlogPrefab, textlogView);
         if (Name == "") tl.GetComponent<Text>().text = string.Format(Sentence[chatID][typingID, 2]);
@@ -276,6 +289,7 @@ public IEnumerator LoadTextData()
         foreach (string x in imageList)
         {
             image[Convert.ToInt32(x) - 1].SetActive(set);
+            effectObject = image[Convert.ToInt32(x) - 1];
             //image[Convert.ToInt32(x) - 1].transform.DOMoveX(0, 0.7f);
             //image[Convert.ToInt32(x)].transform.position = image[Convert.ToInt32(x) - 1].transform.position;
         }
@@ -298,27 +312,28 @@ public IEnumerator LoadTextData()
         GameManager.Instance.InputNameCanvas.SetActive(true);
     }
 
-    private void CharacterEffectFuntion(CharacterEffectEnum effectNumber = 0, float distance = 0, float time = 0, int direct = 1)
-    {
-        switch(effectNumber)
-        {
-            case CharacterEffectEnum.MoveX:
-                characterEffect.MoveXposition(distance, time, direct);
-                break;
-            default:
-                break;
-        } 
-    }
+    //캐릭터 & 배경 연출 이였던 것.
+    //private void CharacterEffectFuntion(CharacterEffectEnum effectNumber = 0, float distance = 0, float time = 0, int direct = 1)
+    //{
+    //    switch(effectNumber)
+    //    {
+    //        case CharacterEffectEnum.MoveX:
+    //            characterEffect.MoveXposition(distance, time, direct);
+    //            break;
+    //        default:
+    //            break;
+    //    } 
+    //}
 
-    private void SceneEffectFuntion(SceneEffectEnum effectNumber = 0, float distance = 0, float time = 0, int direct = 1)
-    {
-        switch (effectNumber)
-        {
-            case SceneEffectEnum.FadeIn:
-                characterEffect.FadeIn(time);
-                break;
-            default:
-                break;
-        }
-    }
+    //private void SceneEffectFuntion(SceneEffectEnum effectNumber = 0, float distance = 0, float time = 0, int direct = 1)
+    //{
+    //    switch (effectNumber)
+    //    {
+    //        case SceneEffectEnum.FadeIn:
+    //            characterEffect.FadeIn(time);
+    //            break;
+    //        default:
+    //            break;
+    //    }
+    //}
 }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
+
     public static GameManager Instance;
 
     [SerializeField] private TextManager textManager = null;
@@ -34,15 +35,21 @@ public class GameManager : MonoBehaviour
     public GameObject InputNameCanvas;
     [SerializeField] private InputField inputField;
 
+
     private void Awake()
     {
+        if (Instance != this)
+        {
+            Destroy(Instance);
+            Instance = this;
+        }
+
+        DontDestroyOnLoad(this.gameObject);
         TitlePanel.SetActive(true);
         Buttons.SetActive(true);
-        Instance = this;
         textManager = GetComponent<TextManager>();
         dataManager = GetComponent<DataManager>();
         soundManager = GetComponent<SoundManager>();
-        //DontDestroyOnLoad(this); 부서지지 않지 않지 않아요~ 근데~
     }
 
     private void Start()
