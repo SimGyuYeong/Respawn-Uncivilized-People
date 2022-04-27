@@ -63,7 +63,7 @@ public class GameManager : MonoBehaviour
         audoSpeedSlider.value = audoSpeedSlider.value * -1;
         audoSpeedSlider.value = TEXT.autoSpeed;
         Debug.Log(PlayerPrefs.GetFloat("auto", 1));
-        soundManager.PlayingMusic(0, 0.01f);
+        soundManager.PlayingMusic(0, 0.05f);
     }
 
     public void Update()
@@ -84,7 +84,7 @@ public class GameManager : MonoBehaviour
                 Buttons.SetActive(false);
                 textManager.chatID = 1;
                 soundManager.PauseMusic();
-                soundManager.PlayingMusic(1, 0.01f);
+                soundManager.PlayingMusic(1, 0.05f);
                 StartCoroutine(FadeIn());
                 StartCoroutine(textManager.Typing());
                 break;
@@ -160,7 +160,7 @@ public class GameManager : MonoBehaviour
         TitlePanel.SetActive(true);
         Buttons.SetActive(true);
         soundManager.PauseMusic();
-        soundManager.PlayingMusic(0, 0.01f);
+        soundManager.PlayingMusic(0, 0.05f);
     }
 
     public void InputName()

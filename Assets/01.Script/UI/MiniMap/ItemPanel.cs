@@ -3,9 +3,10 @@ using UnityEngine;
 public class ItemPanel
 {
     public int number;
-    public ItemPanel(int _number, int count)
+    public int count;
+    public ItemPanel(int _number, int _count)
     {
         number = _number;
-
+        count = _count;
     }
 }

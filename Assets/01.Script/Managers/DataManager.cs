@@ -51,10 +51,10 @@ public class DataManager : MonoBehaviour
                 GameObject obj = menu[i].transform.GetChild(j).gameObject;
                 if (j == 2)
                 {
-                    Image image = obj.GetComponent<Image>();
+                    SpriteRenderer image = obj.GetComponent<SpriteRenderer>();
                     image.sprite = nullImage;
                     if (data[i].id != 0) {
-                        image.sprite = GameManager.Instance.TEXT.background[data[i].imageID].GetComponent<Image>().sprite;
+                        image.sprite = GameManager.Instance.TEXT.background[data[i].imageID].GetComponent<SpriteRenderer>().sprite;
                     }
                 }
                 else

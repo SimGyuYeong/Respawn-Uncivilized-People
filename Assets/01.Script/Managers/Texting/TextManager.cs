@@ -42,9 +42,10 @@ public class TextManager : MonoBehaviour
 
     private static TextManager instance;
 
+    public Action<GameObject> OnEffectObject;
 
-    public delegate void EffectObject(GameObject g);
-    public event EffectObject OnEffectObject;
+    //public delegate void EffectObject(GameObject g);
+    //public event EffectObject OnEffectObject;
 
     public static TextManager Instance
     {
@@ -66,6 +67,7 @@ public class TextManager : MonoBehaviour
 
     private void Awake()
     {
+        DontDestroyOnLoad(this);
         characterEffect = GetComponent<CharacterEffect>(); // 캐릭터 이펙트 스크립트 대입
         soundManager = GetComponent<SoundManager>(); // 사운드 매니저 스크립트 대입
         StartCoroutine(LoadTextData()); // 텍스트 데이터 읽기
@@ -168,7 +170,9 @@ public IEnumerator LoadTextData()
         if (!Auto) endObject.SetActive(true);
         isTyping = false;
 
-        OnEffectObject(effectObject);
+        OnEffectObject?.Invoke(effectObject);
+
+        //if(OnEffectObject!=null)
 
         GameObject tl = Instantiate(textlogPrefab, textlogView);
         if (Name == "") tl.GetComponent<Text>().text = string.Format(Sentence[chatID][typingID, 2]);
