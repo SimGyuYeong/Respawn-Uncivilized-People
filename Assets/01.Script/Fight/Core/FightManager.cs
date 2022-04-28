@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using TMPro;
+using UnityEngine.Events;
 
 public class FightManager : MonoBehaviour
 {
@@ -12,23 +13,23 @@ public class FightManager : MonoBehaviour
 
     #region A* 알고리즘
     
-    public AStarAlgorithm _AStar; // A* 알고리즘 캐싱
+    private AStarAlgorithm _aStar; // A* 알고리즘 캐싱
 
     //A* 알고리즘에서 길정보를 가져옴
-    public List<Node> finalNodeList { get => _AStar.FinalNodeList; }
+    private List<Node> _finalNodeList { get => _aStar.FinalNodeList; }
 
     //A* 알고리즘에 등록된 플레이어 부대의 좌표를 가져오거나 설정
     public Vector2Int pPos
     {
-        get => _AStar.playerPos;
-        set => _AStar.playerPos = value;
+        get => _aStar.playerPos;
+        set => _aStar.playerPos = value;
     }
 
     //A* 알고리즘에 등록된 타켓 좌표를 가져오거나 설정
     public Vector2Int tPos
     {
-        get => _AStar.targetPos;
-        set => _AStar.targetPos = value;
+        get => _aStar.targetPos;
+        set => _aStar.targetPos = value;
     }
     #endregion
 
@@ -37,13 +38,13 @@ public class FightManager : MonoBehaviour
     public List<int> noneMoveEnemy = new List<int>(); //움직이지 않은 적들 리스트
 
     //타일이 생성될 오브젝트 부모, 플레이어 프리팹, 플레이어가 움직이는 애니메이션 오브젝트
-    public GameObject Content, Player, moveAni;
+    public GameObject content, player, moveAni;
 
     //타일 프리팹
-    public Tile TilePrefab;
+    public Tile tilePrefab;
 
     //적 프리팹
-    public AI Enemy;
+    public AI enemyPrefab;
 
     //현재 플레이어 애니메이션이 작동중인지
     public bool isIng = false;
@@ -52,7 +53,7 @@ public class FightManager : MonoBehaviour
     public bool[] isWallList;
     
     //플레이어가 한턴에 몇번 행동할 수 있는지
-    private int TurnPlayerCount = 2;
+    private int _turnPlayerCount = 2;
 
     //타일 리스트
     public List<Tile> tileList = new List<Tile>();
@@ -60,13 +61,7 @@ public class FightManager : MonoBehaviour
     //적 리스트
     public List<AI> enemyList = new List<AI>();
 
-    [SerializeField] Text turnText;
-
-    [SerializeField] GameObject TileUI;
-    [SerializeField] GameObject GoalUI;
-
-    private Text _energyText;
-    private Text _goalText;
+    
 
     //나중에 플레이어 스크립트 옮길 예정
     //움직였는지, 싸웠는지 체크하는 변수
@@ -74,7 +69,7 @@ public class FightManager : MonoBehaviour
     private int _energy = 100;
 
     //액션 버튼 오브젝트
-    [SerializeField] private GameObject _ActionButton;
+    [SerializeField] private GameObject _actionButton;
 
     public int Energy
     {
@@ -89,14 +84,14 @@ public class FightManager : MonoBehaviour
         }
     }
 
-    private int _enemyCount = 3;
-
-    [SerializeField] int turn = 10;
+    public int turn = 10;
 
     public bool isClickPlayer = false;
     public int moveDistance = 4;
 
-    public LineRenderer _lineRenderer;
+    public LineRenderer lineRenderer;
+
+    [field: SerializeField] public UnityEvent OnUIChange { get; set; }
 
     public enum TurnType
     {
@@ -120,19 +115,15 @@ public class FightManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        _lineRenderer = GetComponent<LineRenderer>();
-        _AStar = GetComponent<AStarAlgorithm>();
-        _energyText = TileUI.transform.GetChild(1).GetComponent<Text>();
-        _goalText = GoalUI.transform.GetChild(1).GetComponent<Text>();
+        lineRenderer = GetComponent<LineRenderer>();
+        _aStar = GetComponent<AStarAlgorithm>();
     }
 
     private void Start()
     {
         StartCoroutine(spawnTile());
-        UpdateUI();
-
-        _lineRenderer.startWidth = .05f;
-        _lineRenderer.endWidth = .05f;
+        lineRenderer.startWidth = .05f;
+        lineRenderer.endWidth = .05f;
     }
 
     /// <summary>
@@ -146,8 +137,8 @@ public class FightManager : MonoBehaviour
         {
             for (int x = 0; x < 8; x++)
             {
-                var spawnedTile = Instantiate(TilePrefab, new Vector3(x, y, 0), Quaternion.identity);
-                spawnedTile.transform.parent = Content.transform;
+                var spawnedTile = Instantiate(tilePrefab, new Vector3(x, y, 0), Quaternion.identity);
+                spawnedTile.transform.parent = content.transform;
                 spawnedTile.name = $"Tile {count}";
                 spawnedTile.tile = new TileInform(count, x, y);
 
@@ -157,8 +148,8 @@ public class FightManager : MonoBehaviour
                 {
                     if (pos == new Vector2Int(x, y))
                     {
-                        Player = Instantiate(Player, spawnedTile.transform);
-                        Player.transform.position = spawnedTile.transform.position;
+                        player = Instantiate(player, spawnedTile.transform);
+                        player.transform.position = spawnedTile.transform.position;
                         pPos = pos;
                     }
                 }
@@ -167,7 +158,7 @@ public class FightManager : MonoBehaviour
                 {
                     if(pos == new Vector2Int(x, y))
                     {
-                        AI enemy = Instantiate(Enemy, spawnedTile.transform);
+                        AI enemy = Instantiate(enemyPrefab, spawnedTile.transform);
                         enemy.transform.position = spawnedTile.transform.position;
                         spawnedTile.tile.isEnemy = true;
                         int _c = count;
@@ -188,31 +179,32 @@ public class FightManager : MonoBehaviour
             }
             yield return new WaitForSeconds(0.08f);
         }
+        OnUIChange?.Invoke();
         TurnChange();
     }
 
     #region 라인 그리기
     public void DrawLine()
     {
-        _lineRenderer.startColor = Color.white;
-        _lineRenderer.endColor = Color.white;
-        _lineRenderer.positionCount = 0;
-        for (int i = 0; i < finalNodeList.Count; i++)
+        lineRenderer.startColor = Color.white;
+        lineRenderer.endColor = Color.white;
+        lineRenderer.positionCount = 0;
+        for (int i = 0; i < _finalNodeList.Count; i++)
         {
-            Vector2 pos = new Vector2(finalNodeList[i].x, finalNodeList[i].y);
-            _lineRenderer.positionCount++;
-            _lineRenderer.SetPosition(i, pos);
+            Vector2 pos = new Vector2(_finalNodeList[i].x, _finalNodeList[i].y);
+            lineRenderer.positionCount++;
+            lineRenderer.SetPosition(i, pos);
         }
     }
 
     public void EnemyDraw()
     {
-        _lineRenderer.positionCount = 2;
-        _lineRenderer.startColor = Color.red;
-        _lineRenderer.endColor = Color.red;
+        lineRenderer.positionCount = 2;
+        lineRenderer.startColor = Color.red;
+        lineRenderer.endColor = Color.red;
 
-        _lineRenderer.SetPosition(0, new Vector3(pPos.x, pPos.y));
-        _lineRenderer.SetPosition(1, new Vector3(tPos.x, tPos.y));
+        lineRenderer.SetPosition(0, new Vector3(pPos.x, pPos.y));
+        lineRenderer.SetPosition(1, new Vector3(tPos.x, tPos.y));
     }
     #endregion
 
@@ -225,8 +217,8 @@ public class FightManager : MonoBehaviour
     public bool DistanceCheck(Vector2 pos)
     {
         tPos = new Vector2Int((int)pos.x, (int)pos.y);
-        _AStar.PathFinding();
-        if (finalNodeList.Count <= moveDistance+1 && finalNodeList.Count > 0) return true;
+        _aStar.PathFinding();
+        if (_finalNodeList.Count <= moveDistance+1 && _finalNodeList.Count > 0) return true;
         return false;
     }
 
@@ -256,7 +248,7 @@ public class FightManager : MonoBehaviour
         if (pos.x < 0 || pos.x > 7 || pos.y > 7 || pos.y < 0)
             return true;
 
-        if (_AStar.NodeArray[(int)pos.x, (int)pos.y].isWall)
+        if (_aStar.NodeArray[(int)pos.x, (int)pos.y].isWall)
             return true;
 
         foreach(var p in enemyPos)
@@ -289,34 +281,29 @@ public class FightManager : MonoBehaviour
     public void ShowDistance(string type)
     {
         SpriteRenderer _spriteRenderer;
-        int count = 0;
 
-        for (int y = 7; y >= 0; y--)
+        foreach(var _tile in tileList)
         {
-            for (int x = 0; x < 8; x++)
+            TileInform _tileInform = _tile.GetComponent<Tile>().tile;
+
+            if(_tileInform.isWall == false)
             {
-                if (!isWallList[count])
+                _spriteRenderer = _tile.GetComponent<SpriteRenderer>();
+
+                if (type == "Move")
                 {
-                    _spriteRenderer = tileList[count].GetComponent<SpriteRenderer>();
-
-                    Vector2 pos = new Vector2(x, y);
-
-                    if (type == "Move")
+                    if (DistanceCheck(_tileInform.Position))
                     {
-                        if (DistanceCheck(pos))
-                        {
-                            _spriteRenderer.color = Color.yellow;
-                        }
-                    }
-                    else if (type == "Attack")
-                    {
-                        if (Vector2.Distance(pos, pPos) <= 1)
-                        {
-                            _spriteRenderer.color = Color.red;
-                        }
+                        _spriteRenderer.color = Color.yellow;
                     }
                 }
-                count++;
+                else if (type == "Attack")
+                {
+                    if (Vector2.Distance(_tileInform.Position, pPos) <= 1)
+                    {
+                        _spriteRenderer.color = Color.red;
+                    }
+                }
             }
         }
     }
@@ -340,31 +327,41 @@ public class FightManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 캐릭터 이동 함수
+    /// </summary>
+    public void PlayerMove(Vector2Int pos, Transform parent)
+    {
+        ClickPlayer();
+        move = true;
+        tPos = pos;
+        _aStar.PathFinding();
+        player.transform.SetParent(parent);
+        StartCoroutine(PlayerMoveCoroutine());
+    }
+
+    /// <summary>
     /// 플레이어 이동 코루틴
     /// </summary>
     /// <returns></returns>
-    public IEnumerator movePlayer()
+    public IEnumerator PlayerMoveCoroutine()
     {
         isIng = true;
-        _lineRenderer.positionCount = 0;
-        Player.SetActive(false);
+        lineRenderer.positionCount = 0;
+        player.SetActive(false);
 
-        int _x = 0, _y = 0;
-        for(int i = 0; i < finalNodeList.Count; i++)
+        for(int i = 0; i < _finalNodeList.Count; i++)
         {
             var obj = Instantiate(moveAni);
-            obj.transform.position = new Vector2(finalNodeList[i].x, finalNodeList[i].y);
-            _x = finalNodeList[i].x;
-            _y = finalNodeList[i].y;
+            obj.transform.position = new Vector2(_finalNodeList[i].x, _finalNodeList[i].y);
             Energy -= 2;
             yield return new WaitForSeconds(0.2f);
         }
         Energy += 2;
-        Player.transform.position = new Vector2(_x, _y);
-        Player.SetActive(true);
-        UpdateUI();
+        player.transform.position = new Vector3(tPos.x, tPos.y);
+        player.SetActive(true);
+        OnUIChange?.Invoke();
         yield return new WaitForSeconds(2f);
-        pPos = new Vector2Int(_x, _y);
+        pPos = tPos;
         NextPlayerTurn(Action.Move);
     }
 
@@ -373,9 +370,9 @@ public class FightManager : MonoBehaviour
     /// </summary>
     private void NextPlayerTurn(Action action)
     {
-        TurnPlayerCount--;
+        _turnPlayerCount--;
         isIng = false;
-        if (TurnPlayerCount > 0)
+        if (_turnPlayerCount > 0)
         {
             if(action == Action.Move)
             {
@@ -400,8 +397,6 @@ public class FightManager : MonoBehaviour
         TurnChange();
     }
 
-    
-
     /// <summary>
     /// 플레이어를 클릭했을 때
     /// </summary>
@@ -410,19 +405,19 @@ public class FightManager : MonoBehaviour
         isClickPlayer = !isClickPlayer;
         if(!isClickPlayer)
         {
-            _lineRenderer.positionCount = 0;
-            _ActionButton.SetActive(false);
+            lineRenderer.positionCount = 0;
+            _actionButton.SetActive(false);
             HideDistance();
         }
         else
         {
-            _ActionButton.transform.position = new Vector3(pPos.x, pPos.y);
-            _ActionButton.SetActive(true);
+            _actionButton.transform.position = new Vector3(pPos.x, pPos.y);
+            _actionButton.SetActive(true);
 
-            TextMeshProUGUI moveText = _ActionButton.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>();
-            TextMeshProUGUI fightText = _ActionButton.transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI moveText = _actionButton.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI fightText = _actionButton.transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>();
             
-            Image image = _ActionButton.transform.GetChild(0).GetComponent<Image>();
+            Image image = _actionButton.transform.GetChild(0).GetComponent<Image>();
             Color c = image.color;
             if(move)
             {
@@ -436,7 +431,7 @@ public class FightManager : MonoBehaviour
             }
             image.color = c;
 
-            image = _ActionButton.transform.GetChild(1).GetComponent<Image>();
+            image = _actionButton.transform.GetChild(1).GetComponent<Image>();
             c = image.color;
             if (fight || AttackCheck() == false)
             {
@@ -459,7 +454,7 @@ public class FightManager : MonoBehaviour
         if (value == Action.Attack && AttackCheck() == false)
             return;
 
-        _ActionButton.SetActive(false);
+        _actionButton.SetActive(false);
         switch(value)
         {
             case Action.Move:
@@ -479,18 +474,7 @@ public class FightManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 캐릭터 이동 함수
-    /// </summary>
-    public void PlayerMove(Vector2Int pos, Transform parent)
-    {
-        ClickPlayer();
-        move = true;
-        tPos = pos;
-        _AStar.PathFinding();
-        Player.transform.SetParent(parent);
-        StartCoroutine(movePlayer());
-    }
+    
 
     public void PlayerAttack(int enemyCount)
     {
@@ -515,9 +499,8 @@ public class FightManager : MonoBehaviour
             }
             num++;
         }
-        _enemyCount--;
         ClickPlayer();
-        UpdateUI();
+        OnUIChange?.Invoke();
         StartCoroutine(AfterAttack());
     }
 
@@ -529,8 +512,6 @@ public class FightManager : MonoBehaviour
 
     public void TurnChange()
     {
-        turnText.text = string.Format("앞으로 {0}턴", turn);
-
         if(turn==0)
         {
             Debug.Log("게임종료");
@@ -542,7 +523,7 @@ public class FightManager : MonoBehaviour
             case TurnType.Wait_Player:
                 Debug.Log("Player Turn");
                 turnType = TurnType.Input_Action;
-                TurnPlayerCount = playerPos.Count*2;
+                _turnPlayerCount = playerPos.Count*2;
                 break;
 
             case TurnType.Player_Move:
@@ -586,33 +567,6 @@ public class FightManager : MonoBehaviour
         fight = false;
         TurnChange();
     }
+
     
-    public void UpdateUI()
-    {
-        UpdateEnergyUI();
-        UpdateGoalUI();
-    }
-
-    private void UpdateGoalUI()
-    {
-        Sequence seq = DOTween.Sequence();
-        seq.Append(GoalUI.transform.GetChild(3).transform.DOScaleX((float)_enemyCount / 3, 1.5f));
-        seq.Append(_goalText.transform.DOShakeScale(0.4f, 0.7f, 5));
-        seq.AppendCallback(() =>
-        {
-            _goalText.text = _enemyCount.ToString();
-        });
-    }
-
-    private void UpdateEnergyUI()
-    {
-        Sequence seq = DOTween.Sequence();
-        seq.Append(TileUI.transform.GetChild(3).transform.DOScaleX((float)Energy / 100, 1.5f));
-        seq.Append(_energyText.transform.DOShakeScale(0.4f, 0.7f, 5));
-        seq.AppendCallback(() =>
-        {
-            _energyText.text = Energy.ToString();
-        });
-        
-    }
 }

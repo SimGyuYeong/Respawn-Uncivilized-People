@@ -29,8 +29,8 @@ public class Tile : MonoBehaviour
             }
             else
             {
-                if(FightManager.Instance._lineRenderer.positionCount > 0)
-                    FightManager.Instance._lineRenderer.positionCount = 0;
+                if(FightManager.Instance.lineRenderer.positionCount > 0)
+                    FightManager.Instance.lineRenderer.positionCount = 0;
             }
         }
         else if (MoveCheck())
@@ -38,7 +38,7 @@ public class Tile : MonoBehaviour
             FightManager.Instance.DrawLine();
         }
         else
-            FightManager.Instance._lineRenderer.positionCount = 0;
+            FightManager.Instance.lineRenderer.positionCount = 0;
     }
 
     /// <summary>
