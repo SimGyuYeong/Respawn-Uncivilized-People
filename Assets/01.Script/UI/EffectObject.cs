@@ -15,10 +15,14 @@ public class EffectObject : MonoBehaviour
 
     //[Header("실행하고 싶은 ")]
 
+    private SpriteRenderer spriteRenderer;
+
+    static public bool SkipDotweenAnimation = false;
 
     void Start()
     {
         TextManager.Instance.OnEffectObject += PlayingEffect;
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void PlayingEffect(GameObject g)
@@ -42,7 +46,7 @@ public class EffectObject : MonoBehaviour
 
     private void BoolFadeIn()
     {
-
+        spriteRenderer.DOFade(1, 0.5f).From(SkipDotweenAnimation).OnComplete(() => SkipDotweenAnimation = false);
     }
 
     private void BoolFadeOut()

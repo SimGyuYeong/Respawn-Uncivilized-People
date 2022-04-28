@@ -196,7 +196,7 @@ public IEnumerator LoadTextData()
             else
             {
                 skip = true;
-                CharacterEffect.SkipDotweenAnimation = true;
+                EffectObject.SkipDotweenAnimation = true;
             }
         }
     }
