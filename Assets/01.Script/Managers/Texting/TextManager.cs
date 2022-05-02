@@ -64,6 +64,17 @@ public class TextManager : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if(Auto == true)
+        {
+            autoChecker.text = "<color=red>자동진행</color>";
+        }
+        else
+        {
+            autoChecker.text = "자동진행";
+        }
+    }
 
     private void Awake()
     {
@@ -268,12 +279,8 @@ public IEnumerator LoadTextData()
         if (!isTyping)
         {
             SkipText();
-            autoChecker.text = "<color=red>자동진행</color>";
         }
-        else if(isTyping)
-        {
-            autoChecker.text = "자동진행";
-        }
+ 
         endObject.SetActive(false);
     }
 
