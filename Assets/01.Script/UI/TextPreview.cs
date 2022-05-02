@@ -32,8 +32,14 @@ public class TextPreview : MonoBehaviour
         for (int i = 0; i < 15 + 1; i++)
         {
             previewText.text = string.Format(previewPath.Substring(0, i));
-            yield return new WaitForSeconds(textManager.chatSpeed);
+            yield return new WaitForSecondsRealtime(textManager.chatSpeed);
         }
         previewVisible = false;
+    }
+
+    private void OnEnable()
+    {
+        previewVisible = false;
+        previewText.text = previewPath;
     }
 }

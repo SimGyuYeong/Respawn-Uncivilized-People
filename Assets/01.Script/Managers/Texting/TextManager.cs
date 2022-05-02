@@ -22,8 +22,8 @@ public class TextManager : MonoBehaviour
     [SerializeField] private float shakestr = 0;
     [SerializeField] private GameObject textlogPrefab;
     [SerializeField] private Transform textlogView;
-    [SerializeField] private GameObject textlogScroll;
-    [SerializeField] private CharacterEffect characterEffect; // 캐릭터 이펙트 스크립트 
+    [SerializeField] private GameObject textlogScroll; // 캐릭터 이펙트 스크립트
+    [SerializeField] private Text autoChecker;
     
     Dictionary<int, string[,]> Sentence = new Dictionary<int, string[,]>();
     Dictionary<int, int> max = new Dictionary<int, int>();
@@ -67,7 +67,6 @@ public class TextManager : MonoBehaviour
 
     private void Awake()
     {
-        characterEffect = GetComponent<CharacterEffect>(); // 캐릭터 이펙트 스크립트 대입
         soundManager = GetComponent<SoundManager>(); // 사운드 매니저 스크립트 대입
         StartCoroutine(LoadTextData()); // 텍스트 데이터 읽기
 }
@@ -266,7 +265,15 @@ public IEnumerator LoadTextData()
     public void AutoPlay()
     {
         Auto = !Auto;
-        if (!isTyping) SkipText();
+        if (!isTyping)
+        {
+            SkipText();
+            autoChecker.text = "<color=red>자동진행</color>";
+        }
+        else if(isTyping)
+        {
+            autoChecker.text = "자동진행";
+        }
         endObject.SetActive(false);
     }
 
