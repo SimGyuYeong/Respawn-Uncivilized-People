@@ -133,7 +133,11 @@ public IEnumerator LoadTextData()
             lineCount++;
         }
     }
-
+    //bool isBracketOpen;
+    //bool checkText;
+    //int openBracketIndex;
+    //int closeBracketIndex;
+    //int bracketCount = 0;
     public IEnumerator Typing()
     {
         if (Sentence[chatID] == null)
@@ -162,11 +166,25 @@ public IEnumerator LoadTextData()
                 skip = false;
                 break;
             }
-            soundManager.TypingSound();
-            textPanel.text = string.Format("{0}\n{1}", Name, Sentence[chatID][typingID, 2].Substring(0, i));  // 텍스트 출력....따따따따
+
+
+            //if(isBracketOpen)
+            //{
+            //    if (Sentence[chatID][typingID, 2][i] == '>')
+            //    {
+            //        checkText = true;
+            //        isBracketOpen = false;
+            //    }
+            //    textPanel.text = string.Format("{0}\n{1}", Name, Sentence[chatID][typingID, 2].Substring(0, i));
+            //    continue;
+            //}
+            //if (Sentence[chatID][typingID, 2][i] == '<') isBracketOpen = true;
+
+
+            textPanel.text = string.Format("{0}\n{1}", Name, Sentence[chatID][typingID, 2].Substring(0, i));
+            soundManager.TypingSound(); // 텍스트 출력....따따따따
             yield return new WaitForSeconds(chatSpeed);
         }
-
         ///↓↓↓ 타이핑 끝난 후 실행
         if (!Auto) endObject.SetActive(true);
         isTyping = false;
