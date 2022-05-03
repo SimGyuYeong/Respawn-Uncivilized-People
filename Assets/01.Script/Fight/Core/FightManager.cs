@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using DG.Tweening;
 using TMPro;
 using UnityEngine.Events;
 
@@ -35,7 +34,7 @@ public class FightManager : MonoBehaviour
 
     public List<Vector2Int> enemyPos = new List<Vector2Int>(); //적들의 좌표 리스트
     public List<Vector2Int> playerPos = new List<Vector2Int>(); //플레이어 부대들의 좌표 리스트
-    public List<int> noneMoveEnemy = new List<int>(); //움직이지 않은 적들 리스트
+    private List<int> _noneEnemyList = new List<int>(); //움직이지 않은 적들 리스트
 
     //타일이 생성될 오브젝트 부모, 플레이어 프리팹, 플레이어가 움직이는 애니메이션 오브젝트
     public GameObject content, player, moveAni;
@@ -474,16 +473,14 @@ public class FightManager : MonoBehaviour
         }
     }
 
-    
-
     public void PlayerAttack(int enemyCount)
     {
         Energy -= enemyList[enemyCount].ai.Health;
         enemyPos.RemoveAt(enemyCount);
         
-        if(noneMoveEnemy.Count > 0)
+        if(_noneEnemyList.Count > 0)
         {
-            noneMoveEnemy.RemoveAt(enemyCount);
+            _noneEnemyList.RemoveAt(enemyCount);
         }
         
         Destroy(enemyList[enemyCount].gameObject);
@@ -537,18 +534,18 @@ public class FightManager : MonoBehaviour
                 turnType = TurnType.AI;
 
                 //움직이지 않는 적이 없다면
-                if(noneMoveEnemy.Count <= 0)
+                if(_noneEnemyList.Count <= 0)
                 {
                     //모든 적들을 움직이지 않는 적 리스트에 다시 넣는다.
                     for (int i = 0; i < enemyPos.Count; i++)
-                        noneMoveEnemy.Add(i);
+                        _noneEnemyList.Add(i);
                 }
 
-                int _num = Random.Range(0, noneMoveEnemy.Count);
-                enemyList[noneMoveEnemy[_num]].AIMoveStart(); //랜덤으로 지정한 적을 움직인다.
-                noneMoveEnemy.RemoveAt(_num); //움직인 적은 움직이지 않은 적 리스트에서 제거
-                if (noneMoveEnemy.Count < 1) //모든 적이 움직였다면
-                    noneMoveEnemy.Clear(); //움직이지 않은 적 리스트 초기화
+                int _num = Random.Range(0, _noneEnemyList.Count);
+                enemyList[_noneEnemyList[_num]].AIMoveStart(); //랜덤으로 지정한 적을 움직인다.
+                _noneEnemyList.RemoveAt(_num); //움직인 적은 움직이지 않은 적 리스트에서 제거
+                if (_noneEnemyList.Count < 1) //모든 적이 움직였다면
+                    _noneEnemyList.Clear(); //움직이지 않은 적 리스트 초기화
 
                 break;
 
@@ -567,6 +564,4 @@ public class FightManager : MonoBehaviour
         fight = false;
         TurnChange();
     }
-
-    
 }
