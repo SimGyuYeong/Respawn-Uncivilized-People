@@ -1,11 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using DG.Tweening;
+//using UnityEngine.EventSystems;
 
 public class InputButton : ButtonManager
 {
     private int moveTo = 1;
+    public UnityEvent textEvents;
+
+    private void Awake()
+    {
+        
+    }
 
     public void InputStoryButton(int code)  //건물 버튼 누르면 생기는 일
     {
@@ -72,5 +80,7 @@ public class InputButton : ButtonManager
     {
         textPanel.transform.DOMoveY(-3.6f, 0.3f).SetEase(Ease.InOutQuart);
         yield return new WaitForSeconds(0.12f);
+        //textEvents();
     }
+
 }
