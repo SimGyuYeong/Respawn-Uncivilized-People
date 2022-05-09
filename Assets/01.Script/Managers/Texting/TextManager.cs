@@ -11,6 +11,9 @@ public class TextManager : MonoBehaviour
 {
     const string URL = "https://docs.google.com/spreadsheets/d/18d1eO7_f3gewvcBi5MIe0sqh50lp1PF-kkQg2nm03wg/export?format=tsv";
 
+    [SerializeField] private TextDataSO _textDataSO;
+    public TextDataSO TextSO => _textDataSO;
+
     [SerializeField] public GameObject textImage;
 
     /// <summary>
@@ -23,7 +26,7 @@ public class TextManager : MonoBehaviour
     /// </summary>
     [SerializeField] private Transform selectPanel; 
 
-    [SerializeField] private GameObject selectButton;
+    [SerializeField] private GameObject _selectButton;
     [SerializeField] public GameObject[] background; // 게임 배경화면 배열
     [SerializeField] private GameObject[] image;    // 추가로 띄워둘 이미지 
     [SerializeField] private GameObject endObject; // 텍스트 끝나면 텍스트 패널 오른쪽 아래에서 뛰옹뛰옹 뱅글뱅글 하는 애
@@ -38,20 +41,28 @@ public class TextManager : MonoBehaviour
     Dictionary<int, int> max = new Dictionary<int, int>();
     List<string> select = new List<string>();
 
-    public int chatID = 1, typingID = 1, backID = 1, slotID = 0; // ID 기본 값 설정
+    public int chatID = 1, typingID = 1, backgroundID = 1, slotID = 0; // ID 기본 값 설정
     private bool isTyping = false, skip = false; // 텍스트 스킵 불 기본 값 설정
-    string[] imageList;
     public float chatSpeed = 0.1f, autoSpeed = 1f; // 텍스트 나오는 속도와 Auto 속도 기본 값 설정
-    public bool Auto = false;
+    public bool isAuto = false;
     private float originalChatSpeed; // 원래 텍스트 속도 기억하는 변수
-    public GameObject effectObject; //이미지의 인덱스 값
-
-    [SerializeField] private SoundManager soundManager = null; // 사운드 매니저 스크립트 넣기
-    public SoundManager SOUND { get { return soundManager; } }
 
     private static TextManager instance;
 
     public Action<GameObject> OnEffectObject;
+
+    enum IDType
+    {
+        ChatID = 0,
+        CharacterName,
+        Text,
+        BackgroundID,
+        ImageID,
+        Direct,
+        SFX,
+        BGM,
+        Event
+    }
 
     //public delegate void EffectObject(GameObject g);
     //public event EffectObject OnEffectObject;
@@ -75,7 +86,7 @@ public class TextManager : MonoBehaviour
 
     private void Update()
     {
-        if(Auto == true)
+        if(isAuto == true)
         {
             autoChecker.text = "<color=red>자동진행</color>";
         }
@@ -87,11 +98,10 @@ public class TextManager : MonoBehaviour
 
     private void Awake()
     {
-        soundManager = GetComponent<SoundManager>(); // 사운드 매니저 스크립트 대입
         StartCoroutine(LoadTextData()); // 텍스트 데이터 읽기
-}
+    }
 
-public IEnumerator LoadTextData()
+    public IEnumerator LoadTextData()
     {
         UnityWebRequest www = UnityWebRequest.Get(URL);
         yield return www.SendWebRequest();
@@ -135,11 +145,11 @@ public IEnumerator LoadTextData()
                         vText = vertualText.Split('N');
                         if (vText[1] != null)
                         {
-                            Sentence[chatID][lineCount, 2] = string.Format("{0}{1}{2}", vText[0], GameManager.Instance.PlayerName, vText[1]);
+                            Sentence[chatID][lineCount, 2] = $"{vText[0]}{GameManager.Instance.playerName}{vText[1]}";
                         }
                         else
                         {
-                            Sentence[chatID][lineCount, 2] = string.Format("{0}{1}", GameManager.Instance.PlayerName, vText[0]);
+                            Sentence[chatID][lineCount, 2] = $"{GameManager.Instance.playerName}{vText[0]}";
                         }
                         break;
                     }
@@ -157,31 +167,43 @@ public IEnumerator LoadTextData()
     //int openBracketIndex;
     //int closeBracketIndex;
     //int bracketCount = 0;
+
     public IEnumerator Typing()
     {
         if (Sentence[chatID] == null)
         {
-            LoadTextData();
+            StartCoroutine(LoadTextData());
+        }
+
+        string bgmName = Sentence[chatID][typingID, (int)IDType.BGM];
+        if (bgmName == "끄기")
+            GameManager.Instance.BgmSound.StopSound();
+        else if (bgmName != "")
+        {
+            GameManager.Instance.BgmSound.PlaySound(TextSO.bgmList[Convert.ToInt32(bgmName)], true);
         }
 
         textImage.SetActive(true);
-        if (!Auto) endObject.SetActive(false);
+        if (!isAuto) endObject.SetActive(false);
         isTyping = true;
-        if (Sentence[chatID][typingID, 3] != "")
+
+        if (Sentence[chatID][typingID, (int)IDType.BackgroundID] != "")
         {
-            backID = Convert.ToInt32(Sentence[chatID][typingID, 3]) - 1;
-            background[backID].SetActive(true);
+            backgroundID = Convert.ToInt32(Sentence[chatID][typingID, 3]) - 1;
+            TextSO.backgroundList[backgroundID].gameObject.SetActive(true);
             //StartCoroutine(GameManager.Instance.FadeIn());
             StartCoroutine(GameManager.Instance.FadeOut());
         }
-        if (Sentence[chatID][typingID, 4] != "") imageSetactive(true);
-        string Name = Sentence[chatID][typingID, 1];
-        if (Name == "당신") Name = GameManager.Instance.PlayerName;
-        for (int i = 0; i < Sentence[chatID][typingID, 2].Length + 1; i++)
+
+        if (Sentence[chatID][typingID, (int)IDType.ImageID] != "") imageSetactive(true);
+
+        string pName = Sentence[chatID][typingID, (int)IDType.CharacterName];
+        if (pName == "당신") pName = GameManager.Instance.playerName;
+        for (int i = 0; i < Sentence[chatID][typingID, (int)IDType.Text].Length + 1; i++)
         {
             if (skip)
             {
-                textPanel.text = string.Format("{0}\n{1}", Name, Sentence[chatID][typingID, 2]);           // 텍스트 넘김.....누르면 한줄이 한번에 딱
+                textPanel.text = string.Format("{0}\n{1}", pName, Sentence[chatID][typingID, 2]);           // 텍스트 넘김.....누르면 한줄이 한번에 딱
                 skip = false;
                 break;
             }
@@ -200,24 +222,20 @@ public IEnumerator LoadTextData()
             //if (Sentence[chatID][typingID, 2][i] == '<') isBracketOpen = true;
 
 
-            textPanel.text = string.Format("{0}\n{1}", Name, Sentence[chatID][typingID, 2].Substring(0, i));
-            soundManager.TypingSound(); // 텍스트 출력....따따따따
+            textPanel.text = string.Format("{0}\n{1}", pName, Sentence[chatID][typingID, 2].Substring(0, i));
+            //soundManager.TypingSound(); // 텍스트 출력....따따따따
             yield return new WaitForSeconds(chatSpeed);
         }
         ///↓↓↓ 타이핑 끝난 후 실행
-        if (!Auto) endObject.SetActive(true);
+        if (!isAuto) endObject.SetActive(true);
         isTyping = false;
 
-        OnEffectObject?.Invoke(effectObject);
-
-        //if(OnEffectObject!=null)
-
         GameObject tl = Instantiate(textlogPrefab, textlogView);
-        if (Name == "") tl.GetComponent<Text>().text = string.Format(Sentence[chatID][typingID, 2]);
-        else tl.GetComponent<Text>().text = string.Format("{0}: {1}", Name, Sentence[chatID][typingID, 2]);
-        GameObject t2 = Instantiate(textlogPrefab, textlogView);
+        if (pName == "") tl.GetComponent<Text>().text = string.Format(Sentence[chatID][typingID, 2]);
+        else tl.GetComponent<Text>().text = string.Format("{0}: {1}", pName, Sentence[chatID][typingID, 2]);
+        Instantiate(textlogPrefab, textlogView);
 
-        if (Auto)
+        if (isAuto)
         {
             yield return new WaitForSeconds(autoSpeed);
             SkipText();
@@ -226,7 +244,7 @@ public IEnumerator LoadTextData()
 
     public void SkipTextClick() // 텍스트 패널 클릭 시 스킵
     {
-        if (!Auto)
+        if (!isAuto)
         {
             if (!isTyping) SkipText();
 
@@ -253,14 +271,15 @@ public IEnumerator LoadTextData()
 
     public void SkipText() // 텍스트 진행
     {
-        if (backID >= 1) background[backID].SetActive(false);
+        if (backgroundID >= 1) background[backgroundID].SetActive(false);
         if (Sentence[chatID][typingID, 4] != "") imageSetactive(false);
 
-        string eventName = Sentence[chatID][typingID, 5];
-        if (eventName == "함수") Invoke(Sentence[chatID][typingID, 6], 0f);
+        string eventName = Sentence[chatID][typingID, (int)IDType.Event];
+
+        if (eventName == "함수") Invoke(Sentence[chatID][typingID, (int)IDType.Event + 1], 0f);
         else if (eventName == "이동")
         {
-            int num = UnityEngine.Random.Range(6, Convert.ToInt32(Sentence[chatID][typingID, 19]));
+            int num = UnityEngine.Random.Range((int)IDType.Event + 1, Convert.ToInt32(Sentence[chatID][typingID, 19]));
             chatID = Convert.ToInt32(Sentence[chatID][typingID, num]);
             typingID = 0;
         }
@@ -268,8 +287,8 @@ public IEnumerator LoadTextData()
         {
             if (Sentence[chatID][typingID, 3] != "")
             {
-                backID = Convert.ToInt32(Sentence[chatID][typingID, 3]) - 1;
-                background[backID].SetActive(true);
+                backgroundID = Convert.ToInt32(Sentence[chatID][typingID, (int)IDType.BackgroundID]) - 1;
+                background[backgroundID].SetActive(true);
             }
             textImage.SetActive(false);
             SelectOpen();
@@ -284,7 +303,7 @@ public IEnumerator LoadTextData()
 
     public void AutoPlay()
     {
-        Auto = !Auto;
+        isAuto = !isAuto;
         if (!isTyping)
         {
             SkipText();
@@ -303,7 +322,7 @@ public IEnumerator LoadTextData()
         for (int i = 6; i < Convert.ToInt32(Sentence[chatID][typingID, 19]); i++)
         {
             select.Add(Sentence[chatID][typingID, i]);
-            GameObject button = Instantiate(selectButton, selectPanel);
+            GameObject button = Instantiate(_selectButton, selectPanel);
             Text selectText = button.transform.GetChild(0).GetComponent<Text>();
             selectText.text = Sentence[chatID][typingID, i];
             select.Add(Sentence[chatID][typingID, ++i]);
@@ -331,18 +350,13 @@ public IEnumerator LoadTextData()
 
     private void imageSetactive(bool set)
     {
-        imageList = Sentence[chatID][typingID, 4].Split(',');
+        string[] imageList = Sentence[chatID][typingID, (int)IDType.ImageID].Split(',');
         foreach (string x in imageList)
         {
-            image[Convert.ToInt32(x) - 1].SetActive(set);
-            effectObject = image[Convert.ToInt32(x) - 1];
-        }
-    }
+            int num = Convert.ToInt32(x) - 1;
 
-    private void PlayMusic(int num)
-    {
-        GameManager.Instance.SOUND.PauseMusic();
-        GameManager.Instance.SOUND.PlayingMusic(num, 0.5f);
+            TextSO.imageList[num].gameObject.SetActive(set);
+        }
     }
 
     public void CallCameraShake()

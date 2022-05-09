@@ -14,14 +14,17 @@ public class GameManager : MonoBehaviour
     [SerializeField] private DataManager dataManager = null;
     public DataManager DATA {  get { return dataManager; } }
 
-    [SerializeField] private SoundManager soundManager = null;
-    public SoundManager SOUND {  get { return soundManager; } }
+    [SerializeField] private SoundManager bgmSoundManager = null; 
+    public SoundManager BgmSound {  get { return bgmSoundManager; } }
+
+    [SerializeField] private SoundManager sfxSoundManager = null;
+    public SoundManager SfxSound { get { return sfxSoundManager; } }
 
     [SerializeField] public GameObject Buttons;
     [SerializeField] public GameObject TitlePanel;
     [SerializeField] GameObject optionPanel;
 
-    public string PlayerName = "公疙";
+    public string playerName = "公疙";
 
     //可记
     [SerializeField] Slider chatSpeedSlider;
@@ -49,7 +52,8 @@ public class GameManager : MonoBehaviour
         Buttons.SetActive(true);
         textManager = GetComponent<TextManager>();
         dataManager = GetComponent<DataManager>();
-        soundManager = GetComponent<SoundManager>();
+        bgmSoundManager = transform.Find("BGM").GetComponent<SoundManager>();
+        sfxSoundManager = transform.Find("EFFECT").GetComponent<SoundManager>();
     }
 
     private void Start()
@@ -63,7 +67,7 @@ public class GameManager : MonoBehaviour
         audoSpeedSlider.value = audoSpeedSlider.value * -1;
         audoSpeedSlider.value = TEXT.autoSpeed;
         Debug.Log(PlayerPrefs.GetFloat("auto", 1));
-        soundManager.PlayingMusic(0, 0.05f);
+        bgmSoundManager.PlaySound(textManager.TextSO.bgmList[0], true);
     }
 
     public void Update()
@@ -83,8 +87,7 @@ public class GameManager : MonoBehaviour
                 TitlePanel.SetActive(false);
                 Buttons.SetActive(false);
                 textManager.chatID = 1;
-                soundManager.PauseMusic();
-                soundManager.PlayingMusic(1, 0.05f);
+                bgmSoundManager.PlaySound(textManager.TextSO.bgmList[0], true);
                 StartCoroutine(FadeIn());
                 StartCoroutine(textManager.Typing());
                 break;
@@ -156,16 +159,15 @@ public class GameManager : MonoBehaviour
         OptionPanelOC(1);
         BlackImageObject.SetActive(false);
         TEXT.textImage.gameObject.SetActive(false);
-        TEXT.background[TEXT.backID].gameObject.SetActive(false);
+        TEXT.background[TEXT.backgroundID].gameObject.SetActive(false);
         TitlePanel.SetActive(true);
         Buttons.SetActive(true);
-        soundManager.PauseMusic();
-        soundManager.PlayingMusic(0, 0.05f);
+        bgmSoundManager.PlaySound(textManager.TextSO.bgmList[0], true);
     }
 
     public void InputName()
     {
-        PlayerName = inputField.text;
+        playerName = inputField.text;
         InputNameCanvas.SetActive(false);
         TEXT.chatID = 100003;
         StartCoroutine(TEXT.LoadTextData());

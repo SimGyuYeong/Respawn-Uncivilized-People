@@ -99,11 +99,11 @@ public class DataManager : MonoBehaviour
         
         if (SLCheck < 2)
         {
-            data[slot].playerName = GameManager.Instance.PlayerName;
+            data[slot].playerName = GameManager.Instance.playerName;
             data[slot].date = DateTime.Now.ToString("yyyy³â MM¿ù ddÀÏ\n HH:mm:ss");
             data[slot].id = GameManager.Instance.TEXT.chatID;
             data[slot].typdingID = GameManager.Instance.TEXT.typingID;
-            data[slot].imageID = GameManager.Instance.TEXT.backID;
+            data[slot].imageID = GameManager.Instance.TEXT.backgroundID;
             SaveToJson();
             SaveMenuPanelUpdate();
         }
@@ -113,12 +113,12 @@ public class DataManager : MonoBehaviour
             StartCoroutine(GameManager.Instance.FadeIn());
             GameManager.Instance.TEXT.chatID = data[slot].id;
             GameManager.Instance.TEXT.typingID = data[slot].typdingID;
-            GameManager.Instance.PlayerName = data[slot].playerName;
+            GameManager.Instance.playerName = data[slot].playerName;
             GameManager.Instance.TitlePanel.SetActive(false);
             GameManager.Instance.Buttons.SetActive(false);
             SaveMenuPanelClose();
             StartCoroutine(GameManager.Instance.TEXT.LoadTextData());
-            GameManager.Instance.TEXT.background[GameManager.Instance.TEXT.backID].SetActive(false);
+            GameManager.Instance.TEXT.background[GameManager.Instance.TEXT.backgroundID].SetActive(false);
             StartCoroutine(GameManager.Instance.TEXT.Typing());
         }
     }
