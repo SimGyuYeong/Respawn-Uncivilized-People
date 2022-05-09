@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TextSpeedSetting : MonoBehaviour
 {
-    public void SetMusicVolume(float volume)
+    public void SetTextSpeed(float volume)
     {
         GameManager.Instance.TEXT.chatSpeed = volume / 10;
         PlayerPrefs.SetFloat("chatSpeed", volume);

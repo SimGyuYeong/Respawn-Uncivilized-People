@@ -172,7 +172,7 @@ public class AI : MonoBehaviour
         float distance = Vector2.Distance(ai.Position, FightManager.Instance.pPos);
         if (distance <= 3)
         {
-            _attackObj = FightManager.Instance.Player;
+            _attackObj = FightManager.Instance.player;
         }
     }
 }

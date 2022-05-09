@@ -12,8 +12,17 @@ public class TextManager : MonoBehaviour
     const string URL = "https://docs.google.com/spreadsheets/d/18d1eO7_f3gewvcBi5MIe0sqh50lp1PF-kkQg2nm03wg/export?format=tsv";
 
     [SerializeField] public GameObject textImage;
-    [SerializeField] private Text textPanel; // 텍스트가 나오는 패널
-    [SerializeField] private Transform selectPanel; // 선택 이벤트 시 활성화 되는 패널
+
+    /// <summary>
+    /// 텍스트가 나오는 패널
+    /// </summary>
+    [SerializeField] private Text textPanel;
+
+    /// <summary>
+    /// 선택 이벤트 시 활성화 되는 패널
+    /// </summary>
+    [SerializeField] private Transform selectPanel; 
+
     [SerializeField] private GameObject selectButton;
     [SerializeField] public GameObject[] background; // 게임 배경화면 배열
     [SerializeField] private GameObject[] image;    // 추가로 띄워둘 이미지 
@@ -22,8 +31,8 @@ public class TextManager : MonoBehaviour
     [SerializeField] private float shakestr = 0;
     [SerializeField] private GameObject textlogPrefab;
     [SerializeField] private Transform textlogView;
-    [SerializeField] private GameObject textlogScroll;
-    [SerializeField] private CharacterEffect characterEffect; // 캐릭터 이펙트 스크립트 
+    [SerializeField] private GameObject textlogScroll; // 캐릭터 이펙트 스크립트
+    [SerializeField] private Text autoChecker;
     
     Dictionary<int, string[,]> Sentence = new Dictionary<int, string[,]>();
     Dictionary<int, int> max = new Dictionary<int, int>();
@@ -35,7 +44,7 @@ public class TextManager : MonoBehaviour
     public float chatSpeed = 0.1f, autoSpeed = 1f; // 텍스트 나오는 속도와 Auto 속도 기본 값 설정
     public bool Auto = false;
     private float originalChatSpeed; // 원래 텍스트 속도 기억하는 변수
-    private GameObject effectObject; //이미지의 인덱스 값
+    public GameObject effectObject; //이미지의 인덱스 값
 
     [SerializeField] private SoundManager soundManager = null; // 사운드 매니저 스크립트 넣기
     public SoundManager SOUND { get { return soundManager; } }
@@ -64,10 +73,20 @@ public class TextManager : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if(Auto == true)
+        {
+            autoChecker.text = "<color=red>자동진행</color>";
+        }
+        else
+        {
+            autoChecker.text = "자동진행";
+        }
+    }
 
     private void Awake()
     {
-        characterEffect = GetComponent<CharacterEffect>(); // 캐릭터 이펙트 스크립트 대입
         soundManager = GetComponent<SoundManager>(); // 사운드 매니저 스크립트 대입
         StartCoroutine(LoadTextData()); // 텍스트 데이터 읽기
 }
@@ -133,7 +152,11 @@ public IEnumerator LoadTextData()
             lineCount++;
         }
     }
-
+    //bool isBracketOpen;
+    //bool checkText;
+    //int openBracketIndex;
+    //int closeBracketIndex;
+    //int bracketCount = 0;
     public IEnumerator Typing()
     {
         if (Sentence[chatID] == null)
@@ -162,11 +185,25 @@ public IEnumerator LoadTextData()
                 skip = false;
                 break;
             }
-            soundManager.TypingSound();
-            textPanel.text = string.Format("{0}\n{1}", Name, Sentence[chatID][typingID, 2].Substring(0, i));  // 텍스트 출력....따따따따
+
+
+            //if(isBracketOpen)
+            //{
+            //    if (Sentence[chatID][typingID, 2][i] == '>')
+            //    {
+            //        checkText = true;
+            //        isBracketOpen = false;
+            //    }
+            //    textPanel.text = string.Format("{0}\n{1}", Name, Sentence[chatID][typingID, 2].Substring(0, i));
+            //    continue;
+            //}
+            //if (Sentence[chatID][typingID, 2][i] == '<') isBracketOpen = true;
+
+
+            textPanel.text = string.Format("{0}\n{1}", Name, Sentence[chatID][typingID, 2].Substring(0, i));
+            soundManager.TypingSound(); // 텍스트 출력....따따따따
             yield return new WaitForSeconds(chatSpeed);
         }
-
         ///↓↓↓ 타이핑 끝난 후 실행
         if (!Auto) endObject.SetActive(true);
         isTyping = false;
@@ -196,7 +233,7 @@ public IEnumerator LoadTextData()
             else
             {
                 skip = true;
-                CharacterEffect.SkipDotweenAnimation = true;
+                EffectObject.SkipDotweenAnimation = true;
             }
         }
     }
@@ -248,7 +285,11 @@ public IEnumerator LoadTextData()
     public void AutoPlay()
     {
         Auto = !Auto;
-        if (!isTyping) SkipText();
+        if (!isTyping)
+        {
+            SkipText();
+        }
+ 
         endObject.SetActive(false);
     }
 
@@ -295,8 +336,6 @@ public IEnumerator LoadTextData()
         {
             image[Convert.ToInt32(x) - 1].SetActive(set);
             effectObject = image[Convert.ToInt32(x) - 1];
-            //image[Convert.ToInt32(x) - 1].transform.DOMoveX(0, 0.7f);
-            //image[Convert.ToInt32(x)].transform.position = image[Convert.ToInt32(x) - 1].transform.position;
         }
     }
 
@@ -317,28 +356,9 @@ public IEnumerator LoadTextData()
         GameManager.Instance.InputNameCanvas.SetActive(true);
     }
 
-    //캐릭터 & 배경 연출 이였던 것.
-    //private void CharacterEffectFuntion(CharacterEffectEnum effectNumber = 0, float distance = 0, float time = 0, int direct = 1)
-    //{
-    //    switch(effectNumber)
-    //    {
-    //        case CharacterEffectEnum.MoveX:
-    //            characterEffect.MoveXposition(distance, time, direct);
-    //            break;
-    //        default:
-    //            break;
-    //    } 
-    //}
-
-    //private void SceneEffectFuntion(SceneEffectEnum effectNumber = 0, float distance = 0, float time = 0, int direct = 1)
-    //{
-    //    switch (effectNumber)
-    //    {
-    //        case SceneEffectEnum.FadeIn:
-    //            characterEffect.FadeIn(time);
-    //            break;
-    //        default:
-    //            break;
-    //    }
-    //}
+    private void TestFunction()
+    {
+        print("따라란");
+    }
 }
+

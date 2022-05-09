@@ -15,15 +15,19 @@ public class EffectObject : MonoBehaviour
 
     //[Header("실행하고 싶은 ")]
 
+    private SpriteRenderer spriteRenderer;
+
+    static public bool SkipDotweenAnimation = false;
 
     void Start()
     {
         TextManager.Instance.OnEffectObject += PlayingEffect;
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    private void PlayingEffect(GameObject g)
+    public void PlayingEffect(GameObject g)
     {
-        if(g == this.gameObject)
+        if(g == gameObject)
         {
             if(boolFadeIn == true)
             {
@@ -42,16 +46,23 @@ public class EffectObject : MonoBehaviour
 
     private void BoolFadeIn()
     {
-
+        spriteRenderer.DOFade(1, 0.5f).From(SkipDotweenAnimation).OnComplete(() => SkipDotweenAnimation = false);
     }
 
     private void BoolFadeOut()
     {
-
+        spriteRenderer.DOFade(0, 0.5f).From(SkipDotweenAnimation).OnComplete(() => SkipDotweenAnimation = false);
     }
 
     private void BoolWalk()
     {
-
+        TextManager.Instance.effectObject.transform.DOMoveY(0.5f, 0.3f);
+        TextManager.Instance.effectObject.transform.DOMove(Vector2.zero, 0.3f);
+        TextManager.Instance.effectObject.transform.DOMoveY(0.4f, 0.3f);
+        TextManager.Instance.effectObject.transform.DOMove(Vector2.zero, 0.3f);
+        TextManager.Instance.effectObject.transform.DOMoveY(0.3f, 0.3f);
+        TextManager.Instance.effectObject.transform.DOMove(Vector2.zero, 0.3f);
+        TextManager.Instance.effectObject.transform.DOMoveY(0.2f, 0.3f);
+        TextManager.Instance.effectObject.transform.DOMove(Vector2.zero, 0.3f);
     }
 }
