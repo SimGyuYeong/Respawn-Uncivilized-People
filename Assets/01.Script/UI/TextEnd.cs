@@ -11,6 +11,6 @@ public class TextEnd : MonoBehaviour
 
     void Update()
     {
-        transform.Rotate(0, 250 * Time.deltaTime, 0);
+        transform.Rotate(0, 200 * Time.deltaTime, 0);
     }
 }

@@ -12,8 +12,17 @@ public class TextManager : MonoBehaviour
     const string URL = "https://docs.google.com/spreadsheets/d/18d1eO7_f3gewvcBi5MIe0sqh50lp1PF-kkQg2nm03wg/export?format=tsv";
 
     [SerializeField] public GameObject textImage;
-    [SerializeField] private Text textPanel; // 텍스트가 나오는 패널
-    [SerializeField] private Transform selectPanel; // 선택 이벤트 시 활성화 되는 패널
+
+    /// <summary>
+    /// 텍스트가 나오는 패널
+    /// </summary>
+    [SerializeField] private Text textPanel;
+
+    /// <summary>
+    /// 선택 이벤트 시 활성화 되는 패널
+    /// </summary>
+    [SerializeField] private Transform selectPanel; 
+
     [SerializeField] private GameObject selectButton;
     [SerializeField] public GameObject[] background; // 게임 배경화면 배열
     [SerializeField] private GameObject[] image;    // 추가로 띄워둘 이미지 
@@ -35,7 +44,7 @@ public class TextManager : MonoBehaviour
     public float chatSpeed = 0.1f, autoSpeed = 1f; // 텍스트 나오는 속도와 Auto 속도 기본 값 설정
     public bool Auto = false;
     private float originalChatSpeed; // 원래 텍스트 속도 기억하는 변수
-    private GameObject effectObject; //이미지의 인덱스 값
+    public GameObject effectObject; //이미지의 인덱스 값
 
     [SerializeField] private SoundManager soundManager = null; // 사운드 매니저 스크립트 넣기
     public SoundManager SOUND { get { return soundManager; } }
@@ -327,8 +336,6 @@ public IEnumerator LoadTextData()
         {
             image[Convert.ToInt32(x) - 1].SetActive(set);
             effectObject = image[Convert.ToInt32(x) - 1];
-            //image[Convert.ToInt32(x) - 1].transform.DOMoveX(0, 0.7f);
-            //image[Convert.ToInt32(x)].transform.position = image[Convert.ToInt32(x) - 1].transform.position;
         }
     }
 
@@ -349,28 +356,9 @@ public IEnumerator LoadTextData()
         GameManager.Instance.InputNameCanvas.SetActive(true);
     }
 
-    //캐릭터 & 배경 연출 이였던 것.
-    //private void CharacterEffectFuntion(CharacterEffectEnum effectNumber = 0, float distance = 0, float time = 0, int direct = 1)
-    //{
-    //    switch(effectNumber)
-    //    {
-    //        case CharacterEffectEnum.MoveX:
-    //            characterEffect.MoveXposition(distance, time, direct);
-    //            break;
-    //        default:
-    //            break;
-    //    } 
-    //}
-
-    //private void SceneEffectFuntion(SceneEffectEnum effectNumber = 0, float distance = 0, float time = 0, int direct = 1)
-    //{
-    //    switch (effectNumber)
-    //    {
-    //        case SceneEffectEnum.FadeIn:
-    //            characterEffect.FadeIn(time);
-    //            break;
-    //        default:
-    //            break;
-    //    }
-    //}
+    private void TestFunction()
+    {
+        print("따라란");
+    }
 }
+
