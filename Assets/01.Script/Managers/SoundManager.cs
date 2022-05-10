@@ -3,63 +3,34 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 
-[System.Serializable]
-public class Music
-{
-    public string name;
-    public AudioClip audio;
-}
-
-[System.Serializable]
-public class EffectMusic
-{
-    public string name;
-    public AudioClip audio;
-}
-
 public class SoundManager : MonoBehaviour
 {
-    [SerializeField] Music[] BGM;
-    [SerializeField] EffectMusic[] EffectMusics;
-    [SerializeField] AudioSource audioBGMPlayer;
-    [SerializeField] AudioSource audioPlayer;
+    private AudioSource _audioSource;
 
-
-
-    public void PlayingMusic(int num, float volume)
+    private void Awake()
     {
-        audioBGMPlayer.clip = BGM[num].audio;
-        audioBGMPlayer.loop = true;
-        audioBGMPlayer.volume = volume;
-        audioBGMPlayer.Play();
+        _audioSource = GetComponent<AudioSource>();
     }
 
-    public void PlayingEffectMusic(int num, float volume)
+    /// <summary>
+    /// 사운드 플레이 함수
+    /// </summary>
+    /// <param name="clip">오디오 클립</param>
+    /// <param name="isLoop">반복 여부</param>
+    public void PlaySound(AudioClip clip, bool isLoop = false)
     {
-        audioPlayer.clip = EffectMusics[num].audio;
-        audioPlayer.loop = false;
-        audioPlayer.volume = volume;
-        audioPlayer.Play();
-    }
-
-    public void TypingSound()
-    {
-        audioPlayer.clip = EffectMusics[0].audio;
-        audioPlayer.time = Random.Range(0f, 5f);
-        audioPlayer.Play();
-        Invoke("PauseMusic", 1f);
+        _audioSource.Stop();
+        _audioSource.clip = clip;
+        _audioSource.loop = isLoop;
+        _audioSource.Play();
     }
 
 
-    public void PauseMusic()
+    /// <summary>
+    /// 사운드 정지 함수
+    /// </summary>
+    public void StopSound()
     {
-        audioPlayer.Pause();
-        audioBGMPlayer.Pause();
-    }
-
-    public void DeleteMusic()
-    {
-        audioPlayer.clip = null;
-        audioBGMPlayer.clip = null;
+        _audioSource.Stop();
     }
  }
