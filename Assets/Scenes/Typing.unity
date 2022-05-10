@@ -1702,7 +1702,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 7d50b8b271240c04cb2ffe5ff8c394f1, type: 3}
+    m_Font: {fileID: 12800000, guid: 716ca82371bf06743bd77bb5aa042892, type: 3}
     m_FontSize: 70
     m_FontStyle: 0
     m_BestFit: 0
@@ -4949,7 +4949,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 7d50b8b271240c04cb2ffe5ff8c394f1, type: 3}
+    m_Font: {fileID: 12800000, guid: 716ca82371bf06743bd77bb5aa042892, type: 3}
     m_FontSize: 70
     m_FontStyle: 0
     m_BestFit: 0
@@ -5925,7 +5925,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 7d50b8b271240c04cb2ffe5ff8c394f1, type: 3}
+    m_Font: {fileID: 12800000, guid: 716ca82371bf06743bd77bb5aa042892, type: 3}
     m_FontSize: 70
     m_FontStyle: 0
     m_BestFit: 0
@@ -10300,6 +10300,7 @@ MonoBehaviour:
   chatSpeed: 1
   autoSpeed: 1
   Auto: 0
+  effectObject: {fileID: 0}
   soundManager: {fileID: 0}
 --- !u!114 &1757475164
 MonoBehaviour:
@@ -12056,7 +12057,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 7d50b8b271240c04cb2ffe5ff8c394f1, type: 3}
+    m_Font: {fileID: 12800000, guid: 716ca82371bf06743bd77bb5aa042892, type: 3}
     m_FontSize: 70
     m_FontStyle: 0
     m_BestFit: 0
