@@ -11487,7 +11487,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2115882023}
         m_TargetAssemblyTypeName: AutoPlaySpeedSetting, Assembly-CSharp
-        m_MethodName: SetMusicVolume
+        m_MethodName: SetAutoplaySpeed
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

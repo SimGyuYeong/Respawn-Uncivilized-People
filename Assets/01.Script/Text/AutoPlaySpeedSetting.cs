@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class AutoPlaySpeedSetting : MonoBehaviour
 {
-    public void SetMusicVolume(float volume)
+    public void SetAutoplaySpeed(float speed)
     {
-        GameManager.Instance.TEXT.autoSpeed = volume;
-        PlayerPrefs.SetFloat("auto", volume);
+        GameManager.Instance.TEXT.autoSpeed = speed;
+        PlayerPrefs.SetFloat("auto", speed);
     }
 }
