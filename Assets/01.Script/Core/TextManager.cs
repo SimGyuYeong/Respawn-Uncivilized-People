@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 using UnityEngine.UI;
 using System;
 using DG.Tweening;
-
+using UnityEngine.Events;
 
 public class TextManager : MonoBehaviour
 {
@@ -46,6 +46,8 @@ public class TextManager : MonoBehaviour
     private static TextManager instance;
 
     public Action<GameObject> OnEffectObject;
+    public UnityEvent TextTyping;
+    public UnityEvent OnTextTypingEnd;
 
     enum IDType
     {
@@ -165,13 +167,11 @@ public class TextManager : MonoBehaviour
     //int closeBracketIndex;
     //int bracketCount = 0;
 
-    public IEnumerator Typing()
+    /// <summary>
+    /// 브금 재생 및 정지
+    /// </summary>
+    public void BgmPlay()
     {
-        if (Sentence[chatID] == null)
-        {
-            StartCoroutine(LoadTextData());
-        }
-
         string bgmName = Sentence[chatID][typingID, (int)IDType.BGM];
         if (bgmName == "끄기")
             GameManager.Instance.BgmSound.StopSound();
@@ -179,23 +179,42 @@ public class TextManager : MonoBehaviour
         {
             GameManager.Instance.BgmSound.PlaySound(TextSO.bgmList[Convert.ToInt32(bgmName)], true);
         }
+    }
 
-        textPanel.transform.parent.gameObject.SetActive(true);
-        if (!isAuto) endObject.SetActive(false);
-        isTyping = true;
-
+    public void SetBackground()
+    {
         if (Sentence[chatID][typingID, (int)IDType.BackgroundID] != "")
         {
-            backgroundID = Convert.ToInt32(Sentence[chatID][typingID, 3]) - 1;
+            backgroundID = Convert.ToInt32(Sentence[chatID][typingID, (int)IDType.BackgroundID]) - 1;
             TextSO.backgroundList[backgroundID].gameObject.SetActive(true);
             //StartCoroutine(GameManager.Instance.FadeIn());
             StartCoroutine(GameManager.Instance.FadeOut());
         }
+    }
 
-        if (Sentence[chatID][typingID, (int)IDType.ImageID] != "") imageSetactive(true);
+    public void ShowImage()
+    {
+        if (Sentence[chatID][typingID, (int)IDType.ImageID] != "")
+        {
+            ImageSetActive(true);
+        }
+    }
 
+    public void Typing()
+    {
+        StartCoroutine(TypingCoroutine());
+    }
+
+    public IEnumerator TypingCoroutine()
+    {
+        textPanel.transform.parent.gameObject.SetActive(true);
+        endObject.SetActive(false);
+
+        isTyping = true;
+        
         string pName = Sentence[chatID][typingID, (int)IDType.CharacterName];
         if (pName == "당신") pName = GameManager.Instance.playerName;
+
         for (int i = 0; i < Sentence[chatID][typingID, (int)IDType.Text].Length + 1; i++)
         {
             if (skip)
@@ -223,7 +242,9 @@ public class TextManager : MonoBehaviour
             //soundManager.TypingSound(); // 텍스트 출력....따따따따
             yield return new WaitForSeconds(chatSpeed);
         }
+
         ///↓↓↓ 타이핑 끝난 후 실행
+
         if (!isAuto) endObject.SetActive(true);
         isTyping = false;
 
@@ -256,7 +277,7 @@ public class TextManager : MonoBehaviour
     public void SkipText() // 텍스트 진행
     {
         if (backgroundID >= 1) TextSO.backgroundList[backgroundID].gameObject.SetActive(true);
-        if (Sentence[chatID][typingID, 4] != "") imageSetactive(false);
+        if (Sentence[chatID][typingID, 4] != "") ImageSetActive(false);
 
         string eventName = Sentence[chatID][typingID, (int)IDType.Event];
 
@@ -280,8 +301,13 @@ public class TextManager : MonoBehaviour
         else
         {
             typingID++;
-            if (typingID != max[chatID]) StartCoroutine(Typing());
-            else textPanel.gameObject.SetActive(false);
+            if (typingID != max[chatID])
+            {
+                TextTyping?.Invoke();
+                textPanel.transform.parent.gameObject.SetActive(true);
+                if (!isAuto) endObject.SetActive(false);
+            }
+            else textPanel.transform.parent.gameObject.SetActive(false);
         }
     } 
 
@@ -322,12 +348,12 @@ public class TextManager : MonoBehaviour
                 textPanel.gameObject.SetActive(true);
                 
                 typingID = 1;
-                StartCoroutine(Typing());
+                TextTyping?.Invoke();
             }
         }
     }
 
-    private void imageSetactive(bool set)
+    private void ImageSetActive(bool set)
     {
         string[] imageList = Sentence[chatID][typingID, (int)IDType.ImageID].Split(',');
         foreach (string x in imageList)

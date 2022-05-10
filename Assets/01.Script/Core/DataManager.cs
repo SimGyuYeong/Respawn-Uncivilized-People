@@ -54,7 +54,7 @@ public class DataManager : MonoBehaviour
                     SpriteRenderer image = obj.GetComponent<SpriteRenderer>();
                     image.sprite = nullImage;
                     if (data[i].id != 0) {
-                        image.sprite = GameManager.Instance.TEXT.background[data[i].imageID].GetComponent<SpriteRenderer>().sprite;
+                        image.sprite = TextManager.Instance.TextSO.backgroundList[data[i].imageID].GetComponent<SpriteRenderer>().sprite;
                     }
                 }
                 else
@@ -118,8 +118,8 @@ public class DataManager : MonoBehaviour
             GameManager.Instance.Buttons.SetActive(false);
             SaveMenuPanelClose();
             StartCoroutine(GameManager.Instance.TEXT.LoadTextData());
-            GameManager.Instance.TEXT.background[GameManager.Instance.TEXT.backgroundID].SetActive(false);
-            StartCoroutine(GameManager.Instance.TEXT.Typing());
+            TextManager.Instance.TextSO.backgroundList[TextManager.Instance.backgroundID].SetActive(false);
+            TextManager.Instance.TextTyping?.Invoke();
         }
     }
 

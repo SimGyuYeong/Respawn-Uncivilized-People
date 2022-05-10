@@ -52,8 +52,8 @@ public class GameManager : MonoBehaviour
         Buttons.SetActive(true);
         _textManager = transform.parent.Find("TextManager").GetComponent<TextManager>();
         dataManager = GetComponent<DataManager>();
-        bgmSoundManager = transform.Find("BGM").GetComponent<SoundManager>();
-        sfxSoundManager = transform.Find("EFFECT").GetComponent<SoundManager>();
+        bgmSoundManager = transform.parent.Find("SoundManager").GetChild(0).GetComponent<SoundManager>();
+        sfxSoundManager = transform.parent.Find("SoundManager").GetChild(1).GetComponent<SoundManager>();
     }
 
     private void Start()
@@ -87,9 +87,9 @@ public class GameManager : MonoBehaviour
                 TitlePanel.SetActive(false);
                 Buttons.SetActive(false);
                 _textManager.chatID = 1;
-                bgmSoundManager.PlaySound(_textManager.TextSO.bgmList[0], true);
+                //bgmSoundManager.PlaySound(_textManager.TextSO.bgmList[0], true);
                 StartCoroutine(FadeIn());
-                StartCoroutine(_textManager.Typing());
+                TEXT.TextTyping?.Invoke();
                 break;
             case "Á¾·á":
 #if UNITY_EDITOR
@@ -159,7 +159,7 @@ public class GameManager : MonoBehaviour
         OptionPanelOC(1);
         BlackImageObject.SetActive(false);
         TEXT.textPanel.gameObject.SetActive(false);
-        TEXT.background[TEXT.backgroundID].gameObject.SetActive(false);
+        TEXT.TextSO.backgroundList[TEXT.backgroundID].gameObject.SetActive(false);
         TitlePanel.SetActive(true);
         Buttons.SetActive(true);
         bgmSoundManager.PlaySound(_textManager.TextSO.bgmList[0], true);
@@ -171,6 +171,6 @@ public class GameManager : MonoBehaviour
         InputNameCanvas.SetActive(false);
         TEXT.chatID = 100003;
         StartCoroutine(TEXT.LoadTextData());
-        StartCoroutine(TEXT.Typing());
+        TEXT.TextTyping?.Invoke();
     }
 }
