@@ -8,8 +8,8 @@ public class GameManager : MonoBehaviour
 
     public static GameManager Instance;
 
-    [SerializeField] private TextManager textManager = null;
-    public TextManager TEXT { get { return textManager; } }
+    private TextManager _textManager = null;
+    public TextManager TEXT { get { return _textManager; } }
 
     [SerializeField] private DataManager dataManager = null;
     public DataManager DATA {  get { return dataManager; } }
@@ -50,7 +50,7 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
         TitlePanel.SetActive(true);
         Buttons.SetActive(true);
-        textManager = GetComponent<TextManager>();
+        _textManager = transform.parent.Find("TextManager").GetComponent<TextManager>();
         dataManager = GetComponent<DataManager>();
         bgmSoundManager = transform.Find("BGM").GetComponent<SoundManager>();
         sfxSoundManager = transform.Find("EFFECT").GetComponent<SoundManager>();
@@ -67,7 +67,7 @@ public class GameManager : MonoBehaviour
         audoSpeedSlider.value = audoSpeedSlider.value * -1;
         audoSpeedSlider.value = TEXT.autoSpeed;
         Debug.Log(PlayerPrefs.GetFloat("auto", 1));
-        bgmSoundManager.PlaySound(textManager.TextSO.bgmList[0], true);
+        bgmSoundManager.PlaySound(_textManager.TextSO.bgmList[0], true);
     }
 
     public void Update()
@@ -86,10 +86,10 @@ public class GameManager : MonoBehaviour
             case "시작":
                 TitlePanel.SetActive(false);
                 Buttons.SetActive(false);
-                textManager.chatID = 1;
-                bgmSoundManager.PlaySound(textManager.TextSO.bgmList[0], true);
+                _textManager.chatID = 1;
+                bgmSoundManager.PlaySound(_textManager.TextSO.bgmList[0], true);
                 StartCoroutine(FadeIn());
-                StartCoroutine(textManager.Typing());
+                StartCoroutine(_textManager.Typing());
                 break;
             case "종료":
 #if UNITY_EDITOR
@@ -158,11 +158,11 @@ public class GameManager : MonoBehaviour
         StopAllCoroutines();
         OptionPanelOC(1);
         BlackImageObject.SetActive(false);
-        TEXT.textImage.gameObject.SetActive(false);
+        TEXT.textPanel.gameObject.SetActive(false);
         TEXT.background[TEXT.backgroundID].gameObject.SetActive(false);
         TitlePanel.SetActive(true);
         Buttons.SetActive(true);
-        bgmSoundManager.PlaySound(textManager.TextSO.bgmList[0], true);
+        bgmSoundManager.PlaySound(_textManager.TextSO.bgmList[0], true);
     }
 
     public void InputName()

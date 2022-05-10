@@ -11,15 +11,13 @@ public class TextManager : MonoBehaviour
 {
     const string URL = "https://docs.google.com/spreadsheets/d/18d1eO7_f3gewvcBi5MIe0sqh50lp1PF-kkQg2nm03wg/export?format=tsv";
 
-    [SerializeField] private TextDataSO _textDataSO;
-    public TextDataSO TextSO => _textDataSO;
-
-    [SerializeField] public GameObject textImage;
+    private TextDataSave _textDataSO;
+    public TextDataSave TextSO => _textDataSO;
 
     /// <summary>
     /// 텍스트가 나오는 패널
     /// </summary>
-    [SerializeField] private Text textPanel;
+    public Text textPanel;
 
     /// <summary>
     /// 선택 이벤트 시 활성화 되는 패널
@@ -34,7 +32,6 @@ public class TextManager : MonoBehaviour
     [SerializeField] private float shakestr = 0;
     [SerializeField] private GameObject textlogPrefab;
     [SerializeField] private Transform textlogView;
-    [SerializeField] private GameObject textlogScroll; // 캐릭터 이펙트 스크립트
     [SerializeField] private Text autoChecker;
     
     Dictionary<int, string[,]> Sentence = new Dictionary<int, string[,]>();
@@ -45,7 +42,6 @@ public class TextManager : MonoBehaviour
     private bool isTyping = false, skip = false; // 텍스트 스킵 불 기본 값 설정
     public float chatSpeed = 0.1f, autoSpeed = 1f; // 텍스트 나오는 속도와 Auto 속도 기본 값 설정
     public bool isAuto = false;
-    private float originalChatSpeed; // 원래 텍스트 속도 기억하는 변수
 
     private static TextManager instance;
 
@@ -98,6 +94,7 @@ public class TextManager : MonoBehaviour
 
     private void Awake()
     {
+        _textDataSO = GetComponentInChildren<TextDataSave>();
         StartCoroutine(LoadTextData()); // 텍스트 데이터 읽기
     }
 
@@ -183,7 +180,7 @@ public class TextManager : MonoBehaviour
             GameManager.Instance.BgmSound.PlaySound(TextSO.bgmList[Convert.ToInt32(bgmName)], true);
         }
 
-        textImage.SetActive(true);
+        textPanel.transform.parent.gameObject.SetActive(true);
         if (!isAuto) endObject.SetActive(false);
         isTyping = true;
 
@@ -256,22 +253,9 @@ public class TextManager : MonoBehaviour
         }
     }
 
-    public void FastSkipText() // 텍스트 빠른 재생
-    {
-        if (chatSpeed != 0.01f)
-        {
-            originalChatSpeed = chatSpeed;
-            chatSpeed = 0.01f;
-        }
-        else if(chatSpeed == 0.01f)
-        {
-            chatSpeed = originalChatSpeed;
-        }
-    }
-
     public void SkipText() // 텍스트 진행
     {
-        if (backgroundID >= 1) background[backgroundID].SetActive(false);
+        if (backgroundID >= 1) TextSO.backgroundList[backgroundID].gameObject.SetActive(true);
         if (Sentence[chatID][typingID, 4] != "") imageSetactive(false);
 
         string eventName = Sentence[chatID][typingID, (int)IDType.Event];
@@ -290,14 +274,14 @@ public class TextManager : MonoBehaviour
                 backgroundID = Convert.ToInt32(Sentence[chatID][typingID, (int)IDType.BackgroundID]) - 1;
                 background[backgroundID].SetActive(true);
             }
-            textImage.SetActive(false);
+            textPanel.gameObject.SetActive(false);
             SelectOpen();
         }
         else
         {
             typingID++;
             if (typingID != max[chatID]) StartCoroutine(Typing());
-            else textImage.SetActive(false);
+            else textPanel.gameObject.SetActive(false);
         }
     } 
 
@@ -310,11 +294,6 @@ public class TextManager : MonoBehaviour
         }
  
         endObject.SetActive(false);
-    }
-
-    public void ShowTextLog(bool check)
-    {
-        textlogScroll.SetActive(check);
     }
 
     public void SelectOpen()
@@ -340,7 +319,7 @@ public class TextManager : MonoBehaviour
                 int num = (i - 1) * 2;
                 chatID = Convert.ToInt32(select[num + 1]);
                 selectPanel.gameObject.SetActive(false);
-                textImage.SetActive(true);
+                textPanel.gameObject.SetActive(true);
                 
                 typingID = 1;
                 StartCoroutine(Typing());
