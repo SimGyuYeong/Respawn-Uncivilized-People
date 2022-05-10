@@ -12,7 +12,7 @@ public class InputButton : ButtonManager
 
     private void Awake()
     {
-        
+         
     }
 
     public void InputStoryButton(int code)  //건물 버튼 누르면 생기는 일
