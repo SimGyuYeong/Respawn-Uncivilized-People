@@ -158,7 +158,7 @@ public class GameManager : MonoBehaviour
         StopAllCoroutines();
         OptionPanelOC(1);
         BlackImageObject.SetActive(false);
-        TEXT.textPanel.gameObject.SetActive(false);
+        TEXT.textPanelObj.SetActive(false);
         TEXT.TextSO.backgroundList[TEXT.backgroundID].gameObject.SetActive(false);
         TitlePanel.SetActive(true);
         Buttons.SetActive(true);

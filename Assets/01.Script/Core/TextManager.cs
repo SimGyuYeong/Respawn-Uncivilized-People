@@ -14,20 +14,15 @@ public class TextManager : MonoBehaviour
     private TextDataSave _textDataSO;
     public TextDataSave TextSO => _textDataSO;
 
-    /// <summary>
-    /// 텍스트가 나오는 패널
-    /// </summary>
-    public Text textPanel;
+    private Text _textPanel;
+    public GameObject textPanelObj;
 
-    /// <summary>
-    /// 선택 이벤트 시 활성화 되는 패널
-    /// </summary>
     [SerializeField] private Transform selectPanel; 
 
     [SerializeField] private GameObject _selectButton;
-    [SerializeField] public GameObject[] background; // 게임 배경화면 배열
-    [SerializeField] private GameObject[] image;    // 추가로 띄워둘 이미지 
-    [SerializeField] private GameObject endObject; // 텍스트 끝나면 텍스트 패널 오른쪽 아래에서 뛰옹뛰옹 뱅글뱅글 하는 애
+    public GameObject[] background; // 게임 배경화면 배열
+    public GameObject[] image;    // 추가로 띄워둘 이미지 
+    [SerializeField] private GameObject _endAnimationObj; // 텍스트 끝나면 텍스트 패널 오른쪽 아래에서 뛰옹뛰옹 뱅글뱅글 하는 애
     [SerializeField] private float shakeTime = 0.13f;
     [SerializeField] private float shakestr = 0;
     [SerializeField] private GameObject textlogPrefab;
@@ -62,9 +57,6 @@ public class TextManager : MonoBehaviour
         Event
     }
 
-    //public delegate void EffectObject(GameObject g);
-    //public event EffectObject OnEffectObject;
-
     public static TextManager Instance
     {
         get
@@ -98,6 +90,7 @@ public class TextManager : MonoBehaviour
     {
         _textDataSO = GetComponentInChildren<TextDataSave>();
         StartCoroutine(LoadTextData()); // 텍스트 데이터 읽기
+        _textPanel = textPanelObj.transform.Find("text").GetComponent<Text>();
     }
 
     public IEnumerator LoadTextData()
@@ -181,6 +174,9 @@ public class TextManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 배경화면 설정
+    /// </summary>
     public void SetBackground()
     {
         if (Sentence[chatID][typingID, (int)IDType.BackgroundID] != "")
@@ -192,6 +188,9 @@ public class TextManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 이미지 보여주기
+    /// </summary>
     public void ShowImage()
     {
         if (Sentence[chatID][typingID, (int)IDType.ImageID] != "")
@@ -200,15 +199,22 @@ public class TextManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 대사 타이핑
+    /// </summary>
     public void Typing()
     {
         StartCoroutine(TypingCoroutine());
     }
 
+    /// <summary>
+    /// 대사 타이핑 코루틴 함수
+    /// </summary>
+    /// <returns></returns>
     public IEnumerator TypingCoroutine()
     {
-        textPanel.transform.parent.gameObject.SetActive(true);
-        endObject.SetActive(false);
+        textPanelObj.SetActive(true);
+        if (!isAuto) _endAnimationObj.SetActive(false);
 
         isTyping = true;
         
@@ -219,7 +225,7 @@ public class TextManager : MonoBehaviour
         {
             if (skip)
             {
-                textPanel.text = string.Format("{0}\n{1}", pName, Sentence[chatID][typingID, 2]);           // 텍스트 넘김.....누르면 한줄이 한번에 딱
+                _textPanel.text = string.Format("{0}\n{1}", pName, Sentence[chatID][typingID, 2]);           // 텍스트 넘김.....누르면 한줄이 한번에 딱
                 skip = false;
                 break;
             }
@@ -238,14 +244,14 @@ public class TextManager : MonoBehaviour
             //if (Sentence[chatID][typingID, 2][i] == '<') isBracketOpen = true;
 
 
-            textPanel.text = string.Format("{0}\n{1}", pName, Sentence[chatID][typingID, 2].Substring(0, i));
+            _textPanel.text = string.Format("{0}\n{1}", pName, Sentence[chatID][typingID, 2].Substring(0, i));
             //soundManager.TypingSound(); // 텍스트 출력....따따따따
             yield return new WaitForSeconds(chatSpeed);
         }
 
         ///↓↓↓ 타이핑 끝난 후 실행
 
-        if (!isAuto) endObject.SetActive(true);
+        if (!isAuto) _endAnimationObj.SetActive(true);
         isTyping = false;
 
         GameObject tl = Instantiate(textlogPrefab, textlogView);
@@ -290,12 +296,12 @@ public class TextManager : MonoBehaviour
         }
         if (eventName == "선택")
         {
-            if (Sentence[chatID][typingID, 3] != "")
+            if (Sentence[chatID][typingID, (int)IDType.BackgroundID] != "")
             {
                 backgroundID = Convert.ToInt32(Sentence[chatID][typingID, (int)IDType.BackgroundID]) - 1;
-                background[backgroundID].SetActive(true);
+                TextSO.backgroundList[backgroundID].SetActive(true);
             }
-            textPanel.gameObject.SetActive(false);
+            textPanelObj.SetActive(false);
             SelectOpen();
         }
         else
@@ -304,10 +310,8 @@ public class TextManager : MonoBehaviour
             if (typingID != max[chatID])
             {
                 TextTyping?.Invoke();
-                textPanel.transform.parent.gameObject.SetActive(true);
-                if (!isAuto) endObject.SetActive(false);
             }
-            else textPanel.transform.parent.gameObject.SetActive(false);
+            else textPanelObj.SetActive(false);
         }
     } 
 
@@ -319,7 +323,7 @@ public class TextManager : MonoBehaviour
             SkipText();
         }
  
-        endObject.SetActive(false);
+        _endAnimationObj.SetActive(false);
     }
 
     public void SelectOpen()
@@ -345,7 +349,7 @@ public class TextManager : MonoBehaviour
                 int num = (i - 1) * 2;
                 chatID = Convert.ToInt32(select[num + 1]);
                 selectPanel.gameObject.SetActive(false);
-                textPanel.gameObject.SetActive(true);
+                _textPanel.gameObject.SetActive(true);
                 
                 typingID = 1;
                 TextTyping?.Invoke();
