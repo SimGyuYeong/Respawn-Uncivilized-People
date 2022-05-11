@@ -16,7 +16,7 @@ public class TextManager : MonoBehaviour
     private TextDataSave _textDataSO;
     public TextDataSave TextSO => _textDataSO;
 
-    private TextMeshPro _textPanel;
+    [SerializeField] protected TextMeshPro _textPanel;
     public GameObject textPanelObj;
 
     [SerializeField] protected Transform selectPanel; 
@@ -35,7 +35,7 @@ public class TextManager : MonoBehaviour
     protected Dictionary<int, int> max = new Dictionary<int, int>();
     protected List<string> select = new List<string>();
 
-    public int chatID = 1, lineNumber = 1, backgroundID = 1, slotID = 0; // ID 기본 값 설정
+    public int chatID = 1, lineNumber = 1, backgroundID = 0, slotID = 0; // ID 기본 값 설정
     protected bool isTyping = false, skip = false; // 텍스트 스킵 불 기본 값 설정
     public float chatSpeed = 0.1f, autoSpeed = 1f; // 텍스트 나오는 속도와 Auto 속도 기본 값 설정
     public bool isAuto = false;
@@ -91,11 +91,11 @@ public class TextManager : MonoBehaviour
     private void Awake()
     {
         _textDataSO = GetComponentInChildren<TextDataSave>();
-        StartCoroutine(LoadTextData(URL, Sentence)); // 텍스트 데이터 읽기
+        StartCoroutine(LoadTextData(URL)); // 텍스트 데이터 읽기
         _textPanel = textPanelObj.transform.Find("text").GetComponent<TextMeshPro>();
     }
 
-    public IEnumerator LoadTextData(string url, Dictionary<int, string[,]> _sentence)
+    public IEnumerator LoadTextData(string url)
     {
         UnityWebRequest www = UnityWebRequest.Get(url);
         yield return www.SendWebRequest();
@@ -115,16 +115,16 @@ public class TextManager : MonoBehaviour
                 lineCount = 1;
                 chatID = Convert.ToInt32(row[0]);
                 max[chatID] = 1;
-                _sentence[chatID] = new string[lineSize, 20];
+                Sentence[chatID] = new string[lineSize, 20];
             }
 
             for (j = 1; j < rawSize; j++)
             {
-                _sentence[chatID][lineCount, j] = row[j];
+                Sentence[chatID][lineCount, j] = row[j].Trim();
             }
-            _sentence[chatID][lineCount, 19] = j.ToString();
+            Sentence[chatID][lineCount, 19] = j.ToString();
 
-            vertualText = _sentence[chatID][lineCount, 2];
+            vertualText = Sentence[chatID][lineCount, 2];
 
             if (vertualText != null)
             {
@@ -135,11 +135,11 @@ public class TextManager : MonoBehaviour
                         vText = vertualText.Split('N');
                         if (vText[1] != null)
                         {
-                            _sentence[chatID][lineCount, 2] = $"{vText[0]}{GameManager.Instance.playerName}{vText[1]}";
+                            Sentence[chatID][lineCount, 2] = $"{vText[0]}{GameManager.Instance.playerName}{vText[1]}";
                         }
                         else
                         {
-                            _sentence[chatID][lineCount, 2] = $"{GameManager.Instance.playerName}{vText[0]}";
+                            Sentence[chatID][lineCount, 2] = $"{GameManager.Instance.playerName}{vText[0]}";
                         }
                         break;
                     }
@@ -147,7 +147,7 @@ public class TextManager : MonoBehaviour
             }
 
 
-            _sentence[chatID][lineCount, ++j] = "x";
+            Sentence[chatID][lineCount, ++j] = "x";
             max[chatID]++;
             lineCount++;
         }
@@ -202,47 +202,39 @@ public class TextManager : MonoBehaviour
     /// </summary>
     public void Typing()
     {
-        StartCoroutine(TypingCoroutine(_textPanel));
+        if(Sentence[chatID] == null)
+        {
+            StartCoroutine(LoadTextData(URL));
+        }
+
+        StartCoroutine(TypingCoroutine());
     }
 
     /// <summary>
     /// 대사 타이핑 코루틴 함수
     /// </summary>
     /// <returns></returns>
-    public IEnumerator TypingCoroutine(TextMeshPro _textMesh)
+    public IEnumerator TypingCoroutine()
     {
         textPanelObj.SetActive(true);
         if (!isAuto) _endAnimationObj.SetActive(false);
 
         isTyping = true;
-        
-        string pName = Sentence[chatID][lineNumber, (int)IDType.CharacterName];
-        if (pName == "당신") pName = GameManager.Instance.playerName;
 
-        for (int i = 0; i < Sentence[chatID][lineNumber, (int)IDType.Text].Length + 1; i++)
+        string pName = Sentence[chatID][lineNumber, (int)IDType.CharacterName];
+        string storyText = Sentence[chatID][lineNumber, (int)IDType.Text];
+
+        for (int i = 0; i < storyText.Length + 1; i++)
         {
             if (skip)
             {
-                _textMesh.text = string.Format("{0}\n{1}", pName, Sentence[chatID][lineNumber, 2]);           // 텍스트 넘김.....누르면 한줄이 한번에 딱
+                _textPanel.text = string.Format("{0}\n{1}", pName, storyText);           // 텍스트 넘김.....누르면 한줄이 한번에 딱
                 skip = false;
                 break;
             }
 
-
-            //if(isBracketOpen)
-            //{
-            //    if (Sentence[chatID][typingID, 2][i] == '>')
-            //    {
-            //        checkText = true;
-            //        isBracketOpen = false;
-            //    }
-            //    textPanel.text = string.Format("{0}\n{1}", Name, Sentence[chatID][typingID, 2].Substring(0, i));
-            //    continue;
-            //}
-            //if (Sentence[chatID][typingID, 2][i] == '<') isBracketOpen = true;
-
-
-            _textMesh.text = string.Format("{0}\n{1}", pName, Sentence[chatID][lineNumber, 2].Substring(0, i));
+            
+            _textPanel.text = string.Format("{0}\n{1}", pName, storyText.Substring(0, i));
             //soundManager.TypingSound(); // 텍스트 출력....따따따따
             yield return new WaitForSeconds(chatSpeed);
         }
@@ -253,8 +245,8 @@ public class TextManager : MonoBehaviour
         isTyping = false;
 
         GameObject tl = Instantiate(textlogPrefab, textlogView);
-        if (pName == "") tl.GetComponent<Text>().text = string.Format(Sentence[chatID][lineNumber, 2]);
-        else tl.GetComponent<Text>().text = string.Format("{0}: {1}", pName, Sentence[chatID][lineNumber, 2]);
+        if (pName == "") tl.GetComponent<Text>().text = storyText;
+        else tl.GetComponent<Text>().text = string.Format("{0}: {1}", pName, storyText);
         Instantiate(textlogPrefab, textlogView);
 
         if (isAuto)
@@ -281,40 +273,44 @@ public class TextManager : MonoBehaviour
     public void SkipText() // 텍스트 진행
     {
         if (backgroundID >= 1) TextSO.backgroundList[backgroundID].gameObject.SetActive(true);
-        if (Sentence[chatID][lineNumber, 4] != "") ImageSetActive(false);
 
-        string eventName = Sentence[chatID][lineNumber, (int)IDType.Event];
-        if (eventName == "함수")
+        if (Sentence[chatID][lineNumber, (int)IDType.ImageID] != "" && Sentence[chatID][lineNumber,(int)IDType.ImageID] != null) 
+            ImageSetActive(false);
+
+        if(Sentence[chatID][lineNumber, (int)IDType.Event] != "" && Sentence[chatID][lineNumber, (int)IDType.Event] != null)
         {
-            string funcName = Sentence[chatID][lineNumber, (int)IDType.Event + 1];
-            funcName.Trim();
-            StartCoroutine(nameof(GotoFreeTime));
-        }
-        else if (eventName == "이동")
-        {
-            int num = UnityEngine.Random.Range((int)IDType.Event + 1, Convert.ToInt32(Sentence[chatID][lineNumber, 19]));
-            chatID = Convert.ToInt32(Sentence[chatID][lineNumber, num]);
-            lineNumber = 0;
-        }
-        if (eventName == "선택")
-        {
-            if (Sentence[chatID][lineNumber, (int)IDType.BackgroundID] != "")
+            string eventName = Sentence[chatID][lineNumber, (int)IDType.Event];
+            if (eventName == "함수")
             {
-                backgroundID = Convert.ToInt32(Sentence[chatID][lineNumber, (int)IDType.BackgroundID]) - 1;
-                TextSO.backgroundList[backgroundID].SetActive(true);
+                string funcName = Sentence[chatID][lineNumber, (int)IDType.Event + 1];
+                StartCoroutine(funcName.Trim());
             }
-            textPanelObj.SetActive(false);
-            SelectOpen();
-        }
-        else
-        {
-            lineNumber++;
-            if (lineNumber != max[chatID])
+            else if (eventName == "이동")
             {
-                TextTyping?.Invoke();
+                int num = UnityEngine.Random.Range((int)IDType.Event + 1, Convert.ToInt32(Sentence[chatID][lineNumber, 19]));
+                chatID = Convert.ToInt32(Sentence[chatID][lineNumber, num]);
+                lineNumber = 0;
             }
-            else textPanelObj.SetActive(false);
+            
+            if (eventName == "선택")
+            {
+                if (Sentence[chatID][lineNumber, (int)IDType.BackgroundID] != "")
+                {
+                    backgroundID = Convert.ToInt32(Sentence[chatID][lineNumber, (int)IDType.BackgroundID]) - 1;
+                    TextSO.backgroundList[backgroundID].SetActive(true);
+                }
+                textPanelObj.SetActive(false);
+                SelectOpen();
+                return;
+            }
         }
+
+        lineNumber++;
+        if (lineNumber != max[chatID])
+        {
+            TextTyping?.Invoke();
+        }
+        else textPanelObj.SetActive(false);
     } 
 
     public void AutoPlay()

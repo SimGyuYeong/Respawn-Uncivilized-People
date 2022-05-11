@@ -8,21 +8,21 @@ using TMPro;
 
 public class FreeTimeText : TextManager
 {
-    const string TextURL = "https://docs.google.com/spreadsheets/d/1Cj-vgW7JDlAjLLz4-zX9PXNoJlbsVDCPbt84g8C_It8/edit#gid=94893557";
-
-    [SerializeField] private TextMeshPro text;
-    public GameObject textPanel;
-
-    Dictionary<int, string[,]> Sentence = new Dictionary<int, string[,]>();
+    const string URL = "https://docs.google.com/spreadsheets/d/1m5NRdsq4Xlf11jEJZ1dZ3wqUiPYDXl6GGHdL09clN9g/export?format=tsv";
 
     private void Awake()
     {
-        StartCoroutine(LoadTextData(TextURL, Sentence));
+        StartCoroutine(LoadTextData(URL));
+    }
+
+    private void Start()
+    {
+        _textPanel = textPanelObj.transform.parent.Find("text").GetComponent<TextMeshPro>();
     }
 
     public void SetText(int _ID)
     {
         chatID = _ID;
-        StartCoroutine(TypingCoroutine(text));
+        StartCoroutine(TypingCoroutine());
     }
 }

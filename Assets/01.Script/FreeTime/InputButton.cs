@@ -10,16 +10,18 @@ public class InputButton : ButtonManager
     private int moveTo = 1;
     public UnityEvent textEvents;
 
+    private int _id;
+
     private FreeTimeText _freeTimeText = null;
 
     private void Start()
     {
-        _freeTimeText = GetComponent<FreeTimeText>();
+        _freeTimeText = transform.parent.Find("TextManager").GetComponent<FreeTimeText>();
     }
 
     public void InputStoryButton(int code)  //건물 버튼 누르면 생기는 일
     {
-        //_freeTimeText.SetText(code);
+        _id = code;   
         StartCoroutine(ButtonMove());       //버튼들이 올라감
 
     }
@@ -63,6 +65,7 @@ public class InputButton : ButtonManager
 
         StartCoroutine(PopUpBackGround());
         yield return new WaitForSeconds(1.2f);
+        
 
         while (fadeImage.color.a >= 0)
         {
@@ -70,8 +73,8 @@ public class InputButton : ButtonManager
             fadeImage.color = color;
             yield return new WaitForSeconds(0.005f);
         }
-
-        StartCoroutine(PopUpTextPanel());
+        _freeTimeText.SetText(_id);
+        //StartCoroutine(PopUpTextPanel());
     }
 
     IEnumerator PopUpBackGround()
@@ -80,11 +83,11 @@ public class InputButton : ButtonManager
         yield return new WaitForSeconds(1.1f);
     }
 
-    IEnumerator PopUpTextPanel()
+    /*IEnumerator PopUpTextPanel()
     {
         textPanel.transform.DOMoveY(-3.6f, 0.3f).SetEase(Ease.InOutQuart);
         yield return new WaitForSeconds(0.12f);
         //textEvents();
-    }
+    }*/
 
 }
