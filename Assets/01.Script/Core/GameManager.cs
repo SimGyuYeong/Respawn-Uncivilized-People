@@ -8,20 +8,23 @@ public class GameManager : MonoBehaviour
 
     public static GameManager Instance;
 
-    [SerializeField] private TextManager textManager = null;
-    public TextManager TEXT { get { return textManager; } }
+    private TextManager _textManager = null;
+    public TextManager TEXT { get { return _textManager; } }
 
     [SerializeField] private DataManager dataManager = null;
     public DataManager DATA {  get { return dataManager; } }
 
-    [SerializeField] private SoundManager soundManager = null;
-    public SoundManager SOUND {  get { return soundManager; } }
+    [SerializeField] private SoundManager bgmSoundManager = null; 
+    public SoundManager BgmSound {  get { return bgmSoundManager; } }
+
+    [SerializeField] private SoundManager sfxSoundManager = null;
+    public SoundManager SfxSound { get { return sfxSoundManager; } }
 
     [SerializeField] public GameObject Buttons;
     [SerializeField] public GameObject TitlePanel;
     [SerializeField] GameObject optionPanel;
 
-    public string PlayerName = "무명";
+    public string playerName = "무명";
 
     //옵션
     [SerializeField] Slider chatSpeedSlider;
@@ -47,9 +50,10 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
         TitlePanel.SetActive(true);
         Buttons.SetActive(true);
-        textManager = GetComponent<TextManager>();
+        _textManager = transform.parent.Find("TextManager").GetComponent<TextManager>();
         dataManager = GetComponent<DataManager>();
-        soundManager = GetComponent<SoundManager>();
+        bgmSoundManager = transform.parent.Find("SoundManager").GetChild(0).GetComponent<SoundManager>();
+        sfxSoundManager = transform.parent.Find("SoundManager").GetChild(1).GetComponent<SoundManager>();
     }
 
     private void Start()
@@ -63,7 +67,7 @@ public class GameManager : MonoBehaviour
         audoSpeedSlider.value = audoSpeedSlider.value * -1;
         audoSpeedSlider.value = TEXT.autoSpeed;
         Debug.Log(PlayerPrefs.GetFloat("auto", 1));
-        soundManager.PlayingMusic(0, 0.05f);
+        bgmSoundManager.PlaySound(_textManager.TextSO.bgmList[0], true);
     }
 
     public void Update()
@@ -82,11 +86,10 @@ public class GameManager : MonoBehaviour
             case "시작":
                 TitlePanel.SetActive(false);
                 Buttons.SetActive(false);
-                textManager.chatID = 1;
-                soundManager.PauseMusic();
-                soundManager.PlayingMusic(1, 0.05f);
+                _textManager.chatID = 1;
+                //bgmSoundManager.PlaySound(_textManager.TextSO.bgmList[0], true);
                 StartCoroutine(FadeIn());
-                StartCoroutine(textManager.Typing());
+                TEXT.TextTyping?.Invoke();
                 break;
             case "종료":
 #if UNITY_EDITOR
@@ -155,20 +158,19 @@ public class GameManager : MonoBehaviour
         StopAllCoroutines();
         OptionPanelOC(1);
         BlackImageObject.SetActive(false);
-        TEXT.textImage.gameObject.SetActive(false);
-        TEXT.background[TEXT.backID].gameObject.SetActive(false);
+        TEXT.textPanelObj.SetActive(false);
+        TEXT.TextSO.backgroundList[TEXT.backgroundID].gameObject.SetActive(false);
         TitlePanel.SetActive(true);
         Buttons.SetActive(true);
-        soundManager.PauseMusic();
-        soundManager.PlayingMusic(0, 0.05f);
+        bgmSoundManager.PlaySound(_textManager.TextSO.bgmList[0], true);
     }
 
     public void InputName()
     {
-        PlayerName = inputField.text;
+        playerName = inputField.text;
         InputNameCanvas.SetActive(false);
         TEXT.chatID = 100003;
         StartCoroutine(TEXT.LoadTextData());
-        StartCoroutine(TEXT.Typing());
+        TEXT.TextTyping?.Invoke();
     }
 }
