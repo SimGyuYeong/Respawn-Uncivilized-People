@@ -10,14 +10,18 @@ public class InputButton : ButtonManager
     private int moveTo = 1;
     public UnityEvent textEvents;
 
-    private void Awake()
+    private FreeTimeText _freeTimeText = null;
+
+    private void Start()
     {
-         
+        _freeTimeText = GetComponent<FreeTimeText>();
     }
 
     public void InputStoryButton(int code)  //건물 버튼 누르면 생기는 일
     {
+        //_freeTimeText.SetText(code);
         StartCoroutine(ButtonMove());       //버튼들이 올라감
+
     }
 
     public void InputSettingButton()

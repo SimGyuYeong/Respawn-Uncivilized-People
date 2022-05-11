@@ -170,7 +170,6 @@ public class GameManager : MonoBehaviour
         playerName = inputField.text;
         InputNameCanvas.SetActive(false);
         TEXT.chatID = 100003;
-        StartCoroutine(TEXT.LoadTextData());
         TEXT.TextTyping?.Invoke();
     }
 }

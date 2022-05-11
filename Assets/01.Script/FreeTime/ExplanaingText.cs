@@ -16,7 +16,6 @@ public class ExplanaingText : MonoBehaviour
         _expText = transform.Find("ExplanationText").GetComponent<TextMeshProUGUI>();
     }
 
-
     /// <summary>
     /// 테스트용 통신 함수
     /// </summary>
@@ -28,40 +27,23 @@ public class ExplanaingText : MonoBehaviour
 
     public void ShowText(string msg)
     {
-        //_openCount++;
-        //if (_openCount > 1)
-        //{
-        //    StopAllCoroutines();
-        //    if (time > 0)
-        //    {
-        //        _openCount--;
-        //        StartCoroutine(CloseCoroutine(time));
-        //    }
-        //    return;
-        //}
-
+        Vector2 position = new Vector2(0, -4);
         _expText.SetText(msg);
         DOTween.Kill(transform);
         if (_seq != null) _seq.Kill();
 
-        transform.localScale = Vector3.zero;
+        //transform.position = new Vector3(0, -3, 0);
         _seq = DOTween.Sequence();
-        _seq.Append(transform.DOScale(Vector3.one * 1.2f, 0.3f));
-        _seq.Append(transform.DOScale(Vector3.one * 0.9f, 0.1f));
-        _seq.Append(transform.DOScale(Vector3.one, 0.1f));
-
-        //if (time > 0)
-        //{
-        //    _seq = DOTween.Sequence();
-        //    _seq.Append(transform.DOScale(Vector3.one * 1.2f, 0.1f));
-        //    _seq.Append(transform.DOScale(Vector3.zero, 0.3f));
-        //}
+        _seq.Append(transform.DOMove(position * 0.9f, 0.1f));
+        _seq.Append(transform.DOMove(position, 0.06f));
     }
 
     public void CloseText()
     {
+        Vector2 position = new Vector2(0, -6.4f);
+        if (_seq != null) _seq.Kill();
         _seq = DOTween.Sequence();
-        _seq.Append(transform.DOScale(Vector3.one * 1.2f, 0.1f));
-        _seq.Append(transform.DOScale(Vector3.zero, 0.3f));
+        _seq.Append(transform.DOMove(position * 1.1f, 0.08f));
+        _seq.Append(transform.DOMove(position, 0.18f));
     }
 }

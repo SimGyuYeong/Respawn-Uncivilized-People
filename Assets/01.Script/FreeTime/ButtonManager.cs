@@ -9,5 +9,5 @@ public class ButtonManager : MonoBehaviour
     [SerializeField] protected Image fadeImage;                            //검은 화면
     [SerializeField] protected GameObject GameScreen;                      //게임 배경화면
     [SerializeField] protected UnityEngine.UI.Button textPanel;            //텍스트 검은 배경
-    [SerializeField] protected Image settingPanel;
+    [SerializeField] protected GameObject settingPanel;
 }
