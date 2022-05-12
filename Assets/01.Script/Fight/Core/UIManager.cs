@@ -39,11 +39,11 @@ public class UIManager : MonoBehaviour
     public void UpdateEnergyUI()
     {
         Sequence seq = DOTween.Sequence();
-        seq.Append(tileUI.transform.GetChild(3).transform.DOScaleX((float)FightManager.Instance.Energy / 100, 1.5f));
+        seq.Append(tileUI.transform.GetChild(3).transform.DOScaleX((float)FightManager.Instance.player.Energy / 100, 1.5f));
         seq.Append(_energyText.transform.DOShakeScale(0.4f, 0.7f, 5));
         seq.AppendCallback(() =>
         {
-            _energyText.text = FightManager.Instance.Energy.ToString();
+            _energyText.text = FightManager.Instance.player.Energy.ToString();
         });
 
     }
