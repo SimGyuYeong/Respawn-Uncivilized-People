@@ -230,20 +230,6 @@ public class TextManager : MonoBehaviour
                 break;
             }
 
-
-            //if(isBracketOpen)
-            //{
-            //    if (Sentence[chatID][typingID, 2][i] == '>')
-            //    {
-            //        checkText = true;
-            //        isBracketOpen = false;
-            //    }
-            //    textPanel.text = string.Format("{0}\n{1}", Name, Sentence[chatID][typingID, 2].Substring(0, i));
-            //    continue;
-            //}
-            //if (Sentence[chatID][typingID, 2][i] == '<') isBracketOpen = true;
-
-
             _textPanel.text = string.Format("{0}\n{1}", pName, Sentence[chatID][typingID, 2].Substring(0, i));
             //soundManager.TypingSound(); // 텍스트 출력....따따따따
             yield return new WaitForSeconds(chatSpeed);
