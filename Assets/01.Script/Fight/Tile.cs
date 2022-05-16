@@ -12,6 +12,11 @@ public class Tile : MonoBehaviour
     /// </summary>
     void OnMouseEnter()
     {
+        if(transform.childCount > 1)
+        {
+            FightManager.Instance.ShowUpdateStat(transform.GetChild(1).GetComponent<Player>());
+        }
+
         if(FightManager.Instance.turnType == FightManager.TurnType.Player_Move || FightManager.Instance.turnType == FightManager.TurnType.Player_Attack)
         {
             _highlight.SetActive(true);

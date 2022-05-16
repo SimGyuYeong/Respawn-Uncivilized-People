@@ -34,8 +34,9 @@ public class FightManager : MonoBehaviour
     }
     #endregion
 
+    public List<PlayerData> playerData = new List<PlayerData>();
+
     public List<Vector2Int> enemyPos = new List<Vector2Int>(); //적들의 좌표 리스트
-    public List<Vector2Int> playerPos = new List<Vector2Int>(); //플레이어 부대들의 좌표 리스트
     private List<int> _noneEnemyList = new List<int>(); //움직이지 않은 적들 리스트
 
 
@@ -113,13 +114,30 @@ public class FightManager : MonoBehaviour
         lineRenderer.endWidth = .05f;
     }
 
+    private void PlayerSpawn()
+    {
+        int count = 1;
+        foreach (var p in playerData)
+        {
+            int slot = Mathf.FloorToInt((7 - p.DPos.y) * 8 + p.DPos.x);
+
+            var _player = Instantiate(playerPrefab, tileList[slot].transform);
+            _player.Position = p.DPos;
+            _player.id = count;
+            _turnPlayerCount += 2;
+
+            _playerList.Add(_player);
+            count++;
+        }
+    }
+
     /// <summary>
     /// 타일 생성 코루틴 함수
     /// </summary>
     /// <returns></returns>
     private IEnumerator spawnTile()
     {
-        int count = 1, aiCount = 0, playerCount = 0;
+        int count = 1, aiCount = 0;
         for (int y = 7; y >= 0; y--)
         {
             for (int x = 0; x < 8; x++)
@@ -130,18 +148,6 @@ public class FightManager : MonoBehaviour
                 spawnedTile.tile = new TileInform(count, x, y);
 
                 tileList.Add(spawnedTile);
-
-                foreach(Vector2Int pos in playerPos)
-                {
-                    if (pos == new Vector2Int(x, y))
-                    {
-                        var _player = Instantiate(playerPrefab, spawnedTile.transform);
-                        _player.Position = pos;
-                        _player.id = ++playerCount;
-                        _turnPlayerCount += 2;
-                        _playerList.Add(_player);
-                    }
-                }
 
                 foreach(Vector2Int pos in enemyPos)
                 {
@@ -168,6 +174,8 @@ public class FightManager : MonoBehaviour
             }
             yield return new WaitForSeconds(0.08f);
         }
+        PlayerSpawn(); 
+
         OnUIChange?.Invoke();
         TurnChange();
     }
@@ -209,8 +217,10 @@ public class FightManager : MonoBehaviour
         _aStar.PathFinding();
         if (_finalNodeList.Count <= moveDistance+1 && _finalNodeList.Count > 0) return true;
         return false;
+    
+        
     }
-
+     
     /// <summary>
     /// 지형지물 체크 함수
     /// </summary>
@@ -321,10 +331,11 @@ public class FightManager : MonoBehaviour
     public void PlayerMove(Vector2Int pos, Transform parent)
     {
         ClickPlayer();
-        player.isMove = true;
-        player.transform.SetParent(parent);
         tPos = pos;
         _aStar.PathFinding();
+
+        player.isMove = true;
+        player.transform.SetParent(parent);
         
         StartCoroutine(PlayerMoveCoroutine());
     }
@@ -534,7 +545,6 @@ public class FightManager : MonoBehaviour
             case TurnType.Wait_Player:
                 Debug.Log("Player Turn");
                 turnType = TurnType.Input_Action;
-                _turnPlayerCount = playerPos.Count*2;
                 break;
 
             case TurnType.Player_Move:
@@ -574,8 +584,13 @@ public class FightManager : MonoBehaviour
     {
         yield return null;   
         turnType = TurnType.Wait_Player;
-        player.isMove = false;
-        player.isFight = false;
+
+        foreach(var p in _playerList)
+        {
+            p.isFight = false;
+            p.isMove = false;
+        }
+
         TurnChange();
     }
 
@@ -653,5 +668,12 @@ public class FightManager : MonoBehaviour
             }
         }
         return false;
+    }
+
+    public void ShowUpdateStat(Player _player)
+    {
+        Debug.Log(_player.playerName);
+        Debug.Log(_player.Energy);
+        Debug.Log(_player.info);
     }
 }
