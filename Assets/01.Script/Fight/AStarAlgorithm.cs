@@ -45,17 +45,12 @@ public class AStarAlgorithm : MonoBehaviour
             {
                 bool isWall = false;
                 int slot = (56 + i) - j * 8;
-                if (FightManager.Instance.isWallList[slot] == true)
+
+                if(FightManager.Instance.tileList[slot].transform.childCount >= 2 || FightManager.Instance.isWallList[slot] == true)
                 {
                     isWall = true;
                 }
-                foreach (Vector2 pos in FightManager.Instance.enemyPos)
-                {
-                    if (pos == new Vector2(i, j))
-                    {
-                        isWall = true;
-                    }
-                }
+
                 NodeArray[i, j] = new Node(isWall, i, j); // º®¿©ºÎ, xÁÂÇ¥, yÁÂÇ¥
             }
         }
