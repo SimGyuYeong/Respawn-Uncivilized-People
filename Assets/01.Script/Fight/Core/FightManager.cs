@@ -35,8 +35,8 @@ public class FightManager : MonoBehaviour
     #endregion
 
     public List<ObjData> playerDataList = new List<ObjData>();
+    public List<ObjData> aiDataList = new List<ObjData>();
 
-    public List<Vector2Int> enemyPos = new List<Vector2Int>(); //적들의 좌표 리스트
     private List<int> _noneEnemyList = new List<int>(); //움직이지 않은 적들 리스트
 
 
@@ -59,13 +59,8 @@ public class FightManager : MonoBehaviour
     //플레이어가 한턴에 몇번 행동할 수 있는지
     private int _turnPlayerCount = 0;
 
-    //타일 리스트
     public List<Tile> tileList = new List<Tile>();
-
-    //적 리스트
-    public List<AI> enemyList = new List<AI>();
-
-    //플레이어 리스트
+    public List<AI> aiList = new List<AI>();
     private List<Player> _playerList = new List<Player>();
 
     //액션 버튼 오브젝트
@@ -116,7 +111,7 @@ public class FightManager : MonoBehaviour
 
     private void PlayerSpawn()
     {
-        int count = 1;
+        int count = 0;
         foreach (var p in playerDataList)
         {
             int slot = Mathf.FloorToInt((7 - p.DPos.y) * 8 + p.DPos.x);
@@ -130,13 +125,28 @@ public class FightManager : MonoBehaviour
         }
     }
 
+    private void AISpawn()
+    {
+        int count = 0;
+        foreach(var ai in aiDataList)
+        {
+            int slot = Mathf.FloorToInt((7 - ai.DPos.y) * 8 + ai.DPos.x);
+
+            var _ai = Instantiate(enemyPrefab, tileList[slot].transform);
+            _ai.DataSet(count, ai);
+
+            aiList.Add(_ai);
+            count++;
+        }
+    }
+
     /// <summary>
     /// 타일 생성 코루틴 함수
     /// </summary>
     /// <returns></returns>
     private IEnumerator spawnTile()
     {
-        int count = 1, aiCount = 0;
+        int count = 1;
         for (int y = 7; y >= 0; y--)
         {
             for (int x = 0; x < 8; x++)
@@ -147,20 +157,6 @@ public class FightManager : MonoBehaviour
                 spawnedTile.tile = new TileInform(count, x, y);
 
                 tileList.Add(spawnedTile);
-
-                foreach(Vector2Int pos in enemyPos)
-                {
-                    if(pos == new Vector2Int(x, y))
-                    {
-                        AI _ai = Instantiate(enemyPrefab, spawnedTile.transform);
-                        _ai.transform.position = spawnedTile.transform.position;
-                        spawnedTile.tile.isEnemy = true;
-                        int _c = count;
-                        _ai.ai = new AIInform(aiCount, x, y, 45, count-1);
-                        enemyList.Add(_ai);
-                        aiCount++;
-                    }
-                }
 
                 if (isWallList[count - 1] == true)
                 {
@@ -173,7 +169,8 @@ public class FightManager : MonoBehaviour
             }
             yield return new WaitForSeconds(0.08f);
         }
-        PlayerSpawn(); 
+        PlayerSpawn();
+        AISpawn();
 
         OnUIChange?.Invoke();
         TurnChange();
@@ -249,10 +246,10 @@ public class FightManager : MonoBehaviour
         if (_aStar.NodeArray[(int)pos.x, (int)pos.y].isWall)
             return true;
 
-        foreach(var p in enemyPos)
+        int slot = Mathf.FloorToInt((7 - pos.y) * 8 + pos.x);
+        if (tileList[slot].transform.childCount > 1)
         {
-            if (p == pos)
-                return true;
+            return true;
         }
 
         return false;
@@ -266,9 +263,9 @@ public class FightManager : MonoBehaviour
     {
         if (player.isFight == false)
         {
-            foreach (Vector2 pos in enemyPos)
+            foreach (var ai in aiList)
             {
-                if (Vector2.Distance(pos, matchPos) <= 1) return true;
+                if (Vector2.Distance(ai.Position, matchPos) <= 1) return true;
             }
         }
 
@@ -499,27 +496,16 @@ public class FightManager : MonoBehaviour
 
     public void PlayerAttack(int enemyCount)
     {
-        player.Energy -= enemyList[enemyCount].ai.Health;
-        enemyPos.RemoveAt(enemyCount);
+        player.Energy -= aiList[enemyCount].energy;
         
         if(_noneEnemyList.Count > 0)
         {
             _noneEnemyList.RemoveAt(enemyCount);
         }
         
-        Destroy(enemyList[enemyCount].gameObject);
-        enemyList.RemoveAt(enemyCount);
+        Destroy(aiList[enemyCount].gameObject);
+        aiList.RemoveAt(enemyCount);
 
-        int num = 0;
-        foreach(var e in enemyList)
-        {
-            AI _ai = e.GetComponent<AI>();
-            if (_ai.ai.Number - num != 0)
-            {
-                _ai.ai.Number--;
-            }
-            num++;
-        }
         ClickPlayer();
         OnUIChange?.Invoke();
         StartCoroutine(AfterAttack());
@@ -560,12 +546,12 @@ public class FightManager : MonoBehaviour
                 if(_noneEnemyList.Count <= 0)
                 {
                     //모든 적들을 움직이지 않는 적 리스트에 다시 넣는다.
-                    for (int i = 0; i < enemyPos.Count; i++)
+                    for (int i = 0; i < aiList.Count; i++)
                         _noneEnemyList.Add(i);
                 }
 
                 int _num = Random.Range(0, _noneEnemyList.Count);
-                enemyList[_noneEnemyList[_num]].AIMoveStart(); //랜덤으로 지정한 적을 움직인다.
+                aiList[_noneEnemyList[_num]].AIMoveStart(); //랜덤으로 지정한 적을 움직인다.
                 _noneEnemyList.RemoveAt(_num); //움직인 적은 움직이지 않은 적 리스트에서 제거
                 if (_noneEnemyList.Count < 1) //모든 적이 움직였다면
                     _noneEnemyList.Clear(); //움직이지 않은 적 리스트 초기화
@@ -596,7 +582,7 @@ public class FightManager : MonoBehaviour
     public void ClickTile(GameObject tileObj)
     {
         GameObject highLight = tileObj.transform.Find("_highlight").gameObject;
-        TileInform tile = tileObj.GetComponent<Tile>().tile;
+        Tile tile = tileObj.GetComponent<Tile>();
 
         if (isIng == false)
         {
@@ -614,31 +600,29 @@ public class FightManager : MonoBehaviour
 
             else if (turnType == TurnType.Player_Move)
             {
-                if (tile.Position == pPos)
+                if (tile.isPlayer())
                 {
                     turnType = TurnType.Input_Action;
                     HideDistance();
                     return;
                 }
 
-                if (MoveCheck(tile) && DistanceCheck(tile.Position))
+                if (MoveCheck(tile) && DistanceCheck(tile.tile.Position))
                 {
-                    PlayerMove(tile.Position, tileObj.transform);
+                    PlayerMove(tile.tile.Position, tileObj.transform);
                 }
             }
             else if (turnType == TurnType.Player_Attack)
             {
-                if (tile.Position == pPos)
+                if (tile.isPlayer())
                 {
                     turnType = TurnType.Input_Action;
                     HideDistance();
-                    return;
                 }
-
-                if (tile.isEnemy)
+                else if(tile.isAI())
                 {
-                    if (Vector2Int.Distance(tile.Position, pPos) <= 1)
-                        PlayerAttack(tileObj.GetComponentInChildren<AI>().ai.Number);
+                    if (Vector2Int.Distance(tile.tile.Position, pPos) <= 1)
+                        PlayerAttack(tileObj.GetComponentInChildren<AI>().id);
                 }
             }
         }
@@ -648,21 +632,16 @@ public class FightManager : MonoBehaviour
     /// 플레이어가 움직일 수 있는 상태인지 체크
     /// </summary>
     /// <returns>움직일 수 있다면 True, 아니면 False</returns>
-    public bool MoveCheck(TileInform tile)
+    public bool MoveCheck(Tile tile)
     {
         if (turnType == TurnType.Player_Move
             && isClickPlayer
             && isIng == false
-            && tile.isWall == false)
+            && tile.tile.isWall == false)
         {
-            if (tile.isEnemy)
+            if (tile.isAI() == false)
             {
-                if (DistanceCheck(tile.Position))
-                    return true;
-            }
-            else
-            {
-                if (DistanceCheck(tile.Position))
+                if (DistanceCheck(tile.tile.Position))
                     return true;
             }
         }
@@ -671,11 +650,11 @@ public class FightManager : MonoBehaviour
 
     public void ShowUpdateStat(Player _player)
     {
-        UIManager.Instance.ShowStatUI(_player.name, _player.Energy, _player.info);
+        UIManager.Instance.ShowStatUI(_player.playerName, _player.Energy, _player.info, 1, _player.id);
     }
 
     public void ShowUpdateStat(AI _ai)
     {
-        //UIManager.Instance.ShowStatUI(_ai);
+        UIManager.Instance.ShowStatUI(_ai.aiName, _ai.energy, _ai.info, 2, _ai.id);
     }
 }

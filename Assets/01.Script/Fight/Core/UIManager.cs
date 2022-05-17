@@ -17,6 +17,9 @@ public class UIManager : MonoBehaviour
     private Text _energyText;
     private Text _goalText;
 
+    public Color aiColor;
+    public Color playerColor;
+
     private void Awake()
     {
         Instance = this;
@@ -33,35 +36,49 @@ public class UIManager : MonoBehaviour
     public void UpdateGoalUI()
     {
         Sequence seq = DOTween.Sequence();
-        seq.Append(goalUI.transform.GetChild(3).transform.DOScaleX((float)FightManager.Instance.enemyList.Count / 3, 1.5f));
+        seq.Append(goalUI.transform.GetChild(3).transform.DOScaleX((float)FightManager.Instance.aiList.Count / 3, 1.5f));
         seq.Append(_goalText.transform.DOShakeScale(0.4f, 0.7f, 5));
         seq.AppendCallback(() =>
         {
-            _goalText.text = FightManager.Instance.enemyList.Count.ToString();
+            _goalText.text = FightManager.Instance.aiList.Count.ToString();
         });
     }
 
-    public void UpdateEnergyUI()
+    public void UpdateEnergyUI(float energy)
     {
-        
-
         Sequence seq = DOTween.Sequence();
-        seq.Append(tileUI.transform.GetChild(3).transform.DOScaleX((float)FightManager.Instance.player.Energy / 100, 1.5f));
+        seq.Append(tileUI.transform.GetChild(3).transform.DOScaleX(energy / 100, 1.5f));
         seq.Append(_energyText.transform.DOShakeScale(0.4f, 0.7f, 5));
         seq.AppendCallback(() =>
         {
-            _energyText.text = FightManager.Instance.player.Energy.ToString();
+            _energyText.text = energy.ToString();
         });
 
     }
 
-    public void ShowStatUI(string name, int energy, string info)
+    public void ShowStatUI(string name, int energy, string info, int type, int id)
     {
         tileUI.SetActive(true);
+        int maxEnergy = 0;
+
+        if (type == 1)
+        {
+            tileUI.GetComponent<Image>().color = playerColor;
+            maxEnergy = FightManager.Instance.playerDataList[id].DEnergy;
+        }
+        else if(type == 2)
+        {
+            tileUI.GetComponent<Image>().color = aiColor;
+            maxEnergy = FightManager.Instance.aiDataList[id].DEnergy;
+        }
 
         tileUI.transform.Find("Name").GetComponent<Text>().text = name;
         tileUI.transform.Find("Energy").GetComponent<Text>().text = energy.ToString();
         tileUI.transform.Find("Info").GetComponent<TextMeshProUGUI>().text = info;
+
+        
+        tileUI.transform.Find("Bar").DOScaleX((float)energy / maxEnergy, 0);
+        _energyText.text = energy.ToString();
     }
 
     public void HideStatUI()

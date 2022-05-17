@@ -14,42 +14,45 @@ public class Tile : MonoBehaviour
     /// </summary>
     void OnMouseEnter()
     {
-        if(transform.childCount > 1)
+        if(FightManager.Instance.isIng == false)
         {
-            _isShowUI = true;
-            if(transform.CompareTag("Player"))
-                FightManager.Instance.ShowUpdateStat(transform.GetChild(1).GetComponent<Player>());
-            else if(transform.CompareTag("AI"))
-                FightManager.Instance.ShowUpdateStat(transform.GetChild(1).GetComponent<AI>());
-        }
-
-        if(FightManager.Instance.turnType == FightManager.TurnType.Player_Move || FightManager.Instance.turnType == FightManager.TurnType.Player_Attack)
-        {
-            _highlight.SetActive(true);
-        }
-
-        if(FightManager.Instance.turnType == FightManager.TurnType.Player_Attack)
-        {
-            if (tile.isEnemy)
+            if (transform.childCount > 1)
             {
-                if (Vector2Int.Distance(tile.Position, FightManager.Instance.pPos) <= 1)
+                _isShowUI = true;
+                if (isPlayer())
+                    FightManager.Instance.ShowUpdateStat(transform.GetChild(1).GetComponent<Player>());
+                else if (isAI())
+                    FightManager.Instance.ShowUpdateStat(transform.GetChild(1).GetComponent<AI>());
+            }
+
+            if (FightManager.Instance.turnType == FightManager.TurnType.Player_Move || FightManager.Instance.turnType == FightManager.TurnType.Player_Attack)
+            {
+                _highlight.SetActive(true);
+            }
+
+            if (FightManager.Instance.turnType == FightManager.TurnType.Player_Attack)
+            {
+                if (isAI())
                 {
-                    FightManager.Instance.tPos = tile.Position;
-                    FightManager.Instance.EnemyDraw();
+                    if (Vector2Int.Distance(tile.Position, FightManager.Instance.pPos) <= 1)
+                    {
+                        FightManager.Instance.tPos = tile.Position;
+                        FightManager.Instance.EnemyDraw();
+                    }
+                }
+                else
+                {
+                    if (FightManager.Instance.lineRenderer.positionCount > 0)
+                        FightManager.Instance.lineRenderer.positionCount = 0;
                 }
             }
-            else
+            else if (FightManager.Instance.MoveCheck(this))
             {
-                if(FightManager.Instance.lineRenderer.positionCount > 0)
-                    FightManager.Instance.lineRenderer.positionCount = 0;
+                FightManager.Instance.DrawLine();
             }
+            else
+                FightManager.Instance.lineRenderer.positionCount = 0;
         }
-        else if (FightManager.Instance.MoveCheck(tile))
-        {
-            FightManager.Instance.DrawLine();
-        }
-        else
-            FightManager.Instance.lineRenderer.positionCount = 0;
     }
 
     /// <summary>
@@ -72,5 +75,23 @@ public class Tile : MonoBehaviour
     private void OnMouseDown()
     {
         FightManager.Instance.ClickTile(gameObject);     
+    }
+
+    public bool isAI()
+    {
+        if(transform.childCount > 1)
+        {
+            return transform.GetChild(1).CompareTag("AI");
+        }
+        return false;
+    }
+
+    public bool isPlayer()
+    {
+        if (transform.childCount > 1)
+        {
+            return transform.GetChild(1).CompareTag("Player");
+        }
+        return false;
     }
 }

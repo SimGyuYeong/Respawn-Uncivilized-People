@@ -5,7 +5,23 @@ using DG.Tweening;
 
 public class AI : MonoBehaviour
 {
-    public AIInform ai;
+    public string aiName;
+    public int id;
+    public int energy;
+    public string info;
+
+    private Vector2 _pos = Vector2.zero;
+    public Vector2 Position
+    {
+        get
+        {
+            return _pos;
+        }
+        set
+        {
+            _pos = value;
+        }
+    }
 
     //공격대상 오브젝트
     private GameObject _attackObj;
@@ -13,8 +29,23 @@ public class AI : MonoBehaviour
     //행동력
     private int _stamina = 2;
 
+    public enum AI_STATE
+    {
+        WAIT_L,
+        WAIT_S,
+        WAIT_R
+    }
     //AI 상태 초기설정
     private AI_STATE _state = AI_STATE.WAIT_L;
+
+    public void DataSet(int _id, ObjData pData)
+    {
+        id = _id;
+        aiName = pData.DName;
+        Position = pData.DPos;
+        info = pData.DInfo;
+        energy = pData.DEnergy;
+    }
 
     /// <summary>
     /// AI 턴 시작 함수
@@ -39,37 +70,37 @@ public class AI : MonoBehaviour
             {
                 if (AttackDistanceCheck())
                 {
-                    FightManager.Instance.player.Energy -= ai.Health;
+                    FightManager.Instance.player.Energy -= energy;
                     break;
                 }
 
-                if (ai.Position.x == FightManager.Instance.pPos.x)
+                if (_pos.x == FightManager.Instance.pPos.x)
                 {
-                    if (ai.Position.y - FightManager.Instance.pPos.y > 0)
+                    if (_pos.y - FightManager.Instance.pPos.y > 0)
                     {
-                        if (!FightManager.Instance.ObjCheck(ai.Position, 'd'))
+                        if (!FightManager.Instance.ObjCheck(_pos, 'd'))
                             ObjMove(8);
                     }
 
                     else
                     {
-                        if (!FightManager.Instance.ObjCheck(ai.Position, 'u'))
+                        if (!FightManager.Instance.ObjCheck(_pos, 'u'))
                             ObjMove(-8);
                     }
 
                 }
                 else
                 {
-                    if (ai.Position.x - FightManager.Instance.pPos.x > 0)
+                    if (_pos.x - FightManager.Instance.pPos.x > 0)
                     {
 
-                        if (!FightManager.Instance.ObjCheck(ai.Position, 'l'))
+                        if (!FightManager.Instance.ObjCheck(_pos, 'l'))
                             ObjMove(-1);
                     }
 
                     else
                     {
-                        if (!FightManager.Instance.ObjCheck(ai.Position, 'r'))
+                        if (!FightManager.Instance.ObjCheck(_pos, 'r'))
                             ObjMove(1);
                     }
 
@@ -83,8 +114,8 @@ public class AI : MonoBehaviour
         else
         {
 
-            if (FightManager.Instance.ObjCheck(ai.Position, 'r')
-                && FightManager.Instance.ObjCheck(ai.Position, 'l'))
+            if (FightManager.Instance.ObjCheck(_pos, 'r')
+                && FightManager.Instance.ObjCheck(_pos, 'l'))
                 {
                 _state = AI_STATE.WAIT_S;
             }
@@ -93,26 +124,26 @@ public class AI : MonoBehaviour
             {
                 case AI_STATE.WAIT_R:
                     ObjMove(1);
-                    if (FightManager.Instance.ObjCheck(ai.Position, 'r'))
+                    if (FightManager.Instance.ObjCheck(_pos, 'r'))
                         _state = AI_STATE.WAIT_L;
 
                     break;
 
                 case AI_STATE.WAIT_L:
                     ObjMove(-1);
-                    if (FightManager.Instance.ObjCheck(ai.Position, 'l'))
+                    if (FightManager.Instance.ObjCheck(_pos, 'l'))
                         _state = AI_STATE.WAIT_R;
                         
                     break;
 
                 case AI_STATE.WAIT_S:
-                    if (!FightManager.Instance.ObjCheck(ai.Position, 'l'))
+                    if (!FightManager.Instance.ObjCheck(_pos, 'l'))
                     {
                         ObjMove(-1);
                         _state = AI_STATE.WAIT_L;
                     }
 
-                    else if (!FightManager.Instance.ObjCheck(ai.Position, 'r'))
+                    else if (!FightManager.Instance.ObjCheck(_pos, 'r'))
                     {
                         ObjMove(1);
                         _state = AI_STATE.WAIT_R;
@@ -134,20 +165,16 @@ public class AI : MonoBehaviour
     private void ObjMove(int value)
     {
         if (value == 1 || value == -1)
-            ai.Position.x += value;
+            _pos.x += value;
         else if (value == 8)
-            ai.Position.y--;
+            _pos.y--;
         else
-            ai.Position.y++;
+            _pos.y++;
 
-        FightManager.Instance.enemyPos[ai.Number] = ai.Position;
-        FightManager.Instance.tileList[ai.TileNum].tile.isEnemy = false;
+        int slot = Mathf.FloorToInt((7 - _pos.y) * 8 + _pos.x);
+        transform.SetParent(FightManager.Instance.tileList[slot].transform);
 
-        ai.TileNum += value;
-        FightManager.Instance.tileList[ai.TileNum].tile.isEnemy = true;
-        transform.SetParent(FightManager.Instance.tileList[ai.TileNum].gameObject.transform);
-
-        transform.DOMove(new Vector3(ai.Position.x, ai.Position.y), 1F);
+        transform.DOMove(new Vector3(_pos.x, _pos.y), 1F);
     }
 
     /// <summary>
@@ -155,9 +182,7 @@ public class AI : MonoBehaviour
     /// </summary>
     /// <returns>공격대상 지정 여부</returns>
     private bool AttackDistanceCheck()
-    {
-        Vector2 _pos = ai.Position;
-
+    { 
         float distance = Vector2.Distance(_pos, FightManager.Instance.pPos);
         if (distance <= 1)
             return true;
@@ -169,7 +194,7 @@ public class AI : MonoBehaviour
     {
         _attackObj = gameObject;
 
-        float distance = Vector2.Distance(ai.Position, FightManager.Instance.pPos);
+        float distance = Vector2.Distance(_pos, FightManager.Instance.pPos);
         if (distance <= 3)
         {
             _attackObj = FightManager.Instance.player.gameObject;
