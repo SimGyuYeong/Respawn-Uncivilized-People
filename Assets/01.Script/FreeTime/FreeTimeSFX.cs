@@ -26,14 +26,14 @@ public class FreeTimeSFX : MonoBehaviour
         }
 
         _audioSource = GetComponent<AudioSource>();
-        _textManager = transform.parent.Find("TextManager").GetComponent<TextManager>();
-        bgmSoundManager = transform.parent.Find("SoundManager").GetChild(0).GetComponent<SoundManager>();
-        sfxSoundManager = transform.parent.Find("SoundManager").GetChild(1).GetComponent<SoundManager>();
+        //_textManager = transform.parent.Find("TextManager").GetComponent<TextManager>();
+        //bgmSoundManager = transform.parent.Find("SoundManager").GetChild(0).GetComponent<SoundManager>();
+        //sfxSoundManager = transform.parent.Find("SoundManager").GetChild(1).GetComponent<SoundManager>();
     }
 
     public void Start()
     {
-        bgmSoundManager.PlaySound(_textManager.TextSO.bgmList[0], true);
+        //bgmSoundManager.PlaySound(_textManager.TextSO.bgmList[0], true);
     }
 
     public void PlaySoundClip(AudioClip clip, bool isLoop = false)
