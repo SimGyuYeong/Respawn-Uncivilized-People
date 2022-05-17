@@ -53,7 +53,6 @@ public class UIManager : MonoBehaviour
         {
             _energyText.text = energy.ToString();
         });
-
     }
 
     public void ShowStatUI(string name, int energy, string info, int type, int id)

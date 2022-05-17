@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Events;
+using DG.Tweening;
 
 public class FightManager : MonoBehaviour
 {
@@ -57,7 +58,8 @@ public class FightManager : MonoBehaviour
     public bool[] isWallList;
     
     //플레이어가 한턴에 몇번 행동할 수 있는지
-    private int _turnPlayerCount = 0;
+    private int _maxTurnCount = 0;
+    private int _turnCount = 0;
 
     public List<Tile> tileList = new List<Tile>();
     public List<AI> aiList = new List<AI>();
@@ -70,6 +72,8 @@ public class FightManager : MonoBehaviour
 
     public bool isClickPlayer = false;
     public int moveDistance = 4;
+
+    private int pCount = 0;
 
     public LineRenderer lineRenderer;
 
@@ -118,24 +122,42 @@ public class FightManager : MonoBehaviour
 
             var _player = Instantiate(playerPrefab, tileList[slot].transform);
             _player.DataSet(count, p);
-            _turnPlayerCount += 2;
+            _maxTurnCount += 2;
+
+            _player.transform.localScale = Vector2.one * 1.5f;
+
+            Sequence seq = DOTween.Sequence();
+            seq.Append(_player.transform.GetComponent<Image>().DOFade(1f, 0.2f));
+            seq.Join(_player.transform.DOScale(Vector2.one * 0.8f, 0.2f));
+            seq.AppendCallback(() => AISpawn());
 
             _playerList.Add(_player);
             count++;
         }
+        _turnCount = _maxTurnCount;
     }
 
     private void AISpawn()
     {
+        pCount -= 1;
+        if (pCount > 0) return;
+
         int count = 0;
         foreach(var ai in aiDataList)
         {
             int slot = Mathf.FloorToInt((7 - ai.DPos.y) * 8 + ai.DPos.x);
 
-            var _ai = Instantiate(enemyPrefab, tileList[slot].transform);
+            var _ai = aiList[count];
+
+            _ai.gameObject.SetActive(true);
             _ai.DataSet(count, ai);
 
-            aiList.Add(_ai);
+            _ai.transform.localScale = Vector2.one * 1.5f;
+
+            Sequence seq = DOTween.Sequence();
+            seq.Append(_ai.transform.GetComponent<SpriteRenderer>().DOFade(1f, 0.2f));
+            seq.Join(_ai.transform.DOScale(Vector2.one * 0.8f, 0.2f));
+            
             count++;
         }
     }
@@ -165,12 +187,23 @@ public class FightManager : MonoBehaviour
                 }
 
                 count++;
-                if (y == 7) yield return new WaitForSeconds(0.08f);
+                if (y == 7) yield return new WaitForSeconds(0.06f);
             }
-            yield return new WaitForSeconds(0.08f);
+            yield return new WaitForSeconds(0.06f);
         }
+
+        pCount = playerDataList.Count;
         PlayerSpawn();
-        AISpawn();
+
+        foreach(var ai in aiDataList)
+        {
+            int slot = Mathf.FloorToInt((7 - ai.DPos.y) * 8 + ai.DPos.x);
+
+            var _ai = Instantiate(enemyPrefab, tileList[slot].transform);
+            _ai.gameObject.SetActive(false);
+
+            aiList.Add(_ai);
+        }
 
         OnUIChange?.Invoke();
         TurnChange();
@@ -213,8 +246,6 @@ public class FightManager : MonoBehaviour
         _aStar.PathFinding();
         if (_finalNodeList.Count <= moveDistance+1 && _finalNodeList.Count > 0) return true;
         return false;
-    
-        
     }
      
     /// <summary>
@@ -367,9 +398,9 @@ public class FightManager : MonoBehaviour
     /// </summary>
     private void NextPlayerTurn(Action action)
     {
-        _turnPlayerCount--;
+        _turnCount--;
         isIng = false;
-        if (_turnPlayerCount > 0)
+        if (_turnCount > 0)
         {
             if(action == Action.Move) player.isMove = true;
             else if (action == Action.Attack) player.isFight = true; 
@@ -496,7 +527,7 @@ public class FightManager : MonoBehaviour
 
     public void PlayerAttack(int enemyCount)
     {
-        player.Energy -= aiList[enemyCount].energy;
+        player.Energy -= aiList[enemyCount].Energy;
         
         if(_noneEnemyList.Count > 0)
         {
@@ -505,6 +536,14 @@ public class FightManager : MonoBehaviour
         
         Destroy(aiList[enemyCount].gameObject);
         aiList.RemoveAt(enemyCount);
+
+        for(int i = 0; i < aiList.Count; i++)
+        {
+            if(aiList[i].id != i)
+            {
+                aiList[i].id--;
+            }
+        }
 
         ClickPlayer();
         OnUIChange?.Invoke();
@@ -529,6 +568,7 @@ public class FightManager : MonoBehaviour
         {
             case TurnType.Wait_Player:
                 Debug.Log("Player Turn");
+                _turnCount = _maxTurnCount;
                 turnType = TurnType.Input_Action;
                 break;
 
@@ -655,6 +695,6 @@ public class FightManager : MonoBehaviour
 
     public void ShowUpdateStat(AI _ai)
     {
-        UIManager.Instance.ShowStatUI(_ai.aiName, _ai.energy, _ai.info, 2, _ai.id);
+        UIManager.Instance.ShowStatUI(_ai.aiName, _ai.Energy, _ai.info, 2, _ai.id);
     }
 }

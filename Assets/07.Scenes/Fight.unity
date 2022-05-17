@@ -512,24 +512,24 @@ MonoBehaviour:
   - DName: "A\uBD80\uB300"
     DEnergy: 100
     DPos: {x: 3, y: 7}
-    DInfo: "\uD604\uC7AC \uC791\uC131\uC911\uC778 \uC815\uBCF4\uC785\uB2C8\uB2E4."
+    DInfo: "A\uBD80\uB300\uC785\uB2C8\uB2E4."
   - DName: "B\uBD80\uB300"
     DEnergy: 100
-    DPos: {x: 5, y: 4}
-    DInfo: "\uD604\uC7AC \uC791\uC131\uC911\uC778 \uC815\uBCF4\uC785\uB2C8\uB2E4.11"
+    DPos: {x: 5, y: 5}
+    DInfo: "B\uBD80\uB300\uC785\uB2C8\uB2E4."
   aiDataList:
-  - DName: AI1
+  - DName: Type-a
     DEnergy: 20
     DPos: {x: 1, y: 7}
-    DInfo: 11
-  - DName: AI2
+    DInfo: "Type A AI\uC785\uB2C8\uB2E4."
+  - DName: Type-b
     DEnergy: 20
-    DPos: {x: 4, y: 6}
-    DInfo: 22
-  - DName: AI3
+    DPos: {x: 5, y: 6}
+    DInfo: "Type B AI\uC785\uB2C8\uB2E4."
+  - DName: Type-c
     DEnergy: 20
     DPos: {x: 2, y: 5}
-    DInfo: 33
+    DInfo: "Type C AI\uC785\uB2C8\uB2E4."
   content: {fileID: 1718551215}
   moveAni: {fileID: 4460019810026274728, guid: 94cd5b94ebda27547838fdb3e82373ac, type: 3}
   tilePrefab: {fileID: 2317601914350064403, guid: 1d6d0f545e3055240bcab4713ac88eaf, type: 3}
@@ -836,7 +836,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1089285335}
   m_Layer: 5
-  m_Name: A
+  m_Name: Bar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1716,6 +1716,8 @@ MonoBehaviour:
   turnText: {fileID: 1965038689}
   tileUI: {fileID: 1739071372}
   goalUI: {fileID: 111060329}
+  aiColor: {r: 1, g: 0.39215687, b: 0.36078432, a: 1}
+  playerColor: {r: 0.3647059, g: 0.8745098, b: 0.9529412, a: 1}
 --- !u!1 &1961350878
 GameObject:
   m_ObjectHideFlags: 0
@@ -1965,7 +1967,7 @@ GameObject:
   - component: {fileID: 1998840037}
   - component: {fileID: 1998840036}
   m_Layer: 5
-  m_Name: fill
+  m_Name: BarSprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

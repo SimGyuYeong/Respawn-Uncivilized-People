@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Player : MonoBehaviour
 {
     public string playerName;
 
+    private int _maxEnergy = 0;
     private int _energy = 100;
     public int Energy
     {
@@ -13,8 +15,9 @@ public class Player : MonoBehaviour
         set
         {
             _energy = value;
-            if (_energy > 100) _energy = 100;
+            if (_energy > _maxEnergy) _energy = _maxEnergy;
             if (_energy < 0) _energy = 0;
+            transform.GetComponentInChildren<TextMeshProUGUI>().text = _energy.ToString();
         }
     }
 
@@ -46,6 +49,7 @@ public class Player : MonoBehaviour
         playerName = pData.DName;
         Position = pData.DPos;
         info = pData.DInfo;
+        _maxEnergy = pData.DEnergy;
         _energy = pData.DEnergy;
     }
 }

@@ -2,12 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using TMPro;
 
 public class AI : MonoBehaviour
 {
     public string aiName;
     public int id;
-    public int energy;
+
+    private int _maxEnergy;
+    private int _energy;
+    public int Energy
+    {
+        get => _energy;
+        set
+        {
+            _energy = value;
+            
+            if (_energy > _maxEnergy) _energy = _maxEnergy;
+            if (_energy < 0) _energy = 0;
+            
+            transform.GetComponentInChildren<TextMeshProUGUI>().text = _energy.ToString();
+        }
+    }
     public string info;
 
     private Vector2 _pos = Vector2.zero;
@@ -38,13 +54,14 @@ public class AI : MonoBehaviour
     //AI 상태 초기설정
     private AI_STATE _state = AI_STATE.WAIT_L;
 
-    public void DataSet(int _id, ObjData pData)
+    public void DataSet(int _id, ObjData aData)
     {
         id = _id;
-        aiName = pData.DName;
-        Position = pData.DPos;
-        info = pData.DInfo;
-        energy = pData.DEnergy;
+        aiName = aData.DName;
+        Position = aData.DPos;
+        info = aData.DInfo;
+        _maxEnergy = aData.DEnergy;
+        Energy = aData.DEnergy;
     }
 
     /// <summary>
@@ -70,7 +87,7 @@ public class AI : MonoBehaviour
             {
                 if (AttackDistanceCheck())
                 {
-                    FightManager.Instance.player.Energy -= energy;
+                    FightManager.Instance.player.Energy -= Energy;
                     break;
                 }
 
