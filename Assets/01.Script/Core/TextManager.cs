@@ -51,7 +51,7 @@ public class TextManager : MonoBehaviour
     public UnityEvent OnTextTypingEnd;
 
     public SpriteRenderer _fadeImage;
-    private bool _isEnd;
+    private bool _isEnd = false;
 
     protected enum IDType
     {
@@ -213,6 +213,8 @@ public class TextManager : MonoBehaviour
         {
             StartCoroutine(LoadTextData(URL));
         }
+        _isEnd = false;
+
 
         StartCoroutine(TypingCoroutine());
     }
@@ -227,7 +229,6 @@ public class TextManager : MonoBehaviour
         if (!isAuto) _endAnimationObj.SetActive(false);
 
         isTyping = true;
-
         string pName = Sentence[chatID][lineNumber, (int)IDType.CharacterName];
         string storyText = Sentence[chatID][lineNumber, (int)IDType.Text];
 
@@ -325,13 +326,16 @@ public class TextManager : MonoBehaviour
                 string funcName = Sentence[chatID][lineNumber, (int)IDType.Event + 1];//StartCoroutine(funcName.Trim());
                 //Debug.Log(funcName.Trim());
                 StartCoroutine(funcName.Trim());
-                if (_isEnd) return;
+                if (_isEnd)
+                {
+                    return;
+                }
             }
             else if (eventName == "이동")
             {
                 int num = UnityEngine.Random.Range((int)IDType.Event + 1, Convert.ToInt32(Sentence[chatID][lineNumber, 19]));
                 chatID = Convert.ToInt32(Sentence[chatID][lineNumber, num]);
-                lineNumber = 0;
+                lineNumber = 1;
             }
 
             if (eventName == "선택")
@@ -368,38 +372,60 @@ public class TextManager : MonoBehaviour
         textPanelObj.SetActive(true);
         FreeTimeDirect.Instance.FadeOutTextPanel();
         textPanelBTN.interactable = true;
+        SkipText();
     }
 
     IEnumerator FadeOut()
     {
-        textPanelBTN.interactable = false;
-        FreeTimeDirect.Instance.FadeOut();
-        yield return new WaitForSeconds(1.7f);
-        textPanelBTN.interactable = true;
-        SkipText();
+        if (_isEnd == false)
+        {
+            textPanelBTN.interactable = false;
+            FreeTimeDirect.Instance.FadeOut();
+            yield return new WaitForSeconds(1.7f);
+            textPanelBTN.interactable = true;
+            SkipText();
+        }
+
+        else
+        {
+            FreeTimeDirect.Instance.FadeOut();
+            yield return new WaitForSeconds(1.7f);
+        }
     }
 
     IEnumerator FadeIn()
     {
-        textPanelBTN.interactable = false;
-        FreeTimeDirect.Instance.FadeIn();
-        yield return new WaitForSeconds(1.7f);
-        textPanelBTN.interactable = true;
-        SkipText();
+        if (_isEnd == false)
+        {
+            textPanelBTN.interactable = false;
+            FreeTimeDirect.Instance.FadeIn();
+            yield return new WaitForSeconds(1.7f);
+            textPanelBTN.interactable = true;
+            SkipText();
+        }
+
+        else
+        {
+            FreeTimeDirect.Instance.FadeIn();
+            yield return new WaitForSeconds(1.7f);
+        }
+    
     }
 
     IEnumerator GoToMain()
     {
         _isEnd = true;
         textPanelBTN.interactable = false;
-        transform.GetComponent<FreeTimeDirect>().FadeInText();
+        FreeTimeDirect.Instance.FadeOutTextPanel();
+        textPanelObj.gameObject.SetActive(false);
         StartCoroutine(FadeOut());
         yield return new WaitForSeconds(1f);
         transform.GetComponentInChildren<FreeTimeText>().GoToMainScreen();
         yield return new WaitForSeconds(1f);
         StartCoroutine(FadeIn());
-        
+        transform.GetComponentInChildren<FreeTimeText>().SetButton();
     }
+
 
     public void AutoPlay()
     {
@@ -476,4 +502,3 @@ public class TextManager : MonoBehaviour
         yield return null;
     }
 }
-

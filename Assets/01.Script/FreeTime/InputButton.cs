@@ -17,6 +17,7 @@ public class InputButton : ButtonManager
     private void Start()
     {
         _freeTimeText = transform.Find("TextManager").GetComponent<FreeTimeText>();
+
     }
 
     public void InputStoryButton(int code)  //건물 버튼 누르면 생기는 일
@@ -36,6 +37,23 @@ public class InputButton : ButtonManager
         settingPanel.transform.DOMoveY(11, 0.3f).SetEase(Ease.InCirc);
         //settingPanel.rectTransform.DOMoveY(11, 0.3f);
         //settingPanel.rectTransform.DOAnchorPosY(11, 0.3f);
+    }
+
+
+    public void ButtonSet()
+    {
+        StartCoroutine(ButtonSetting());
+    }
+
+
+    IEnumerator ButtonSetting()
+    {
+        //Sequence seq = DOTween.Sequence();
+        for (int i = 0; i < storyButton.Length; i++)
+        {
+            storyButton[i].transform.DOMoveY(0.8f * moveTo, 0.3f).SetEase(Ease.InOutQuart);
+            yield return new WaitForSeconds(0.12f);
+        }
     }
 
     IEnumerator ButtonMove()
@@ -62,6 +80,8 @@ public class InputButton : ButtonManager
             fadeImage.color = color;
             yield return new WaitForSeconds(0.005f);
         }
+
+        storyButton[_id - 1].interactable = false;
 
         //StartCoroutine(PopUpBackGround());
 
