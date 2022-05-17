@@ -6,6 +6,8 @@ using UnityEngine.UI;
 using System;
 using DG.Tweening;
 using UnityEngine.Events;
+using TMPro;
+using UnityEngine.SceneManagement;
 
 public class TextManager : MonoBehaviour
 {
@@ -14,27 +16,27 @@ public class TextManager : MonoBehaviour
     private TextDataSave _textDataSO;
     public TextDataSave TextSO => _textDataSO;
 
-    private Text _textPanel;
+    [SerializeField] protected TextMeshPro _textPanel;
     public GameObject textPanelObj;
 
-    [SerializeField] private Transform selectPanel; 
+    [SerializeField] protected Transform selectPanel; 
 
-    [SerializeField] private GameObject _selectButton;
+    [SerializeField] protected GameObject _selectButton;
     public GameObject[] background; // 게임 배경화면 배열
     public GameObject[] image;    // 추가로 띄워둘 이미지 
-    [SerializeField] private GameObject _endAnimationObj; // 텍스트 끝나면 텍스트 패널 오른쪽 아래에서 뛰옹뛰옹 뱅글뱅글 하는 애
-    [SerializeField] private float shakeTime = 0.13f;
-    [SerializeField] private float shakestr = 0;
-    [SerializeField] private GameObject textlogPrefab;
-    [SerializeField] private Transform textlogView;
+    [SerializeField] protected GameObject _endAnimationObj; // 텍스트 끝나면 텍스트 패널 오른쪽 아래에서 뛰옹뛰옹 뱅글뱅글 하는 애
+    [SerializeField] protected float shakeTime = 0.13f;
+    [SerializeField] protected float shakestr = 0;
+    [SerializeField] protected GameObject textlogPrefab;
+    [SerializeField] protected Transform textlogView;
     [SerializeField] private Text autoChecker;
     
     Dictionary<int, string[,]> Sentence = new Dictionary<int, string[,]>();
-    Dictionary<int, int> max = new Dictionary<int, int>();
-    List<string> select = new List<string>();
+    protected Dictionary<int, int> max = new Dictionary<int, int>();
+    protected List<string> select = new List<string>();
 
-    public int chatID = 1, typingID = 1, backgroundID = 1, slotID = 0; // ID 기본 값 설정
-    private bool isTyping = false, skip = false; // 텍스트 스킵 불 기본 값 설정
+    public int chatID = 1, lineNumber = 1, backgroundID = 0, slotID = 0; // ID 기본 값 설정
+    protected bool isTyping = false, skip = false; // 텍스트 스킵 불 기본 값 설정
     public float chatSpeed = 0.1f, autoSpeed = 1f; // 텍스트 나오는 속도와 Auto 속도 기본 값 설정
     public bool isAuto = false;
 
@@ -44,7 +46,7 @@ public class TextManager : MonoBehaviour
     public UnityEvent TextTyping;
     public UnityEvent OnTextTypingEnd;
 
-    enum IDType
+    private enum IDType
     {
         ChatID = 0,
         CharacterName,
@@ -89,13 +91,13 @@ public class TextManager : MonoBehaviour
     private void Awake()
     {
         _textDataSO = GetComponentInChildren<TextDataSave>();
-        StartCoroutine(LoadTextData()); // 텍스트 데이터 읽기
-        _textPanel = textPanelObj.transform.Find("text").GetComponent<Text>();
+        StartCoroutine(LoadTextData(URL)); // 텍스트 데이터 읽기
+        _textPanel = textPanelObj.transform.Find("text").GetComponent<TextMeshPro>();
     }
 
-    public IEnumerator LoadTextData()
+    public IEnumerator LoadTextData(string url)
     {
-        UnityWebRequest www = UnityWebRequest.Get(URL);
+        UnityWebRequest www = UnityWebRequest.Get(url);
         yield return www.SendWebRequest();
 
         string data = www.downloadHandler.text, vertualText;
@@ -118,11 +120,7 @@ public class TextManager : MonoBehaviour
 
             for (j = 1; j < rawSize; j++)
             {
-                Sentence[chatID][lineCount, j] = row[j];
-                if(j > 4)
-                {
-                    if (row[j] == "") break;
-                }
+                Sentence[chatID][lineCount, j] = row[j].Trim();
             }
             Sentence[chatID][lineCount, 19] = j.ToString();
 
@@ -148,7 +146,7 @@ public class TextManager : MonoBehaviour
                 }
             }
 
-            
+
             Sentence[chatID][lineCount, ++j] = "x";
             max[chatID]++;
             lineCount++;
@@ -165,7 +163,7 @@ public class TextManager : MonoBehaviour
     /// </summary>
     public void BgmPlay()
     {
-        string bgmName = Sentence[chatID][typingID, (int)IDType.BGM];
+        string bgmName = Sentence[chatID][lineNumber, (int)IDType.BGM];
         if (bgmName == "끄기")
             GameManager.Instance.BgmSound.StopSound();
         else if (bgmName != "")
@@ -179,9 +177,9 @@ public class TextManager : MonoBehaviour
     /// </summary>
     public void SetBackground()
     {
-        if (Sentence[chatID][typingID, (int)IDType.BackgroundID] != "")
+        if (Sentence[chatID][lineNumber, (int)IDType.BackgroundID] != "")
         {
-            backgroundID = Convert.ToInt32(Sentence[chatID][typingID, (int)IDType.BackgroundID]) - 1;
+            backgroundID = Convert.ToInt32(Sentence[chatID][lineNumber, (int)IDType.BackgroundID]) - 1;
             TextSO.backgroundList[backgroundID].gameObject.SetActive(true);
             //StartCoroutine(GameManager.Instance.FadeIn());
             StartCoroutine(GameManager.Instance.FadeOut());
@@ -193,7 +191,7 @@ public class TextManager : MonoBehaviour
     /// </summary>
     public void ShowImage()
     {
-        if (Sentence[chatID][typingID, (int)IDType.ImageID] != "")
+        if (Sentence[chatID][lineNumber, (int)IDType.ImageID] != "")
         {
             ImageSetActive(true);
         }
@@ -204,6 +202,11 @@ public class TextManager : MonoBehaviour
     /// </summary>
     public void Typing()
     {
+        if(Sentence[chatID] == null)
+        {
+            StartCoroutine(LoadTextData(URL));
+        }
+
         StartCoroutine(TypingCoroutine());
     }
 
@@ -217,20 +220,25 @@ public class TextManager : MonoBehaviour
         if (!isAuto) _endAnimationObj.SetActive(false);
 
         isTyping = true;
-        
-        string pName = Sentence[chatID][typingID, (int)IDType.CharacterName];
-        if (pName == "당신") pName = GameManager.Instance.playerName;
 
-        for (int i = 0; i < Sentence[chatID][typingID, (int)IDType.Text].Length + 1; i++)
+        string pName = Sentence[chatID][lineNumber, (int)IDType.CharacterName];
+        string storyText = Sentence[chatID][lineNumber, (int)IDType.Text];
+
+        for (int i = 0; i < storyText.Length + 1; i++)
         {
             if (skip)
             {
-                _textPanel.text = string.Format("{0}\n{1}", pName, Sentence[chatID][typingID, 2]);           // 텍스트 넘김.....누르면 한줄이 한번에 딱
+                _textPanel.text = string.Format("{0}\n{1}", pName, storyText);           // 텍스트 넘김.....누르면 한줄이 한번에 딱
                 skip = false;
                 break;
             }
 
+<<<<<<< HEAD
             _textPanel.text = string.Format("{0}\n{1}", pName, Sentence[chatID][typingID, 2].Substring(0, i));
+=======
+            
+            _textPanel.text = string.Format("{0}\n{1}", pName, storyText.Substring(0, i));
+>>>>>>> 7e46c043bf5cc88230384ea197e1de2913820438
             //soundManager.TypingSound(); // 텍스트 출력....따따따따
             yield return new WaitForSeconds(chatSpeed);
         }
@@ -241,8 +249,8 @@ public class TextManager : MonoBehaviour
         isTyping = false;
 
         GameObject tl = Instantiate(textlogPrefab, textlogView);
-        if (pName == "") tl.GetComponent<Text>().text = string.Format(Sentence[chatID][typingID, 2]);
-        else tl.GetComponent<Text>().text = string.Format("{0}: {1}", pName, Sentence[chatID][typingID, 2]);
+        if (pName == "") tl.GetComponent<Text>().text = storyText;
+        else tl.GetComponent<Text>().text = string.Format("{0}: {1}", pName, storyText);
         Instantiate(textlogPrefab, textlogView);
 
         if (isAuto)
@@ -269,36 +277,44 @@ public class TextManager : MonoBehaviour
     public void SkipText() // 텍스트 진행
     {
         if (backgroundID >= 1) TextSO.backgroundList[backgroundID].gameObject.SetActive(true);
-        if (Sentence[chatID][typingID, 4] != "") ImageSetActive(false);
 
-        string eventName = Sentence[chatID][typingID, (int)IDType.Event];
+        if (Sentence[chatID][lineNumber, (int)IDType.ImageID] != "" && Sentence[chatID][lineNumber,(int)IDType.ImageID] != null) 
+            ImageSetActive(false);
 
-        if (eventName == "함수") Invoke(Sentence[chatID][typingID, (int)IDType.Event + 1], 0f);
-        else if (eventName == "이동")
+        if(Sentence[chatID][lineNumber, (int)IDType.Event] != "" && Sentence[chatID][lineNumber, (int)IDType.Event] != null)
         {
-            int num = UnityEngine.Random.Range((int)IDType.Event + 1, Convert.ToInt32(Sentence[chatID][typingID, 19]));
-            chatID = Convert.ToInt32(Sentence[chatID][typingID, num]);
-            typingID = 0;
-        }
-        if (eventName == "선택")
-        {
-            if (Sentence[chatID][typingID, (int)IDType.BackgroundID] != "")
+            string eventName = Sentence[chatID][lineNumber, (int)IDType.Event];
+            if (eventName == "함수")
             {
-                backgroundID = Convert.ToInt32(Sentence[chatID][typingID, (int)IDType.BackgroundID]) - 1;
-                TextSO.backgroundList[backgroundID].SetActive(true);
+                string funcName = Sentence[chatID][lineNumber, (int)IDType.Event + 1];
+                StartCoroutine(funcName.Trim());
             }
-            textPanelObj.SetActive(false);
-            SelectOpen();
-        }
-        else
-        {
-            typingID++;
-            if (typingID != max[chatID])
+            else if (eventName == "이동")
             {
-                TextTyping?.Invoke();
+                int num = UnityEngine.Random.Range((int)IDType.Event + 1, Convert.ToInt32(Sentence[chatID][lineNumber, 19]));
+                chatID = Convert.ToInt32(Sentence[chatID][lineNumber, num]);
+                lineNumber = 0;
             }
-            else textPanelObj.SetActive(false);
+            
+            if (eventName == "선택")
+            {
+                if (Sentence[chatID][lineNumber, (int)IDType.BackgroundID] != "")
+                {
+                    backgroundID = Convert.ToInt32(Sentence[chatID][lineNumber, (int)IDType.BackgroundID]) - 1;
+                    TextSO.backgroundList[backgroundID].SetActive(true);
+                }
+                textPanelObj.SetActive(false);
+                SelectOpen();
+                return;
+            }
         }
+
+        lineNumber++;
+        if (lineNumber != max[chatID])
+        {
+            TextTyping?.Invoke();
+        }
+        else textPanelObj.SetActive(false);
     } 
 
     public void AutoPlay()
@@ -314,13 +330,13 @@ public class TextManager : MonoBehaviour
 
     public void SelectOpen()
     {
-        for (int i = 6; i < Convert.ToInt32(Sentence[chatID][typingID, 19]); i++)
+        for (int i = 6; i < Convert.ToInt32(Sentence[chatID][lineNumber, 19]); i++)
         {
-            select.Add(Sentence[chatID][typingID, i]);
+            select.Add(Sentence[chatID][lineNumber, i]);
             GameObject button = Instantiate(_selectButton, selectPanel);
             Text selectText = button.transform.GetChild(0).GetComponent<Text>();
-            selectText.text = Sentence[chatID][typingID, i];
-            select.Add(Sentence[chatID][typingID, ++i]);
+            selectText.text = Sentence[chatID][lineNumber, i];
+            select.Add(Sentence[chatID][lineNumber, ++i]);
             button.SetActive(true);
         }
         selectPanel.gameObject.SetActive(true);
@@ -337,7 +353,7 @@ public class TextManager : MonoBehaviour
                 selectPanel.gameObject.SetActive(false);
                 _textPanel.gameObject.SetActive(true);
                 
-                typingID = 1;
+                lineNumber = 1;
                 TextTyping?.Invoke();
             }
         }
@@ -345,7 +361,7 @@ public class TextManager : MonoBehaviour
 
     private void ImageSetActive(bool set)
     {
-        string[] imageList = Sentence[chatID][typingID, (int)IDType.ImageID].Split(',');
+        string[] imageList = Sentence[chatID][lineNumber, (int)IDType.ImageID].Split(',');
         foreach (string x in imageList)
         {
             int num = Convert.ToInt32(x) - 1;
@@ -368,6 +384,12 @@ public class TextManager : MonoBehaviour
     private void TestFunction()
     {
         print("따라란");
+    }
+
+    IEnumerator GotoFreeTime()
+    {
+        SceneManager.LoadScene("FreeTime");
+        yield return null;
     }
 }
 
