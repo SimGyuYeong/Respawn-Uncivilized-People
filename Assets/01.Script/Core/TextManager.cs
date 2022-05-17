@@ -19,7 +19,9 @@ public class TextManager : MonoBehaviour
     [SerializeField] protected TextMeshPro _textPanel;
     public GameObject textPanelObj;
 
-    [SerializeField] protected Transform selectPanel; 
+    [SerializeField] protected Transform selectPanel;
+
+    [SerializeField] protected Button textPanelBTN;
 
     [SerializeField] protected GameObject _selectButton;
     public GameObject[] background; // 게임 배경화면 배열
@@ -31,7 +33,7 @@ public class TextManager : MonoBehaviour
     [SerializeField] protected Transform textlogView;
     [SerializeField] private Text autoChecker;
     
-    Dictionary<int, string[,]> Sentence = new Dictionary<int, string[,]>();
+    protected Dictionary<int, string[,]> Sentence = new Dictionary<int, string[,]>();
     protected Dictionary<int, int> max = new Dictionary<int, int>();
     protected List<string> select = new List<string>();
 
@@ -42,11 +44,16 @@ public class TextManager : MonoBehaviour
 
     private static TextManager instance;
 
+    public AudioClip _coffeclip = null;
+
     public Action<GameObject> OnEffectObject;
     public UnityEvent TextTyping;
     public UnityEvent OnTextTypingEnd;
 
-    private enum IDType
+    public SpriteRenderer _fadeImage;
+    private bool _isEnd;
+
+    protected enum IDType
     {
         ChatID = 0,
         CharacterName,
@@ -175,7 +182,7 @@ public class TextManager : MonoBehaviour
     /// <summary>
     /// 배경화면 설정
     /// </summary>
-    public void SetBackground()
+    public virtual void SetBackground()
     {
         if (Sentence[chatID][lineNumber, (int)IDType.BackgroundID] != "")
         {
@@ -224,21 +231,33 @@ public class TextManager : MonoBehaviour
         string pName = Sentence[chatID][lineNumber, (int)IDType.CharacterName];
         string storyText = Sentence[chatID][lineNumber, (int)IDType.Text];
 
-        for (int i = 0; i < storyText.Length + 1; i++)
-        {
-            if (skip)
-            {
-                _textPanel.text = string.Format("{0}\n{1}", pName, storyText);           // 텍스트 넘김.....누르면 한줄이 한번에 딱
-                skip = false;
-                break;
-            }
+        //if (Sentence[chatID][lineNumber, (int)IDType.Direct] == null || Sentence[chatID][lineNumber, (int)IDType.Direct] == "") {
 
-            
-            _textPanel.text = string.Format("{0}\n{1}", pName, storyText.Substring(0, i));
-            //soundManager.TypingSound(); // 텍스트 출력....따따따따
-            yield return new WaitForSeconds(chatSpeed);
+        if (Sentence[chatID][lineNumber, (int)IDType.Direct] == "" || Sentence[chatID][lineNumber, (int)IDType.Direct] == null)
+        {
+            for (int i = 0; i < storyText.Length + 1; i++)
+            {
+
+                if (skip)
+                {
+                    _textPanel.text = string.Format("{0}\n{1}", pName, storyText);           // 텍스트 넘김.....누르면 한줄이 한번에 딱
+                    skip = false;
+                    break;
+                }
+
+
+                _textPanel.text = string.Format("{0}\n{1}", pName, storyText.Substring(0, i));
+                //soundManager.TypingSound(); // 텍스트 출력....따따따따
+                yield return new WaitForSeconds(chatSpeed);
+
+                _textPanel.text = string.Format("{0}\n{1}", pName, storyText);
+            }
         }
 
+        else
+        {
+            _textPanel.text = string.Format("");
+        }
         ///↓↓↓ 타이핑 끝난 후 실행
 
         if (!isAuto) _endAnimationObj.SetActive(true);
@@ -255,6 +274,11 @@ public class TextManager : MonoBehaviour
             SkipText();
         }
     }
+
+        //else
+        //{
+        //    SkipText();
+        //}
 
     public void SkipTextClick() // 텍스트 패널 클릭 시 스킵
     {
@@ -277,13 +301,31 @@ public class TextManager : MonoBehaviour
         if (Sentence[chatID][lineNumber, (int)IDType.ImageID] != "" && Sentence[chatID][lineNumber,(int)IDType.ImageID] != null) 
             ImageSetActive(false);
 
-        if(Sentence[chatID][lineNumber, (int)IDType.Event] != "" && Sentence[chatID][lineNumber, (int)IDType.Event] != null)
+        if (Sentence[chatID][lineNumber+1, (int)IDType.Direct] != "" && Sentence[chatID][lineNumber+1, (int)IDType.Direct] != null)
+        {
+            string directName = Sentence[chatID][lineNumber+1, (int)IDType.Direct];
+            StartCoroutine(directName.Trim());
+            //Invoke(directName.Trim(), 0f);
+            Debug.Log(directName.Trim());
+        }
+
+        if (Sentence[chatID][lineNumber, (int)IDType.SFX] != "" && Sentence[chatID][lineNumber, (int)IDType.SFX] != null)
+        {
+            string clipName = Sentence[chatID][lineNumber, (int)IDType.SFX].Trim();
+            //FreeTimeSFX.instance.PlaySoundClip(_coffeclip);
+            Debug.Log(_coffeclip);
+            FreeTimeSFX.instance.SfxSound.PlaySound(_coffeclip);
+        }
+
+        if (Sentence[chatID][lineNumber, (int)IDType.Event] != "" && Sentence[chatID][lineNumber, (int)IDType.Event] != null)
         {
             string eventName = Sentence[chatID][lineNumber, (int)IDType.Event];
             if (eventName == "함수")
             {
-                string funcName = Sentence[chatID][lineNumber, (int)IDType.Event + 1];
+                string funcName = Sentence[chatID][lineNumber, (int)IDType.Event + 1];//StartCoroutine(funcName.Trim());
+                //Debug.Log(funcName.Trim());
                 StartCoroutine(funcName.Trim());
+                if (_isEnd) return;
             }
             else if (eventName == "이동")
             {
@@ -291,7 +333,7 @@ public class TextManager : MonoBehaviour
                 chatID = Convert.ToInt32(Sentence[chatID][lineNumber, num]);
                 lineNumber = 0;
             }
-            
+
             if (eventName == "선택")
             {
                 if (Sentence[chatID][lineNumber, (int)IDType.BackgroundID] != "")
@@ -311,7 +353,53 @@ public class TextManager : MonoBehaviour
             TextTyping?.Invoke();
         }
         else textPanelObj.SetActive(false);
-    } 
+    }
+
+    IEnumerator Walking()
+    {
+        Debug.Log("ascasda");
+        textPanelBTN.interactable = false;
+        //_textPanel.text = string.Format("");
+        //FreeTimeDirect.Instance.FadeIn();
+        FreeTimeDirect.Instance.Walking();
+        
+        textPanelObj.SetActive(false);
+        yield return new WaitForSeconds(3f);
+        textPanelObj.SetActive(true);
+        FreeTimeDirect.Instance.FadeOutTextPanel();
+        textPanelBTN.interactable = true;
+    }
+
+    IEnumerator FadeOut()
+    {
+        textPanelBTN.interactable = false;
+        FreeTimeDirect.Instance.FadeOut();
+        yield return new WaitForSeconds(1.7f);
+        textPanelBTN.interactable = true;
+        SkipText();
+    }
+
+    IEnumerator FadeIn()
+    {
+        textPanelBTN.interactable = false;
+        FreeTimeDirect.Instance.FadeIn();
+        yield return new WaitForSeconds(1.7f);
+        textPanelBTN.interactable = true;
+        SkipText();
+    }
+
+    IEnumerator GoToMain()
+    {
+        _isEnd = true;
+        textPanelBTN.interactable = false;
+        transform.GetComponent<FreeTimeDirect>().FadeInText();
+        StartCoroutine(FadeOut());
+        yield return new WaitForSeconds(1f);
+        transform.GetComponentInChildren<FreeTimeText>().GoToMainScreen();
+        yield return new WaitForSeconds(1f);
+        StartCoroutine(FadeIn());
+        
+    }
 
     public void AutoPlay()
     {

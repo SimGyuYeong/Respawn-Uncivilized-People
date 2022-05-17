@@ -34,16 +34,16 @@ public class ExplanaingText : MonoBehaviour
 
         //transform.position = new Vector3(0, -3, 0);
         _seq = DOTween.Sequence();
-        _seq.Append(transform.DOMove(position * 0.9f, 0.1f));
-        _seq.Append(transform.DOMove(position, 0.06f));
+        _seq.Append(transform.DOMove(position * 0.9f, 0.18f));
+        _seq.Append(transform.DOMove(position, 0.1f));
     }
 
     public void CloseText()
     {
-        Vector2 position = new Vector2(0, -6.4f);
+        Vector2 position = new Vector2(0, -7f);
         if (_seq != null) _seq.Kill();
         _seq = DOTween.Sequence();
-        _seq.Append(transform.DOMove(position * 1.1f, 0.08f));
+        //_seq.Append(transform.DOMove(position * 1.1f, 0.08f));
         _seq.Append(transform.DOMove(position, 0.18f));
     }
 }
