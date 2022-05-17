@@ -233,12 +233,12 @@ public class TextManager : MonoBehaviour
                 break;
             }
 
-<<<<<<< HEAD
-            _textPanel.text = string.Format("{0}\n{1}", pName, Sentence[chatID][typingID, 2].Substring(0, i));
-=======
+//<<<<<<< HEAD
+           // _textPanel.text = string.Format("{0}\n{1}", pName, Sentence[chatID][typingID, 2].Substring(0, i));
+//=======
             
             _textPanel.text = string.Format("{0}\n{1}", pName, storyText.Substring(0, i));
->>>>>>> 7e46c043bf5cc88230384ea197e1de2913820438
+//>>>>>>> 7e46c043bf5cc88230384ea197e1de2913820438
             //soundManager.TypingSound(); // 텍스트 출력....따따따따
             yield return new WaitForSeconds(chatSpeed);
         }
