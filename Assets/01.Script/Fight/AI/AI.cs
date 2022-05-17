@@ -39,7 +39,7 @@ public class AI : MonoBehaviour
             {
                 if (AttackDistanceCheck())
                 {
-                    FightManager.Instance.Energy -= ai.Health;
+                    FightManager.Instance.player.Energy -= ai.Health;
                     break;
                 }
 
@@ -172,7 +172,7 @@ public class AI : MonoBehaviour
         float distance = Vector2.Distance(ai.Position, FightManager.Instance.pPos);
         if (distance <= 3)
         {
-            _attackObj = FightManager.Instance.player;
+            _attackObj = FightManager.Instance.player.gameObject;
         }
     }
 }

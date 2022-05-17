@@ -14,6 +14,8 @@ public class FightManager : MonoBehaviour
     
     private AStarAlgorithm _aStar; // A* 알고리즘 캐싱
 
+    public AStarAlgorithm AStar => _aStar;
+
     //A* 알고리즘에서 길정보를 가져옴
     private List<Node> _finalNodeList { get => _aStar.FinalNodeList; }
 
@@ -32,18 +34,21 @@ public class FightManager : MonoBehaviour
     }
     #endregion
 
+    public List<ObjData> playerDataList = new List<ObjData>();
+
     public List<Vector2Int> enemyPos = new List<Vector2Int>(); //적들의 좌표 리스트
-    public List<Vector2Int> playerPos = new List<Vector2Int>(); //플레이어 부대들의 좌표 리스트
     private List<int> _noneEnemyList = new List<int>(); //움직이지 않은 적들 리스트
 
+
     //타일이 생성될 오브젝트 부모, 플레이어 프리팹, 플레이어가 움직이는 애니메이션 오브젝트
-    public GameObject content, player, moveAni;
+    public GameObject content, moveAni;
 
-    //타일 프리팹
     public Tile tilePrefab;
-
-    //적 프리팹
     public AI enemyPrefab;
+    public Player playerPrefab;
+
+    public AI ai;
+    public Player player;
 
     //현재 플레이어 애니메이션이 작동중인지
     public bool isIng = false;
@@ -52,7 +57,7 @@ public class FightManager : MonoBehaviour
     public bool[] isWallList;
     
     //플레이어가 한턴에 몇번 행동할 수 있는지
-    private int _turnPlayerCount = 2;
+    private int _turnPlayerCount = 0;
 
     //타일 리스트
     public List<Tile> tileList = new List<Tile>();
@@ -60,28 +65,11 @@ public class FightManager : MonoBehaviour
     //적 리스트
     public List<AI> enemyList = new List<AI>();
 
-    
-
-    //나중에 플레이어 스크립트 옮길 예정
-    //움직였는지, 싸웠는지 체크하는 변수
-    public bool move = false, fight = false;
-    private int _energy = 100;
+    //플레이어 리스트
+    private List<Player> _playerList = new List<Player>();
 
     //액션 버튼 오브젝트
     [SerializeField] private GameObject _actionButton;
-
-    public int Energy
-    {
-        get => _energy;
-        set
-        {
-            _energy = Mathf.Clamp(value, 0, 100);
-            if(_energy==0)
-            {
-                Debug.Log("게임종료");
-            }
-        }
-    }
 
     public int turn = 10;
 
@@ -116,6 +104,7 @@ public class FightManager : MonoBehaviour
         Instance = this;
         lineRenderer = GetComponent<LineRenderer>();
         _aStar = GetComponent<AStarAlgorithm>();
+            
     }
 
     private void Start()
@@ -123,6 +112,22 @@ public class FightManager : MonoBehaviour
         StartCoroutine(spawnTile());
         lineRenderer.startWidth = .05f;
         lineRenderer.endWidth = .05f;
+    }
+
+    private void PlayerSpawn()
+    {
+        int count = 1;
+        foreach (var p in playerDataList)
+        {
+            int slot = Mathf.FloorToInt((7 - p.DPos.y) * 8 + p.DPos.x);
+
+            var _player = Instantiate(playerPrefab, tileList[slot].transform);
+            _player.DataSet(count, p);
+            _turnPlayerCount += 2;
+
+            _playerList.Add(_player);
+            count++;
+        }
     }
 
     /// <summary>
@@ -143,26 +148,16 @@ public class FightManager : MonoBehaviour
 
                 tileList.Add(spawnedTile);
 
-                foreach(Vector2Int pos in playerPos)
-                {
-                    if (pos == new Vector2Int(x, y))
-                    {
-                        player = Instantiate(player, spawnedTile.transform);
-                        player.transform.position = spawnedTile.transform.position;
-                        pPos = pos;
-                    }
-                }
-
                 foreach(Vector2Int pos in enemyPos)
                 {
                     if(pos == new Vector2Int(x, y))
                     {
-                        AI enemy = Instantiate(enemyPrefab, spawnedTile.transform);
-                        enemy.transform.position = spawnedTile.transform.position;
+                        AI _ai = Instantiate(enemyPrefab, spawnedTile.transform);
+                        _ai.transform.position = spawnedTile.transform.position;
                         spawnedTile.tile.isEnemy = true;
                         int _c = count;
-                        enemy.ai = new AIInform(aiCount, x, y, 45, --_c);
-                        enemyList.Add(enemy);
+                        _ai.ai = new AIInform(aiCount, x, y, 45, count-1);
+                        enemyList.Add(_ai);
                         aiCount++;
                     }
                 }
@@ -178,6 +173,8 @@ public class FightManager : MonoBehaviour
             }
             yield return new WaitForSeconds(0.08f);
         }
+        PlayerSpawn(); 
+
         OnUIChange?.Invoke();
         TurnChange();
     }
@@ -219,8 +216,10 @@ public class FightManager : MonoBehaviour
         _aStar.PathFinding();
         if (_finalNodeList.Count <= moveDistance+1 && _finalNodeList.Count > 0) return true;
         return false;
+    
+        
     }
-
+     
     /// <summary>
     /// 지형지물 체크 함수
     /// </summary>
@@ -263,13 +262,13 @@ public class FightManager : MonoBehaviour
     /// 공격이 가능한지 체크하는 함수
     /// </summary>
     /// <returns></returns>
-    private bool AttackCheck()
+    private bool AttackCheck(Vector2 matchPos)
     {
-        if (fight == false)
+        if (player.isFight == false)
         {
             foreach (Vector2 pos in enemyPos)
             {
-                if (Vector2.Distance(pos, pPos) <= 1) return true;
+                if (Vector2.Distance(pos, matchPos) <= 1) return true;
             }
         }
 
@@ -331,10 +330,12 @@ public class FightManager : MonoBehaviour
     public void PlayerMove(Vector2Int pos, Transform parent)
     {
         ClickPlayer();
-        move = true;
         tPos = pos;
         _aStar.PathFinding();
+
+        player.isMove = true;
         player.transform.SetParent(parent);
+        
         StartCoroutine(PlayerMoveCoroutine());
     }
 
@@ -346,21 +347,21 @@ public class FightManager : MonoBehaviour
     {
         isIng = true;
         lineRenderer.positionCount = 0;
-        player.SetActive(false);
+        player.gameObject.SetActive(false);
 
         for(int i = 0; i < _finalNodeList.Count; i++)
         {
             var obj = Instantiate(moveAni);
             obj.transform.position = new Vector2(_finalNodeList[i].x, _finalNodeList[i].y);
-            Energy -= 2;
+            player.Energy -= 2;
             yield return new WaitForSeconds(0.2f);
         }
-        Energy += 2;
-        player.transform.position = new Vector3(tPos.x, tPos.y);
-        player.SetActive(true);
+        player.Energy += 2;
+        player.Position = tPos;
+        player.gameObject.SetActive(true);
         OnUIChange?.Invoke();
+
         yield return new WaitForSeconds(2f);
-        pPos = tPos;
         NextPlayerTurn(Action.Move);
     }
 
@@ -373,24 +374,31 @@ public class FightManager : MonoBehaviour
         isIng = false;
         if (_turnPlayerCount > 0)
         {
-            if(action == Action.Move)
+            if(action == Action.Move) player.isMove = true;
+            else if (action == Action.Attack) player.isFight = true; 
+
+            bool isNext = true;
+            foreach (var p in _playerList)
             {
-                move = true;
-                if (AttackCheck())
+                if (!p.isMove)
                 {
-                    turnType = TurnType.Input_Action;
-                    return;
+                    isNext = false;
+                }
+                else if (!p.isFight)
+                {
+                    if (AttackCheck(p.Position))
+                    {
+                        isNext = false;
+                    }
                 }
             }
-            else if (action == Action.Attack)
+
+            if(isNext == false)
             {
-                fight = true;
-                if (move == false)
-                {
-                    turnType = TurnType.Input_Action;
-                    return;
-                }
+                turnType = TurnType.Input_Action;
+                return;
             }
+                
         }
 
         TurnChange();
@@ -399,58 +407,74 @@ public class FightManager : MonoBehaviour
     /// <summary>
     /// 플레이어를 클릭했을 때
     /// </summary>
-    public void ClickPlayer()
+    public void ClickPlayer(Player _clickPlayer = null)
     {
-        isClickPlayer = !isClickPlayer;
-        if(!isClickPlayer)
+        if (_clickPlayer == null) _clickPlayer = player;
+
+        if(isClickPlayer)
         {
-            lineRenderer.positionCount = 0;
-            _actionButton.SetActive(false);
-            HideDistance();
+            if (player == _clickPlayer)
+            {
+                isClickPlayer = false;
+                lineRenderer.positionCount = 0;
+                _actionButton.SetActive(false);
+                HideDistance();
+                return;
+            }
+            else
+            {
+                _actionButton.SetActive(false);
+            }
+        }
+
+        isClickPlayer = true;
+
+        player = _clickPlayer;
+        pPos = player.IPos;
+
+        _actionButton.transform.position = new Vector3(pPos.x, pPos.y);
+        _actionButton.SetActive(true);
+
+        Transform moveTrm = _actionButton.transform.Find("Move");
+        Transform attackTrm = _actionButton.transform.Find("Attack");
+
+
+        TextMeshProUGUI moveText = moveTrm.GetComponentInChildren<TextMeshProUGUI>();
+        TextMeshProUGUI fightText = attackTrm.GetComponentInChildren<TextMeshProUGUI>();
+
+        Image image = moveTrm.GetComponent<Image>();
+        Color c = image.color;
+        if (player.isMove)
+        {
+            moveText.color = Color.red;
+            c.a = 0.5f;
         }
         else
         {
-            _actionButton.transform.position = new Vector3(pPos.x, pPos.y);
-            _actionButton.SetActive(true);
-
-            TextMeshProUGUI moveText = _actionButton.transform.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>();
-            TextMeshProUGUI fightText = _actionButton.transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>();
-            
-            Image image = _actionButton.transform.GetChild(0).GetComponent<Image>();
-            Color c = image.color;
-            if(move)
-            {
-                moveText.color = Color.red;
-                c.a = 0.5f;
-            }
-            else
-            {
-                moveText.color = Color.black;
-                c.a = 1f;
-            }
-            image.color = c;
-
-            image = _actionButton.transform.GetChild(1).GetComponent<Image>();
-            c = image.color;
-            if (fight || AttackCheck() == false)
-            {
-                fightText.color = Color.red;
-                c.a = 0.5f;
-            }
-                
-            else
-            {
-                fightText.color = Color.black;
-                c.a = 1f;
-            }
-            image.color = c;
-                
+            moveText.color = Color.black;
+            c.a = 1f;
         }
+        image.color = c;
+
+        image = attackTrm.GetComponent<Image>();
+        c = image.color;
+        if (player.isFight || AttackCheck(pPos) == false)
+        {
+            fightText.color = Color.red;
+            c.a = 0.5f;
+        }
+
+        else
+        {
+            fightText.color = Color.black;
+            c.a = 1f;
+        }
+        image.color = c;
     }
 
     public void PlayerAction(Action value)
     {
-        if (value == Action.Attack && AttackCheck() == false)
+        if (value == Action.Attack && AttackCheck(pPos) == false)
             return;
 
         _actionButton.SetActive(false);
@@ -475,7 +499,7 @@ public class FightManager : MonoBehaviour
 
     public void PlayerAttack(int enemyCount)
     {
-        Energy -= enemyList[enemyCount].ai.Health;
+        player.Energy -= enemyList[enemyCount].ai.Health;
         enemyPos.RemoveAt(enemyCount);
         
         if(_noneEnemyList.Count > 0)
@@ -520,7 +544,6 @@ public class FightManager : MonoBehaviour
             case TurnType.Wait_Player:
                 Debug.Log("Player Turn");
                 turnType = TurnType.Input_Action;
-                _turnPlayerCount = playerPos.Count*2;
                 break;
 
             case TurnType.Player_Move:
@@ -560,8 +583,99 @@ public class FightManager : MonoBehaviour
     {
         yield return null;   
         turnType = TurnType.Wait_Player;
-        move = false;
-        fight = false;
+
+        foreach(var p in _playerList)
+        {
+            p.isFight = false;
+            p.isMove = false;
+        }
+
         TurnChange();
+    }
+
+    public void ClickTile(GameObject tileObj)
+    {
+        GameObject highLight = tileObj.transform.Find("_highlight").gameObject;
+        TileInform tile = tileObj.GetComponent<Tile>().tile;
+
+        if (isIng == false)
+        {
+            highLight.SetActive(false);
+            if (turnType == TurnType.Input_Action)
+            {
+                if(tileObj.transform.childCount >= 2)
+                {
+                    if(tileObj.transform.GetComponentInChildren<Player>() != null)
+                    {
+                        ClickPlayer(tileObj.transform.GetChild(1).GetComponent<Player>());
+                    }
+                }
+            }
+
+            else if (turnType == TurnType.Player_Move)
+            {
+                if (tile.Position == pPos)
+                {
+                    turnType = TurnType.Input_Action;
+                    HideDistance();
+                    return;
+                }
+
+                if (MoveCheck(tile) && DistanceCheck(tile.Position))
+                {
+                    PlayerMove(tile.Position, tileObj.transform);
+                }
+            }
+            else if (turnType == TurnType.Player_Attack)
+            {
+                if (tile.Position == pPos)
+                {
+                    turnType = TurnType.Input_Action;
+                    HideDistance();
+                    return;
+                }
+
+                if (tile.isEnemy)
+                {
+                    if (Vector2Int.Distance(tile.Position, pPos) <= 1)
+                        PlayerAttack(tileObj.GetComponentInChildren<AI>().ai.Number);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 플레이어가 움직일 수 있는 상태인지 체크
+    /// </summary>
+    /// <returns>움직일 수 있다면 True, 아니면 False</returns>
+    public bool MoveCheck(TileInform tile)
+    {
+        if (turnType == TurnType.Player_Move
+            && isClickPlayer
+            && isIng == false
+            && tile.isWall == false)
+        {
+            if (tile.isEnemy)
+            {
+                if (DistanceCheck(tile.Position))
+                    return true;
+            }
+            else
+            {
+                if (DistanceCheck(tile.Position))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public void ShowUpdateStat(Player _player)
+    {
+        UIManager.Instance.ShowStatUI(_player.name, _player.Energy, _player.info);
+    }
+
+    public void ShowUpdateStat(AI _ai)
+    {
+        //UIManager.Instance.ShowStatUI(_ai);
     }
 }

@@ -7,11 +7,22 @@ public class Tile : MonoBehaviour
     public GameObject _highlight;
     public TileInform tile;
 
+    private bool _isShowUI = false;
+
     /// <summary>
     /// 마우스 커서가 위에 있을때
     /// </summary>
     void OnMouseEnter()
     {
+        if(transform.childCount > 1)
+        {
+            _isShowUI = true;
+            if(transform.CompareTag("Player"))
+                FightManager.Instance.ShowUpdateStat(transform.GetChild(1).GetComponent<Player>());
+            else if(transform.CompareTag("AI"))
+                FightManager.Instance.ShowUpdateStat(transform.GetChild(1).GetComponent<AI>());
+        }
+
         if(FightManager.Instance.turnType == FightManager.TurnType.Player_Move || FightManager.Instance.turnType == FightManager.TurnType.Player_Attack)
         {
             _highlight.SetActive(true);
@@ -33,7 +44,7 @@ public class Tile : MonoBehaviour
                     FightManager.Instance.lineRenderer.positionCount = 0;
             }
         }
-        else if (MoveCheck())
+        else if (FightManager.Instance.MoveCheck(tile))
         {
             FightManager.Instance.DrawLine();
         }
@@ -47,6 +58,12 @@ public class Tile : MonoBehaviour
     void OnMouseExit()
     {
         _highlight.SetActive(false);
+
+        if(_isShowUI)
+        {
+            _isShowUI = false;
+            UIManager.Instance.HideStatUI();
+        }
     }
 
     /// <summary>
@@ -54,75 +71,6 @@ public class Tile : MonoBehaviour
     /// </summary>
     private void OnMouseDown()
     {
-        if (!FightManager.Instance.isIng)
-        {
-            _highlight.SetActive(false);
-            if (FightManager.Instance.turnType == FightManager.TurnType.Input_Action)
-            {
-                
-                if (tile.Position == FightManager.Instance.pPos)
-                {
-                    FightManager.Instance.ClickPlayer();
-                    return;
-                }
-            }
-            else if (FightManager.Instance.turnType == FightManager.TurnType.Player_Move)
-            {
-                if (tile.Position == FightManager.Instance.pPos)
-                {
-                    FightManager.Instance.turnType = FightManager.TurnType.Input_Action;
-                    FightManager.Instance.HideDistance();
-                    return;
-                }
-
-                if (MoveCheck() && FightManager.Instance.DistanceCheck(tile.Position))
-                {
-                    FightManager.Instance.PlayerMove(tile.Position, transform);
-                }
-            }
-            else if (FightManager.Instance.turnType == FightManager.TurnType.Player_Attack)
-            {
-                if (tile.Position == FightManager.Instance.pPos)
-                {
-                    FightManager.Instance.turnType = FightManager.TurnType.Input_Action;
-                    FightManager.Instance.HideDistance();
-                    return;
-                }
-
-                if (tile.isEnemy)
-                {
-                    if (Vector2Int.Distance(tile.Position, FightManager.Instance.pPos) <= 1)
-                        FightManager.Instance.PlayerAttack(transform.GetChild(1).GetComponent<AI>().ai.Number);
-                }
-            }
-        }
-            
-    }
-
-    /// <summary>
-    /// 플레이어가 움직일 수 있는 상태인지 체크
-    /// </summary>
-    /// <returns>움직일 수 있다면 True, 아니면 False</returns>
-    private bool MoveCheck()
-    {
-        FightManager _fight = FightManager.Instance;
-
-        if (_fight.turnType == FightManager.TurnType.Player_Move
-            && _fight.isClickPlayer
-            && !_fight.isIng
-            && !tile.isWall)
-        {
-            if (tile.isEnemy)
-            {
-                if (_fight.DistanceCheck(tile.Position))
-                    return true;
-            }
-            else
-            {
-                if (_fight.DistanceCheck(tile.Position))
-                    return true;
-            }
-        }
-        return false;
+        FightManager.Instance.ClickTile(gameObject);     
     }
 }
