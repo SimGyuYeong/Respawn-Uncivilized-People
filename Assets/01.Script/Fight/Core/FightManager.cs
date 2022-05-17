@@ -34,7 +34,7 @@ public class FightManager : MonoBehaviour
     }
     #endregion
 
-    public List<PlayerData> playerData = new List<PlayerData>();
+    public List<ObjData> playerDataList = new List<ObjData>();
 
     public List<Vector2Int> enemyPos = new List<Vector2Int>(); //적들의 좌표 리스트
     private List<int> _noneEnemyList = new List<int>(); //움직이지 않은 적들 리스트
@@ -117,13 +117,12 @@ public class FightManager : MonoBehaviour
     private void PlayerSpawn()
     {
         int count = 1;
-        foreach (var p in playerData)
+        foreach (var p in playerDataList)
         {
             int slot = Mathf.FloorToInt((7 - p.DPos.y) * 8 + p.DPos.x);
 
             var _player = Instantiate(playerPrefab, tileList[slot].transform);
-            _player.Position = p.DPos;
-            _player.id = count;
+            _player.DataSet(count, p);
             _turnPlayerCount += 2;
 
             _playerList.Add(_player);
@@ -672,8 +671,11 @@ public class FightManager : MonoBehaviour
 
     public void ShowUpdateStat(Player _player)
     {
-        Debug.Log(_player.playerName);
-        Debug.Log(_player.Energy);
-        Debug.Log(_player.info);
+        UIManager.Instance.ShowStatUI(_player.name, _player.Energy, _player.info);
+    }
+
+    public void ShowUpdateStat(AI _ai)
+    {
+        //UIManager.Instance.ShowStatUI(_ai);
     }
 }

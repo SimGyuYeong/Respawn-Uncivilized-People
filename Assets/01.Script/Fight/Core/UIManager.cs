@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
+    public static UIManager Instance;
+
     [SerializeField] Text turnText;
 
     [SerializeField] GameObject tileUI;
@@ -17,6 +19,8 @@ public class UIManager : MonoBehaviour
 
     private void Awake()
     {
+        Instance = this;
+
         _energyText = tileUI.transform.GetComponentInChildren<Text>();
         _goalText = goalUI.transform.GetComponentInChildren<Text>();
     }
@@ -51,12 +55,17 @@ public class UIManager : MonoBehaviour
 
     }
 
-    public void ShowStatUI(Player _player)
+    public void ShowStatUI(string name, int energy, string info)
     {
-        tileUI.transform.Find("Name").GetComponent<Text>().text = _player.playerName;
-        tileUI.transform.Find("Energy").GetComponent<Text>().text = _player.Energy.ToString();
-        tileUI.transform.Find("Info").GetComponent<TextMeshPro>().text = _player.info;
-
         tileUI.SetActive(true);
+
+        tileUI.transform.Find("Name").GetComponent<Text>().text = name;
+        tileUI.transform.Find("Energy").GetComponent<Text>().text = energy.ToString();
+        tileUI.transform.Find("Info").GetComponent<TextMeshProUGUI>().text = info;
+    }
+
+    public void HideStatUI()
+    {
+        tileUI.SetActive(false);
     }
 }

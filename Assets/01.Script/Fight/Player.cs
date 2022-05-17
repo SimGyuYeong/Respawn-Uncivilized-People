@@ -2,15 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class PlayerData
-{
-    public string DName;
-    public int DEnergy;
-    public Vector2 DPos;
-    public string DInfo;
-}
-
 public class Player : MonoBehaviour
 {
     public string playerName;
@@ -48,4 +39,13 @@ public class Player : MonoBehaviour
 
     public Vector2Int IPos => new Vector2Int((int)_pos.x, (int)_pos.y);
     public string info;
+
+    public void DataSet(int _id, ObjData pData)
+    {
+        id = _id;
+        playerName = pData.DName;
+        Position = pData.DPos;
+        info = pData.DInfo;
+        _energy = pData.DEnergy;
+    }
 }

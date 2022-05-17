@@ -7,6 +7,8 @@ public class Tile : MonoBehaviour
     public GameObject _highlight;
     public TileInform tile;
 
+    private bool _isShowUI = false;
+
     /// <summary>
     /// 마우스 커서가 위에 있을때
     /// </summary>
@@ -14,7 +16,11 @@ public class Tile : MonoBehaviour
     {
         if(transform.childCount > 1)
         {
-            FightManager.Instance.ShowUpdateStat(transform.GetChild(1).GetComponent<Player>());
+            _isShowUI = true;
+            if(transform.CompareTag("Player"))
+                FightManager.Instance.ShowUpdateStat(transform.GetChild(1).GetComponent<Player>());
+            else if(transform.CompareTag("AI"))
+                FightManager.Instance.ShowUpdateStat(transform.GetChild(1).GetComponent<AI>());
         }
 
         if(FightManager.Instance.turnType == FightManager.TurnType.Player_Move || FightManager.Instance.turnType == FightManager.TurnType.Player_Attack)
@@ -52,6 +58,12 @@ public class Tile : MonoBehaviour
     void OnMouseExit()
     {
         _highlight.SetActive(false);
+
+        if(_isShowUI)
+        {
+            _isShowUI = false;
+            UIManager.Instance.HideStatUI();
+        }
     }
 
     /// <summary>
