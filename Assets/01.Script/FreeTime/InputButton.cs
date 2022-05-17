@@ -16,7 +16,7 @@ public class InputButton : ButtonManager
 
     private void Start()
     {
-        _freeTimeText = transform.parent.Find("TextManager").GetComponent<FreeTimeText>();
+        _freeTimeText = transform.Find("TextManager").GetComponent<FreeTimeText>();
     }
 
     public void InputStoryButton(int code)  //건물 버튼 누르면 생기는 일
@@ -63,9 +63,14 @@ public class InputButton : ButtonManager
             yield return new WaitForSeconds(0.005f);
         }
 
-        StartCoroutine(PopUpBackGround());
+        //StartCoroutine(PopUpBackGround());
+
+        //여기서 배경이미지를 불러 와야함
+
         yield return new WaitForSeconds(1.2f);
-        
+
+        _freeTimeText.SetText(_id);
+
 
         while (fadeImage.color.a >= 0)
         {
@@ -73,15 +78,16 @@ public class InputButton : ButtonManager
             fadeImage.color = color;
             yield return new WaitForSeconds(0.005f);
         }
-        _freeTimeText.SetText(_id);
+        fadeImage.gameObject.SetActive(false);
+        //_freeTimeText.SetText(_id);
         //StartCoroutine(PopUpTextPanel());
     }
 
-    IEnumerator PopUpBackGround()
-    {
-        GameScreen.transform.position = Vector3.zero;
-        yield return new WaitForSeconds(1.1f);
-    }
+    //IEnumerator PopUpBackGround()
+    //{
+    //    GameScreen.transform.position = Vector3.zero;
+    //    yield return new WaitForSeconds(1.1f);
+    //}
 
     /*IEnumerator PopUpTextPanel()
     {
