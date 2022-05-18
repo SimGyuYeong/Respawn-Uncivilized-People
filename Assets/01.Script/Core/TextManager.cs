@@ -120,6 +120,11 @@ public class TextManager : MonoBehaviour
         textPanelBTN.onClick.AddListener(() => SkipTextClick());
         textPanelObj.SetActive(false);
         ChildStart();
+
+        if(FightManager.sendChatID > 3)
+        {
+            chatID = 3;
+        }
     }
 
     protected virtual void ChildStart()
@@ -459,5 +464,9 @@ public class TextManager : MonoBehaviour
         yield return null;
     }
 
-    
+    IEnumerator GotoFight()
+    {
+        SceneManager.LoadScene("Fight");
+        yield return null;
+    }
 }
