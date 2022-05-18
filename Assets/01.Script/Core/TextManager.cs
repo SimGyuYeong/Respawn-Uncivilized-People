@@ -459,5 +459,9 @@ public class TextManager : MonoBehaviour
         yield return null;
     }
 
-    
+    IEnumerator GotoFight()
+    {
+        SceneManager.LoadScene("Fight");
+        yield return null;
+    }
 }

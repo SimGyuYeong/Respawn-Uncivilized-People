@@ -91,6 +91,9 @@ public class UIManager : MonoBehaviour
 
     public void ViewText(string text, Action action)
     {
+        Debug.Log(text);
+        DOTween.KillAll();
+
         _broadTextObj.SetActive(true);
 
         _broadText.text = text;

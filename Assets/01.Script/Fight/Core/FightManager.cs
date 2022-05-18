@@ -11,6 +11,8 @@ public class FightManager : MonoBehaviour
     //싱글톤
     public static FightManager Instance;
 
+    private Tutorial _tuto;
+
     #region A* 알고리즘
     
     private AStarAlgorithm _aStar; // A* 알고리즘 캐싱
@@ -70,7 +72,7 @@ public class FightManager : MonoBehaviour
     public bool isClickPlayer = false;
     public int moveDistance = 4;
 
-    private int pCount = 0;
+    private int _pCount = 0;
 
     public LineRenderer lineRenderer;
 
@@ -98,16 +100,20 @@ public class FightManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        
         lineRenderer = GetComponent<LineRenderer>();
+        lineRenderer.startWidth = .05f;
+        lineRenderer.endWidth = .05f;
+
         _aStar = GetComponent<AStarAlgorithm>();
+        _tuto = transform.parent.Find("Tutorial").GetComponent<Tutorial>();
             
     }
 
     private void Start()
     {
-        StartCoroutine(spawnTile());
-        lineRenderer.startWidth = .05f;
-        lineRenderer.endWidth = .05f;
+        StartCoroutine(TileSpawn());
+        isIng = true;
     }
 
     private void PlayerSpawn()
@@ -136,8 +142,8 @@ public class FightManager : MonoBehaviour
 
     private void AISpawn()
     {
-        pCount -= 1;
-        if (pCount > 0) return;
+        _pCount -= 1;
+        if (_pCount > 0) return;
 
         int count = 0;
         foreach(var ai in aiDataList)
@@ -163,7 +169,7 @@ public class FightManager : MonoBehaviour
     /// 타일 생성 코루틴 함수
     /// </summary>
     /// <returns></returns>
-    private IEnumerator spawnTile()
+    private IEnumerator TileSpawn()
     {
         int count = 1;
         for (int y = 7; y >= 0; y--)
@@ -189,7 +195,7 @@ public class FightManager : MonoBehaviour
             yield return new WaitForSeconds(0.06f);
         }
 
-        pCount = playerDataList.Count;
+        _pCount = playerDataList.Count;
         PlayerSpawn();
 
         foreach(var ai in aiDataList)
@@ -204,8 +210,7 @@ public class FightManager : MonoBehaviour
 
         _aStar.PathFinding();
 
-        OnUIChange?.Invoke();
-        TurnChange();
+        StartCoroutine(_tuto.StartTutorial());
     }
 
     #region 라인 그리기
