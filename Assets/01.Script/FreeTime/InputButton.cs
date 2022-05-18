@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Events;
 using DG.Tweening;
+using TMPro;
 
 public class InputButton : ButtonManager
 {
@@ -107,6 +109,17 @@ public class InputButton : ButtonManager
         }
 
         storyButton[_id - 1].interactable = false;
+
+        Color textAlpha = storyButton[_id - 1].transform.Find("ButtonImageMask/Image").GetComponent<Image>().color;
+        
+        textAlpha.a = 170;
+        storyButton[_id - 1].transform.Find("ButtonImageMask/Text").GetComponent<TextMeshProUGUI>().color = textAlpha;
+
+        //storyButton[_id - 1].transform.Find("iIntimacy").GetComponent<Button>().interactable = false;
+
+        //textAlpha = storyButton[_id - 1].transform.Find("iIntimacy").Find("IlntimacyText").GetComponent<TextMeshProUGUI>().color;
+        //textAlpha.a /= 3;
+        //storyButton[_id - 1].transform.Find("iIntimacy").Find("IlntimacyText").GetComponent<TextMeshProUGUI>().color = textAlpha;
 
         yield return new WaitForSeconds(1.2f);
 
