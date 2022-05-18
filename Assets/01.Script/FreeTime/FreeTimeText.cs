@@ -20,10 +20,11 @@ public class FreeTimeText : TextManager
         StartCoroutine(LoadTextData(URL));
     }
 
-    private void Start()
+    protected override void ChildStart()
     {
         _textPanel = textPanelObj.transform.Find("text").GetComponent<TextMeshPro>();
         inputButton = GetComponentInParent<InputButton>();
+        base.ChildStart();
     }
 
     public void SetText(int _ID)
@@ -54,6 +55,8 @@ public class FreeTimeText : TextManager
 
     public void GoToMainScreen()
     {
+
+
         storyPanel.transform.position = new Vector3(0, 100, 0);
 
         //Typing();

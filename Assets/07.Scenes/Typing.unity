@@ -6529,10 +6529,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de2146980b641ce41b665bfdb7940a45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _textPanel: {fileID: 0}
   textPanelObj: {fileID: 1067993811}
+  textPanelPrefab: {fileID: 4053891989768110728, guid: 2f8bf1bc46369e74099d06cf96f4945e, type: 3}
+  textCanvasTrm: {fileID: 674379031}
   selectPanel: {fileID: 591857319}
-  textPanelBTN: {fileID: 0}
   _selectButton: {fileID: 0}
   background:
   - {fileID: 138511791}
@@ -6552,7 +6552,6 @@ MonoBehaviour:
   - {fileID: 97045104}
   - {fileID: 1654934528}
   - {fileID: 1772858903}
-  _endAnimationObj: {fileID: 1421083659}
   shakeTime: 0.13
   shakestr: 0
   textlogPrefab: {fileID: 6871316211140201032, guid: 63bd3abb528bc9547a3420689dedf61a, type: 3}

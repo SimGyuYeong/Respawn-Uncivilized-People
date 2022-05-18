@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using DG.Tweening;
-//using UnityEngine.EventSystems;
 
 public class InputButton : ButtonManager
 {
@@ -17,34 +16,31 @@ public class InputButton : ButtonManager
     private void Start()
     {
         _freeTimeText = transform.Find("TextManager").GetComponent<FreeTimeText>();
-
     }
 
-    public void InputStoryButton(int code)  //건물 버튼 누르면 생기는 일
+    public void InputStoryButton(int code)
     {
-        _id = code;   
-        StartCoroutine(ButtonMove());       //버튼들이 올라감
-
+        _id = code;
+        //Debug.Log(weekCount.ToString() + dayCount.ToString());
+        //timeText.text = string.Format($"{weekCount}st Week Day {dayCount} Post Meridiem");
+        StartCoroutine(ButtonMove());
     }
 
     public void InputSettingButton()
     {
         settingPanel.transform.DOMoveY(0, 0.3f).SetEase(Ease.InCirc);
-        
     }
+
     public void InputContinueButton()
     {
         settingPanel.transform.DOMoveY(11, 0.3f).SetEase(Ease.InCirc);
-        //settingPanel.rectTransform.DOMoveY(11, 0.3f);
-        //settingPanel.rectTransform.DOAnchorPosY(11, 0.3f);
+        //timeText.text = string.Format("{0}st Week Day {1} Post Meridiem", weekCount, dayCount);
     }
-
 
     public void ButtonSet()
     {
         StartCoroutine(ButtonSetting());
     }
-
 
     IEnumerator ButtonSetting()
     {
@@ -53,6 +49,23 @@ public class InputButton : ButtonManager
         {
             storyButton[i].transform.DOMoveY(0.8f * moveTo, 0.3f).SetEase(Ease.InOutQuart);
             yield return new WaitForSeconds(0.12f);
+        }
+    }
+
+    public void ChangeMain()
+    {
+        if (isDay) 
+        {
+            timeText.SetText($"{weekCount}st Week Day {dayCount} Ante Meridiem");
+            mainImage.sprite = mainBackgroundImage[0];
+            isDay = false; 
+        }
+        else 
+        {
+            timeText.SetText($"{weekCount}st Week Day {dayCount} Post Meridiem");
+            mainImage.sprite = mainBackgroundImage[1];
+            isDay = true;
+            dayCount++;
         }
     }
 
@@ -83,10 +96,6 @@ public class InputButton : ButtonManager
 
         storyButton[_id - 1].interactable = false;
 
-        //StartCoroutine(PopUpBackGround());
-
-        //여기서 배경이미지를 불러 와야함
-
         yield return new WaitForSeconds(1.2f);
 
         _freeTimeText.SetText(_id);
@@ -99,21 +108,7 @@ public class InputButton : ButtonManager
             yield return new WaitForSeconds(0.005f);
         }
         fadeImage.gameObject.SetActive(false);
-        //_freeTimeText.SetText(_id);
-        //StartCoroutine(PopUpTextPanel());
+
+        ChangeMain();
     }
-
-    //IEnumerator PopUpBackGround()
-    //{
-    //    GameScreen.transform.position = Vector3.zero;
-    //    yield return new WaitForSeconds(1.1f);
-    //}
-
-    /*IEnumerator PopUpTextPanel()
-    {
-        textPanel.transform.DOMoveY(-3.6f, 0.3f).SetEase(Ease.InOutQuart);
-        yield return new WaitForSeconds(0.12f);
-        //textEvents();
-    }*/
-
 }

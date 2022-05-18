@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
+using System;
 
 public class FreeTimeDirect : MonoBehaviour
 {
@@ -65,10 +66,31 @@ public class FreeTimeDirect : MonoBehaviour
         textpanelImage.gameObject.SetActive(true);
     }
 
+    public void LookAround(Action action = null)
+    {
+        Sequence _seq = DOTween.Sequence();
+        StartCoroutine(FadeInTextPanel());
+        _seq.Append(freeTimeText.storyPanel.transform.DOScale(1.35f, 1.2f)).SetEase(Ease.OutSine);
+        _seq.Append(maincam.transform.DOMoveX(3f, 1f)).SetEase(Ease.Linear);
+        _seq.Append(maincam.transform.DOMoveX(-3f, 1.8f)).SetEase(Ease.Linear);
+        _seq.Append(maincam.transform.DOMoveX(0, 1f)).SetEase(Ease.Linear);
+        _seq.Append(freeTimeText.storyPanel.transform.DOScale(1f, 1.2f)).SetEase(Ease.OutSine);
+        _seq.AppendCallback(FadeOutTextPanel);
+        _seq.AppendInterval(0.5f);
+        if(action!=null)
+        {
+            _seq.AppendCallback(() =>
+            {
+                action.Invoke();
+            });
+        }
+    }
+
     public void FadeOutTextPanel()
     {
         StartCoroutine(FadeOutCo()); 
     }
+
     IEnumerator FadeOutCo()
     {
         textpanelImage.gameObject.SetActive(true);

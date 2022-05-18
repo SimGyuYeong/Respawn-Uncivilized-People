@@ -16,17 +16,20 @@ public class TextManager : MonoBehaviour
     private TextDataSave _textDataSO;
     public TextDataSave TextSO => _textDataSO;
 
-    [SerializeField] protected TextMeshPro _textPanel;
+    protected TextMeshPro _textPanel;
     public GameObject textPanelObj;
+    public GameObject textPanelPrefab;
+
+    public Transform textCanvasTrm;
 
     [SerializeField] protected Transform selectPanel;
 
-    [SerializeField] protected Button textPanelBTN;
+    protected Button textPanelBTN;
 
     [SerializeField] protected GameObject _selectButton;
     public GameObject[] background; // 게임 배경화면 배열
     public GameObject[] image;    // 추가로 띄워둘 이미지 
-    [SerializeField] protected GameObject _endAnimationObj; // 텍스트 끝나면 텍스트 패널 오른쪽 아래에서 뛰옹뛰옹 뱅글뱅글 하는 애
+    protected GameObject _endAnimationObj; // 텍스트 끝나면 텍스트 패널 오른쪽 아래에서 뛰옹뛰옹 뱅글뱅글 하는 애
     [SerializeField] protected float shakeTime = 0.13f;
     [SerializeField] protected float shakestr = 0;
     [SerializeField] protected GameObject textlogPrefab;
@@ -52,6 +55,8 @@ public class TextManager : MonoBehaviour
 
     public SpriteRenderer _fadeImage;
     private bool _isEnd = false;
+
+    protected int _time = 0;
 
     protected enum IDType
     {
@@ -85,21 +90,39 @@ public class TextManager : MonoBehaviour
 
     private void Update()
     {
-        if(isAuto == true)
-        {
-            autoChecker.text = "<color=red>자동진행</color>";
-        }
-        else
-        {
-            autoChecker.text = "자동진행";
-        }
+        //if(isAuto == true)
+        //{
+        //    autoChecker.text = "<color=red>자동진행</color>";
+        //}
+        //else
+        //{
+        //    autoChecker.text = "자동진행";
+        //}
     }
 
     private void Awake()
     {
         _textDataSO = GetComponentInChildren<TextDataSave>();
         StartCoroutine(LoadTextData(URL)); // 텍스트 데이터 읽기
+        
+    }
+
+    public void Start()
+    {
+        textPanelObj = Instantiate(textPanelPrefab, textCanvasTrm);
+
         _textPanel = textPanelObj.transform.Find("text").GetComponent<TextMeshPro>();
+        textPanelBTN = textPanelObj.transform.Find("Button").GetComponent<Button>();
+        _endAnimationObj = textPanelObj.transform.Find("textEnd").gameObject;
+
+        textPanelBTN.onClick.AddListener(() => SkipTextClick());
+
+        ChildStart();
+    }
+
+    protected virtual void ChildStart()
+    {
+        //do nothing!
     }
 
     public IEnumerator LoadTextData(string url)
@@ -375,6 +398,18 @@ public class TextManager : MonoBehaviour
         SkipText();
     }
 
+    IEnumerator TakeALook()
+    {
+        textPanelBTN.interactable = false;
+        FreeTimeDirect.Instance.LookAround(() =>
+        {
+            SkipText();
+            textPanelBTN.interactable = true;
+        });
+        
+        yield return new WaitForSeconds(3f);
+    }
+
     IEnumerator FadeOut()
     {
         if (_isEnd == false)
@@ -409,11 +444,11 @@ public class TextManager : MonoBehaviour
             FreeTimeDirect.Instance.FadeIn();
             yield return new WaitForSeconds(1.7f);
         }
-    
     }
 
     IEnumerator GoToMain()
     {
+        _time++;
         _isEnd = true;
         textPanelBTN.interactable = false;
         FreeTimeDirect.Instance.FadeOutTextPanel();

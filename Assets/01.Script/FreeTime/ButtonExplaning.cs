@@ -6,7 +6,7 @@ using TMPro;
 using UnityEngine.EventSystems;
 using DG.Tweening;
 
-public class ButtonExplaning : ButtonManager, IPointerEnterHandler, IPointerExitHandler
+public class ButtonExplaning : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     private ExplanaingText _explanaingText;
 
@@ -17,11 +17,10 @@ public class ButtonExplaning : ButtonManager, IPointerEnterHandler, IPointerExit
     {
         _explanaingText = FindObjectOfType<ExplanaingText>();
     }
-    
+
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log("³ª¤Ã¤Ã");
         _explanaingText.TestInterface(buttonIntType);
         switch (buttonIntType)
         {
@@ -39,60 +38,9 @@ public class ButtonExplaning : ButtonManager, IPointerEnterHandler, IPointerExit
                 break;
         }
     }
-
-    private void SetExText()
-    {
-        //GameObject currentBTN = EventSystem.current.currentSelectedGameObject;
-
-        //string buttonName = currentBTN.name;
-
-        //Debug.Log(buttonName);
-
-        //switch(buttonName)
-        //{
-        //    case storyButton.:
-        //        Debug.Log("¾È³ç");
-        //        break;
-        //}
-    }
-
+    
     public void OnPointerExit(PointerEventData eventData)
     {
         _explanaingText.CloseText();
     }
-
-    //IEnumerator TextFadeIn()
-    //{
-    //    Color alpha = new Color(0, 64, 0);
-
-    //    while (alpha.a <= 1)
-    //    {
-    //        alpha.a += 0.04f;
-    //        explaningImage.color = alpha;
-    //        yield return new WaitForSeconds(0.01f);
-    //    }
-    //}
-
-    //IEnumerator AddScale()
-    //{
-    //    explaningText.transform.DOScale(1f, 0.4f);
-    //    yield return new WaitForSeconds(0.5f);
-    //}
-    //IEnumerator TextFadeOut()
-    //{
-    //    Color alpha = new Color(0, 64, 0);
-
-    //    while (alpha.a >= 0)
-    //    {
-    //        alpha.a += 0.04f;
-    //        explaningImage.color = alpha;
-    //        yield return new WaitForSeconds(0.01f);
-    //    }
-    //}
-
-    //IEnumerator MinScale()
-    //{
-    //    explaningText.transform.DOScale(0.1f, 0.4f);
-    //    yield return new WaitForSeconds(0.5f);
-    //}
 }
