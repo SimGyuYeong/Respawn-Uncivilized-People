@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Events;
 using DG.Tweening;
+using UnityEngine.SceneManagement;
 
 public class FightManager : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class FightManager : MonoBehaviour
     public static FightManager Instance;
 
     private Tutorial _tuto;
+    private UIManager _uiManager;
+    public UIManager UI { get => _uiManager; }
 
     #region A* 알고리즘
     
@@ -67,12 +70,16 @@ public class FightManager : MonoBehaviour
     //액션 버튼 오브젝트
     [SerializeField] private GameObject _actionButton;
 
-    public int turn = 10;
+    public int maxTurn = 10;
+    public int turn = 0;
 
     public bool isClickPlayer = false;
     public int moveDistance = 4;
 
     private int _pCount = 0;
+    private int _aiMoveCount = 0;
+
+    public static int sendChatID = 0;
 
     public LineRenderer lineRenderer;
 
@@ -107,13 +114,14 @@ public class FightManager : MonoBehaviour
 
         _aStar = GetComponent<AStarAlgorithm>();
         _tuto = transform.parent.Find("Tutorial").GetComponent<Tutorial>();
-            
+        _uiManager = transform.parent.Find("UIManager").GetComponent<UIManager>();
     }
 
     private void Start()
     {
         StartCoroutine(TileSpawn());
         isIng = true;
+        turn = maxTurn;
     }
 
     private void PlayerSpawn()
@@ -169,7 +177,7 @@ public class FightManager : MonoBehaviour
     /// 타일 생성 코루틴 함수
     /// </summary>
     /// <returns></returns>
-    private IEnumerator TileSpawn()
+    private IEnumerator TileSpawn(bool tuto = true)
     {
         int count = 1;
         for (int y = 7; y >= 0; y--)
@@ -209,8 +217,14 @@ public class FightManager : MonoBehaviour
         }
 
         _aStar.PathFinding();
+        OnUIChange?.Invoke();
 
-        StartCoroutine(_tuto.StartTutorial());
+        if (tuto)
+            StartCoroutine(_tuto.StartTutorial());
+        else
+        {
+            TurnChange();
+        }
     }
 
     #region 라인 그리기
@@ -555,6 +569,12 @@ public class FightManager : MonoBehaviour
         Destroy(aiList[aiID].gameObject);
         aiList.RemoveAt(aiID);
 
+        if(aiList.Count == 0)
+        {
+            StartCoroutine(Win());
+            return;
+        }
+
         for(int i = 0; i < aiList.Count; i++)
         {
             if(aiList[i].id != i)
@@ -578,14 +598,14 @@ public class FightManager : MonoBehaviour
     {
         if(turn==0)
         {
-            Debug.Log("게임종료");
+            StartCoroutine(Defeat());
             return;
         }
 
         switch (turnType)
         {
             case TurnType.Wait_Player:
-                UIManager.Instance.ViewText("Player Turn", () =>
+                _uiManager.ViewText("Player Turn", () =>
                 {
                     _turnCount = _maxTurnCount;
                     turnType = TurnType.Input_Action;
@@ -599,16 +619,21 @@ public class FightManager : MonoBehaviour
                 break;
 
             case TurnType.Wait_AI:
-                UIManager.Instance.ViewText("Enemy Turn", () =>
+                _aiMoveCount = aiList.Count;
+                _uiManager.ViewText("Enemy Turn", () =>
                 {
                     AITurn();
                 });
                 break;
 
             case TurnType.AI:
-                turn--;
-                isIng = false;
-                StartCoroutine(PlayerTurn());
+                _aiMoveCount--;
+                if(_aiMoveCount == 0)
+                {
+                    turn--;
+                    isIng = false;
+                    StartCoroutine(PlayerTurn());
+                }
                 break;
         }
     }
@@ -692,12 +717,12 @@ public class FightManager : MonoBehaviour
 
     public void ShowUpdateStat(Player _player)
     {
-        UIManager.Instance.ShowStatUI(_player.playerName, _player.Energy, _player.info, 1, _player.id);
+        _uiManager.ShowStatUI(_player.playerName, _player.Energy, _player.info, 1, _player.id);
     }
 
     public void ShowUpdateStat(AI _ai)
     {
-        UIManager.Instance.ShowStatUI(_ai.aiName, _ai.Energy, _ai.info, 2, _ai.id);
+        _uiManager.ShowStatUI(_ai.aiName, _ai.Energy, _ai.info, 2, _ai.id);
     }
 
     public void TurnStop()
@@ -707,5 +732,55 @@ public class FightManager : MonoBehaviour
             turnType = TurnType.Wait_AI;
             TurnChange();
         }
-    }    
+    }
+
+    public IEnumerator Win()
+    {
+        yield return new WaitForSeconds(0.5f);
+        for(int y = 0; y < 8; y++)
+        {
+            for(int x = 0; x < 8; x++)
+            {
+                int slot = Mathf.FloorToInt((7 - y) * 8 + x);
+                Destroy(tileList[slot].gameObject);
+            }
+            yield return new WaitForSeconds(0.06f);
+        }
+        _uiManager.ShowInfoUI(false);
+
+        yield return new WaitForSeconds(0.2f);
+        _uiManager.ViewText("Battle Command Complete", () =>
+        {
+            sendChatID = 4;
+            SceneManager.LoadScene("Typing");
+        });
+    }
+
+    public IEnumerator Defeat()
+    {
+        yield return new WaitForSeconds(0.5f);
+        for (int y = 0; y < 8; y++)
+        {
+            for (int x = 0; x < 8; x++)
+            {
+                int slot = Mathf.FloorToInt((7 - y) * 8 + x);
+                Destroy(tileList[slot].gameObject);
+            }
+            yield return new WaitForSeconds(0.06f);
+        }
+        _uiManager.ShowInfoUI(false);
+
+        yield return new WaitForSeconds(0.2f);
+        _uiManager.ViewText("Battle Command Faild!", () => 
+        {
+            tileList.Clear();
+            playerList.Clear();
+            aiList.Clear();
+
+            turn = maxTurn;
+
+            StartCoroutine(TileSpawn(false));
+            _uiManager.ShowInfoUI(true);
+        });
+    }
 }

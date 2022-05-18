@@ -96,7 +96,6 @@ public class AI : MonoBehaviour
 
                 if (_pos.x == _attackPlayer.Position.x)
                 {
-                    Debug.Log("YÀÌµ¿");
                     if (_pos.y - _attackPlayer.Position.y > 0)
                     {
                         if (!FightManager.Instance.ObjCheck(_pos, 'd'))

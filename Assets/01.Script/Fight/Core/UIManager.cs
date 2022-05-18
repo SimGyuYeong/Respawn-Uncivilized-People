@@ -6,10 +6,9 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    public static UIManager Instance;
-
     [SerializeField] Text turnText;
 
+    public GameObject infoUI;
     [SerializeField] GameObject tileUI;
     [SerializeField] GameObject goalUI;
 
@@ -24,8 +23,6 @@ public class UIManager : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
-
         _energyText = tileUI.transform.GetComponentInChildren<Text>();
         _goalText = goalUI.transform.GetComponentInChildren<Text>();
 
@@ -89,11 +86,8 @@ public class UIManager : MonoBehaviour
         tileUI.SetActive(false);
     }
 
-    public void ViewText(string text, Action action)
+    public void ViewText(string text, Action action = null)
     {
-        Debug.Log(text);
-        DOTween.KillAll();
-
         _broadTextObj.SetActive(true);
 
         _broadText.text = text;
@@ -104,11 +98,16 @@ public class UIManager : MonoBehaviour
         seq.Append(_broadText.DOFade(0f, 1f));
         seq.AppendCallback(()=>
         {
-            action.Invoke();
+            action?.Invoke();
         });
         seq.AppendCallback(() =>
         {
             _broadTextObj.SetActive(false);
         }); 
+    }
+
+    public void ShowInfoUI(bool isActive)
+    {
+        infoUI.SetActive(isActive);
     }
 }
