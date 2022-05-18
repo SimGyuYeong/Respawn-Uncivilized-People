@@ -13,20 +13,25 @@ public class FreeTimeText : TextManager
     [SerializeField]
     public GameObject storyPanel;
 
+    private InputButton inputButton = null;
 
     private void Awake()
     {
         StartCoroutine(LoadTextData(URL));
     }
 
-    private void Start()
+    protected override void ChildStart()
     {
         _textPanel = textPanelObj.transform.Find("text").GetComponent<TextMeshPro>();
+        inputButton = GetComponentInParent<InputButton>();
+        base.ChildStart();
     }
 
     public void SetText(int _ID)
     {
         chatID = _ID;
+        lineNumber = 1;
+        textPanelBTN.interactable = true;
         TextTyping?.Invoke();
     }
 
@@ -43,10 +48,17 @@ public class FreeTimeText : TextManager
         else return;
     }
 
+    public void SetButton()
+    {
+        inputButton.ButtonSet();
+    }
+
     public void GoToMainScreen()
     {
+
+
         storyPanel.transform.position = new Vector3(0, 100, 0);
 
-        Typing();
+        //Typing();
     }
 }

@@ -4291,14 +4291,14 @@ GameObject:
   - component: {fileID: 676803826}
   - component: {fileID: 676803825}
   - component: {fileID: 676803829}
-  - component: {fileID: 676803830}
+  - component: {fileID: 676803831}
   m_Layer: 0
   m_Name: SpineRobinOnTalking
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &676803825
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4311,7 +4311,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d247ba06193faa74d9335f5481b2b56c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skeletonDataAsset: {fileID: 11400000, guid: 7da328e6baa69c64dadb979ba59b3083, type: 2}
+  skeletonDataAsset: {fileID: 11400000, guid: 0da1a70b37d57bd44b0f7d76ebeea83a, type: 2}
   initialSkinName: 
   fixPrefabOverrideViaMeshFilter: 2
   initialFlipX: 0
@@ -4334,7 +4334,7 @@ MonoBehaviour:
     materialsInsideMask: []
     materialsOutsideMask: []
   disableRenderingOnOverride: 1
-  _animationName: blink
+  _animationName: Idle
   loop: 1
   timeScale: 1
 --- !u!23 &676803826
@@ -4356,7 +4356,9 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 335a4d898df34a9448b735d850f1f243, type: 2}
+  - {fileID: 2100000, guid: fa11a41be5e209a45b1c9008d389a35f, type: 2}
+  - {fileID: 2100000, guid: f908d070a3c5b72458782832e25c1183, type: 2}
+  - {fileID: 2100000, guid: fa11a41be5e209a45b1c9008d389a35f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4408,7 +4410,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 676803824}
   m_CullTransparentMesh: 1
---- !u!114 &676803830
+--- !u!114 &676803831
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4417,11 +4419,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 676803824}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 170d45c3acc8f2245ab017f6feefff29, type: 3}
+  m_Script: {fileID: 11500000, guid: f21c9538588898a45a3da22bf4779ab3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BackGroundImage: {fileID: 0}
-  BackGroundObject: {fileID: 0}
+  rootMotionBoneName: root
+  transformPositionX: 1
+  transformPositionY: 1
+  rootMotionScaleX: 1
+  rootMotionScaleY: 1
+  rootMotionTranslateXPerY: 0
+  rootMotionTranslateYPerX: 0
+  rigidBody2D: {fileID: 0}
+  applyRigidbody2DGravity: 0
+  rigidBody: {fileID: 0}
+  animationTrackFlags: -1
 --- !u!1 &692460934
 GameObject:
   m_ObjectHideFlags: 0
@@ -6518,8 +6529,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de2146980b641ce41b665bfdb7940a45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _textPanel: {fileID: 0}
   textPanelObj: {fileID: 1067993811}
+  textPanelPrefab: {fileID: 4053891989768110728, guid: 2f8bf1bc46369e74099d06cf96f4945e, type: 3}
+  textCanvasTrm: {fileID: 674379031}
   selectPanel: {fileID: 591857319}
   _selectButton: {fileID: 0}
   background:
@@ -6540,7 +6552,6 @@ MonoBehaviour:
   - {fileID: 97045104}
   - {fileID: 1654934528}
   - {fileID: 1772858903}
-  _endAnimationObj: {fileID: 1421083659}
   shakeTime: 0.13
   shakestr: 0
   textlogPrefab: {fileID: 6871316211140201032, guid: 63bd3abb528bc9547a3420689dedf61a, type: 3}
@@ -6553,6 +6564,7 @@ MonoBehaviour:
   chatSpeed: 1
   autoSpeed: 1
   isAuto: 0
+  _coffeclip: {fileID: 0}
   TextTyping:
     m_PersistentCalls:
       m_Calls:
@@ -6583,6 +6595,7 @@ MonoBehaviour:
   OnTextTypingEnd:
     m_PersistentCalls:
       m_Calls: []
+  _fadeImage: {fileID: 0}
 --- !u!1 &1057784077
 GameObject:
   m_ObjectHideFlags: 0

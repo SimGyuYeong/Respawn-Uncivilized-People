@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
+using System;
 
 public class FreeTimeDirect : MonoBehaviour
 {
@@ -36,13 +37,13 @@ public class FreeTimeDirect : MonoBehaviour
         Sequence _seq = DOTween.Sequence();
         Debug.Log("a");
         StartCoroutine(FadeInTextPanel());
-        freeTimeText.storyPanel.transform.DOScale(1.3f, 2f);
-        _seq.Join(maincam.transform.DOMoveY(0.7f, 0.4f));
-        _seq.Append(maincam.transform.DOMoveY(0, 0.25f));
-        _seq.Append(maincam.transform.DOMoveY(0.7f, 0.4f));
-        _seq.Append(maincam.transform.DOMoveY(0f, 0.25f));
-        _seq.Append(maincam.transform.DOMoveY(0.7f, 0.4f));
-        _seq.Append(maincam.transform.DOMoveY(0f, 0.25f));
+        freeTimeText.storyPanel.transform.DOScale(1.35f, 2.3f);
+        _seq.Join(maincam.transform.DOMoveY(0.76f, 0.44f)).SetEase(Ease.OutQuad);
+        _seq.Append(maincam.transform.DOMoveY(0, 0.34f)).SetEase(Ease.OutSine);
+        _seq.Append(maincam.transform.DOMoveY(0.76f, 0.44f)).SetEase(Ease.OutQuad);
+        _seq.Append(maincam.transform.DOMoveY(0f, 0.34f)).SetEase(Ease.OutSine);
+        _seq.Append(maincam.transform.DOMoveY(0.76f, 0.44f)).SetEase(Ease.OutQuad);
+        _seq.Append(maincam.transform.DOMoveY(0f, 0.34f)).SetEase(Ease.OutSine);
         //_seq.Append(freeTimeText.storyPanel.transform.DOScale(1f, 3.5f)).SetEase(Ease.Flash);
         //freeTimeText.storyPanel.transform.DOScale(2f, 2f);
         //yield return new WaitForSeconds(0.8f);
@@ -65,10 +66,31 @@ public class FreeTimeDirect : MonoBehaviour
         textpanelImage.gameObject.SetActive(true);
     }
 
+    public void LookAround(Action action = null)
+    {
+        Sequence _seq = DOTween.Sequence();
+        StartCoroutine(FadeInTextPanel());
+        _seq.Append(freeTimeText.storyPanel.transform.DOScale(1.35f, 1.2f)).SetEase(Ease.OutSine);
+        _seq.Append(maincam.transform.DOMoveX(3f, 1f)).SetEase(Ease.Linear);
+        _seq.Append(maincam.transform.DOMoveX(-3f, 1.8f)).SetEase(Ease.Linear);
+        _seq.Append(maincam.transform.DOMoveX(0, 1f)).SetEase(Ease.Linear);
+        _seq.Append(freeTimeText.storyPanel.transform.DOScale(1f, 1.2f)).SetEase(Ease.OutSine);
+        _seq.AppendCallback(FadeOutTextPanel);
+        _seq.AppendInterval(0.5f);
+        if(action!=null)
+        {
+            _seq.AppendCallback(() =>
+            {
+                action.Invoke();
+            });
+        }
+    }
+
     public void FadeOutTextPanel()
     {
         StartCoroutine(FadeOutCo()); 
     }
+
     IEnumerator FadeOutCo()
     {
         textpanelImage.gameObject.SetActive(true);
