@@ -24,12 +24,13 @@ public class TextManager : MonoBehaviour
 
     [SerializeField] protected Transform selectPanel;
 
+    //[Space(100),SerializeField]
     protected Button textPanelBTN;
 
     [SerializeField] protected GameObject _selectButton;
     public GameObject[] background; // 게임 배경화면 배열
     public GameObject[] image;    // 추가로 띄워둘 이미지 
-    protected GameObject _endAnimationObj; // 텍스트 끝나면 텍스트 패널 오른쪽 아래에서 뛰옹뛰옹 뱅글뱅글 하는 애
+    public GameObject _endAnimationObj; // 텍스트 끝나면 텍스트 패널 오른쪽 아래에서 뛰옹뛰옹 뱅글뱅글 하는 애
     [SerializeField] protected float shakeTime = 0.13f;
     [SerializeField] protected float shakestr = 0;
     [SerializeField] protected GameObject textlogPrefab;
@@ -54,7 +55,7 @@ public class TextManager : MonoBehaviour
     public UnityEvent OnTextTypingEnd;
 
     public SpriteRenderer _fadeImage;
-    private bool _isEnd = false;
+    protected bool _isEnd = false;
 
     protected int _time = 0;
 
@@ -104,7 +105,8 @@ public class TextManager : MonoBehaviour
     {
         _textDataSO = GetComponentInChildren<TextDataSave>();
         StartCoroutine(LoadTextData(URL)); // 텍스트 데이터 읽기
-        
+
+        //textPanelObj = Instantiate(textPanelPrefab, textCanvasTrm);
     }
 
     public void Start()
@@ -116,7 +118,7 @@ public class TextManager : MonoBehaviour
         _endAnimationObj = textPanelObj.transform.Find("textEnd").gameObject;
 
         textPanelBTN.onClick.AddListener(() => SkipTextClick());
-
+        textPanelObj.SetActive(false);
         ChildStart();
     }
 
@@ -382,86 +384,6 @@ public class TextManager : MonoBehaviour
         else textPanelObj.SetActive(false);
     }
 
-    IEnumerator Walking()
-    {
-        Debug.Log("ascasda");
-        textPanelBTN.interactable = false;
-        //_textPanel.text = string.Format("");
-        //FreeTimeDirect.Instance.FadeIn();
-        FreeTimeDirect.Instance.Walking();
-        
-        textPanelObj.SetActive(false);
-        yield return new WaitForSeconds(3f);
-        textPanelObj.SetActive(true);
-        FreeTimeDirect.Instance.FadeOutTextPanel();
-        textPanelBTN.interactable = true;
-        SkipText();
-    }
-
-    IEnumerator TakeALook()
-    {
-        textPanelBTN.interactable = false;
-        FreeTimeDirect.Instance.LookAround(() =>
-        {
-            SkipText();
-            textPanelBTN.interactable = true;
-        });
-        
-        yield return new WaitForSeconds(3f);
-    }
-
-    IEnumerator FadeOut()
-    {
-        if (_isEnd == false)
-        {
-            textPanelBTN.interactable = false;
-            FreeTimeDirect.Instance.FadeOut();
-            yield return new WaitForSeconds(1.7f);
-            textPanelBTN.interactable = true;
-            SkipText();
-        }
-
-        else
-        {
-            FreeTimeDirect.Instance.FadeOut();
-            yield return new WaitForSeconds(1.7f);
-        }
-    }
-
-    IEnumerator FadeIn()
-    {
-        if (_isEnd == false)
-        {
-            textPanelBTN.interactable = false;
-            FreeTimeDirect.Instance.FadeIn();
-            yield return new WaitForSeconds(1.7f);
-            textPanelBTN.interactable = true;
-            SkipText();
-        }
-
-        else
-        {
-            FreeTimeDirect.Instance.FadeIn();
-            yield return new WaitForSeconds(1.7f);
-        }
-    }
-
-    IEnumerator GoToMain()
-    {
-        _time++;
-        _isEnd = true;
-        textPanelBTN.interactable = false;
-        FreeTimeDirect.Instance.FadeOutTextPanel();
-        textPanelObj.gameObject.SetActive(false);
-        StartCoroutine(FadeOut());
-        yield return new WaitForSeconds(1f);
-        transform.GetComponentInChildren<FreeTimeText>().GoToMainScreen();
-        yield return new WaitForSeconds(1f);
-        StartCoroutine(FadeIn());
-        transform.GetComponentInChildren<FreeTimeText>().SetButton();
-    }
-
-
     public void AutoPlay()
     {
         isAuto = !isAuto;
@@ -534,6 +456,12 @@ public class TextManager : MonoBehaviour
     IEnumerator GotoFreeTime()
     {
         SceneManager.LoadScene("FreeTime");
+        yield return null;
+    }
+
+    IEnumerator GotoFight()
+    {
+        SceneManager.LoadScene("Fight");
         yield return null;
     }
 }
