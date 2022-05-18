@@ -4334,7 +4334,7 @@ MonoBehaviour:
     materialsInsideMask: []
     materialsOutsideMask: []
   disableRenderingOnOverride: 1
-  _animationName: Idle
+  _animationName: Idle+Blink
   loop: 1
   timeScale: 1
 --- !u!23 &676803826
