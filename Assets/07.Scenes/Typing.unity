@@ -4298,7 +4298,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &676803825
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6552,6 +6552,7 @@ MonoBehaviour:
   - {fileID: 97045104}
   - {fileID: 1654934528}
   - {fileID: 1772858903}
+  _endAnimationObj: {fileID: 0}
   shakeTime: 0.13
   shakestr: 0
   textlogPrefab: {fileID: 6871316211140201032, guid: 63bd3abb528bc9547a3420689dedf61a, type: 3}
