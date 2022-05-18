@@ -51,7 +51,7 @@ public class InputButton : ButtonManager
         //Sequence seq = DOTween.Sequence();
         for (int i = 0; i < storyButton.Length; i++)
         {
-            storyButton[i].transform.DOMoveY(0.8f * moveTo, 0.3f).SetEase(Ease.InOutQuart);
+            storyButton[i].transform.DOMoveY(1.24f * moveTo, 0.3f).SetEase(Ease.InOutQuart);
             yield return new WaitForSeconds(0.12f);
         }
     }

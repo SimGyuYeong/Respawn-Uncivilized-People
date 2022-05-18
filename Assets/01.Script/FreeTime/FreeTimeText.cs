@@ -100,6 +100,7 @@ public class FreeTimeText : TextManager
         yield return new WaitForSeconds(1.7f);
         textPanelObj.SetActive(true);
         FreeTimeDirect.Instance.FadeOutTextPanel();
+        yield return new WaitForSeconds(0.8f);
         textPanelBTN.interactable = true;
         SkipText();
     }
