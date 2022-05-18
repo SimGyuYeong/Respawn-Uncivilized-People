@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Events;
 using DG.Tweening;
+using UnityEngine.SceneManagement;
 
 public class FightManager : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class FightManager : MonoBehaviour
     public static FightManager Instance;
 
     private Tutorial _tuto;
+    private UIManager _uiManager;
+    public UIManager UI { get => _uiManager; }
 
     #region A* 알고리즘
     
@@ -76,6 +79,8 @@ public class FightManager : MonoBehaviour
     private int _pCount = 0;
     private int _aiMoveCount = 0;
 
+    public static int sendChatID = 0;
+
     public LineRenderer lineRenderer;
 
     [field: SerializeField] public UnityEvent OnUIChange { get; set; }
@@ -109,7 +114,7 @@ public class FightManager : MonoBehaviour
 
         _aStar = GetComponent<AStarAlgorithm>();
         _tuto = transform.parent.Find("Tutorial").GetComponent<Tutorial>();
-            
+        _uiManager = transform.parent.Find("UIManager").GetComponent<UIManager>();
     }
 
     private void Start()
@@ -600,7 +605,7 @@ public class FightManager : MonoBehaviour
         switch (turnType)
         {
             case TurnType.Wait_Player:
-                UIManager.Instance.ViewText("Player Turn", () =>
+                _uiManager.ViewText("Player Turn", () =>
                 {
                     _turnCount = _maxTurnCount;
                     turnType = TurnType.Input_Action;
@@ -615,7 +620,7 @@ public class FightManager : MonoBehaviour
 
             case TurnType.Wait_AI:
                 _aiMoveCount = aiList.Count;
-                UIManager.Instance.ViewText("Enemy Turn", () =>
+                _uiManager.ViewText("Enemy Turn", () =>
                 {
                     AITurn();
                 });
@@ -712,12 +717,12 @@ public class FightManager : MonoBehaviour
 
     public void ShowUpdateStat(Player _player)
     {
-        UIManager.Instance.ShowStatUI(_player.playerName, _player.Energy, _player.info, 1, _player.id);
+        _uiManager.ShowStatUI(_player.playerName, _player.Energy, _player.info, 1, _player.id);
     }
 
     public void ShowUpdateStat(AI _ai)
     {
-        UIManager.Instance.ShowStatUI(_ai.aiName, _ai.Energy, _ai.info, 2, _ai.id);
+        _uiManager.ShowStatUI(_ai.aiName, _ai.Energy, _ai.info, 2, _ai.id);
     }
 
     public void TurnStop()
@@ -741,10 +746,14 @@ public class FightManager : MonoBehaviour
             }
             yield return new WaitForSeconds(0.06f);
         }
-        UIManager.Instance.ShowInfoUI(true);
+        _uiManager.ShowInfoUI(false);
 
         yield return new WaitForSeconds(0.2f);
-        UIManager.Instance.ViewText("Battle Command Complete");
+        _uiManager.ViewText("Battle Command Complete", () =>
+        {
+            sendChatID = 4;
+            SceneManager.LoadScene("Typing");
+        });
     }
 
     public IEnumerator Defeat()
@@ -759,10 +768,10 @@ public class FightManager : MonoBehaviour
             }
             yield return new WaitForSeconds(0.06f);
         }
-        UIManager.Instance.ShowInfoUI(false);
+        _uiManager.ShowInfoUI(false);
 
         yield return new WaitForSeconds(0.2f);
-        UIManager.Instance.ViewText("Battle Command Faild!", () => 
+        _uiManager.ViewText("Battle Command Faild!", () => 
         {
             tileList.Clear();
             playerList.Clear();
@@ -771,7 +780,7 @@ public class FightManager : MonoBehaviour
             turn = maxTurn;
 
             StartCoroutine(TileSpawn(false));
-            UIManager.Instance.ShowInfoUI(true);
+            _uiManager.ShowInfoUI(true);
         });
     }
 }

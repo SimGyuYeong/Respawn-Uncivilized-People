@@ -6,8 +6,6 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    public static UIManager Instance;
-
     [SerializeField] Text turnText;
 
     public GameObject infoUI;
@@ -25,8 +23,6 @@ public class UIManager : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
-
         _energyText = tileUI.transform.GetComponentInChildren<Text>();
         _goalText = goalUI.transform.GetComponentInChildren<Text>();
 
