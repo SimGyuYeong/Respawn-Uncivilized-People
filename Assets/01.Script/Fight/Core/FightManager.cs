@@ -67,12 +67,14 @@ public class FightManager : MonoBehaviour
     //액션 버튼 오브젝트
     [SerializeField] private GameObject _actionButton;
 
-    public int turn = 10;
+    public int maxTurn = 10;
+    public int turn = 0;
 
     public bool isClickPlayer = false;
     public int moveDistance = 4;
 
     private int _pCount = 0;
+    private int _aiMoveCount = 0;
 
     public LineRenderer lineRenderer;
 
@@ -114,6 +116,7 @@ public class FightManager : MonoBehaviour
     {
         StartCoroutine(TileSpawn());
         isIng = true;
+        turn = maxTurn;
     }
 
     private void PlayerSpawn()
@@ -169,7 +172,7 @@ public class FightManager : MonoBehaviour
     /// 타일 생성 코루틴 함수
     /// </summary>
     /// <returns></returns>
-    private IEnumerator TileSpawn()
+    private IEnumerator TileSpawn(bool tuto = true)
     {
         int count = 1;
         for (int y = 7; y >= 0; y--)
@@ -209,8 +212,14 @@ public class FightManager : MonoBehaviour
         }
 
         _aStar.PathFinding();
+        OnUIChange?.Invoke();
 
-        StartCoroutine(_tuto.StartTutorial());
+        if (tuto)
+            StartCoroutine(_tuto.StartTutorial());
+        else
+        {
+            TurnChange();
+        }
     }
 
     #region 라인 그리기
@@ -555,6 +564,12 @@ public class FightManager : MonoBehaviour
         Destroy(aiList[aiID].gameObject);
         aiList.RemoveAt(aiID);
 
+        if(aiList.Count == 0)
+        {
+            StartCoroutine(Win());
+            return;
+        }
+
         for(int i = 0; i < aiList.Count; i++)
         {
             if(aiList[i].id != i)
@@ -578,7 +593,7 @@ public class FightManager : MonoBehaviour
     {
         if(turn==0)
         {
-            Debug.Log("게임종료");
+            StartCoroutine(Defeat());
             return;
         }
 
@@ -599,6 +614,7 @@ public class FightManager : MonoBehaviour
                 break;
 
             case TurnType.Wait_AI:
+                _aiMoveCount = aiList.Count;
                 UIManager.Instance.ViewText("Enemy Turn", () =>
                 {
                     AITurn();
@@ -606,9 +622,13 @@ public class FightManager : MonoBehaviour
                 break;
 
             case TurnType.AI:
-                turn--;
-                isIng = false;
-                StartCoroutine(PlayerTurn());
+                _aiMoveCount--;
+                if(_aiMoveCount == 0)
+                {
+                    turn--;
+                    isIng = false;
+                    StartCoroutine(PlayerTurn());
+                }
                 break;
         }
     }
@@ -707,5 +727,51 @@ public class FightManager : MonoBehaviour
             turnType = TurnType.Wait_AI;
             TurnChange();
         }
-    }    
+    }
+
+    public IEnumerator Win()
+    {
+        yield return new WaitForSeconds(0.5f);
+        for(int y = 0; y < 8; y++)
+        {
+            for(int x = 0; x < 8; x++)
+            {
+                int slot = Mathf.FloorToInt((7 - y) * 8 + x);
+                Destroy(tileList[slot].gameObject);
+            }
+            yield return new WaitForSeconds(0.06f);
+        }
+        UIManager.Instance.ShowInfoUI(true);
+
+        yield return new WaitForSeconds(0.2f);
+        UIManager.Instance.ViewText("Battle Command Complete");
+    }
+
+    public IEnumerator Defeat()
+    {
+        yield return new WaitForSeconds(0.5f);
+        for (int y = 0; y < 8; y++)
+        {
+            for (int x = 0; x < 8; x++)
+            {
+                int slot = Mathf.FloorToInt((7 - y) * 8 + x);
+                Destroy(tileList[slot].gameObject);
+            }
+            yield return new WaitForSeconds(0.06f);
+        }
+        UIManager.Instance.ShowInfoUI(false);
+
+        yield return new WaitForSeconds(0.2f);
+        UIManager.Instance.ViewText("Battle Command Faild!", () => 
+        {
+            tileList.Clear();
+            playerList.Clear();
+            aiList.Clear();
+
+            turn = maxTurn;
+
+            StartCoroutine(TileSpawn(false));
+            UIManager.Instance.ShowInfoUI(true);
+        });
+    }
 }
