@@ -1,14 +1,11 @@
 로빈 레이어 나누기.png
-size:1895,1771
+size:1875,1771
 filter:Linear,Linear
 pma:true
-RightHideHair
-bounds:1300,78,129,289
-offsets:14,0,143,289
 body
 bounds:2,566,720,1203
 close eyes
-bounds:1431,2,294,103
+bounds:1300,2,294,103
 offsets:31,0,325,103
 face
 bounds:1460,345,372,365
@@ -17,7 +14,7 @@ bounds:2,63,501,788
 offsets:59,0,560,788
 rotate:90
 hair shadow
-bounds:1431,107,342,236
+bounds:1300,107,342,236
 hide leg
 bounds:1693,1137,632,141
 offsets:4,0,636,151
@@ -36,6 +33,6 @@ right arm
 bounds:724,731,302,1038
 offsets:95,0,397,1038
 오른쪽 눈
-bounds:1775,192,118,151
+bounds:1644,192,118,151
 왼쪽 눈
-bounds:1775,46,109,144
+bounds:1764,199,109,144
