@@ -1,6 +1,5 @@
 using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,12 +19,17 @@ public class UIManager : MonoBehaviour
     public Color aiColor;
     public Color playerColor;
 
+    [SerializeField] private GameObject _broadTextObj;
+    private TextMeshProUGUI _broadText;
+
     private void Awake()
     {
         Instance = this;
 
         _energyText = tileUI.transform.GetComponentInChildren<Text>();
         _goalText = goalUI.transform.GetComponentInChildren<Text>();
+
+        _broadText = _broadTextObj.GetComponent<TextMeshProUGUI>();
     }
 
     public void UpdateTurnText()
@@ -83,5 +87,25 @@ public class UIManager : MonoBehaviour
     public void HideStatUI()
     {
         tileUI.SetActive(false);
+    }
+
+    public void ViewText(string text, Action action)
+    {
+        _broadTextObj.SetActive(true);
+
+        _broadText.text = text;
+        
+        Sequence seq = DOTween.Sequence();
+        seq.Append(_broadText.DOFade(1f, 1f));
+        seq.AppendInterval(0.5f);
+        seq.Append(_broadText.DOFade(0f, 1f));
+        seq.AppendCallback(()=>
+        {
+            action.Invoke();
+        });
+        seq.AppendCallback(() =>
+        {
+            _broadTextObj.SetActive(false);
+        }); 
     }
 }

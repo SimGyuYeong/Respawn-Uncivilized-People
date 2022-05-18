@@ -39,19 +39,19 @@ public class AStarAlgorithm : MonoBehaviour
         NodeArray = new Node[sizeX, sizeY];
 
         //Node 리스트에 타일정보 입력
-        for (i = 0; i < sizeX; i++)
+        for (i = maxPos.y; i >= 0; i--)
         {
-            for (int j = 0; j < sizeY; j++)
+            for (int j = 0; j <= maxPos.x; j++)
             {
                 bool isWall = false;
-                int slot = (56 + i) - j * 8;
+                int slot = (7 - i) * 8 + j;
 
                 if(FightManager.Instance.tileList[slot].transform.childCount >= 2 || FightManager.Instance.isWallList[slot] == true)
                 {
                     isWall = true;
                 }
 
-                NodeArray[i, j] = new Node(isWall, i, j); // 벽여부, x좌표, y좌표
+                NodeArray[j, i] = new Node(isWall, j, i); // 벽여부, x좌표, y좌표
             }
         }
 

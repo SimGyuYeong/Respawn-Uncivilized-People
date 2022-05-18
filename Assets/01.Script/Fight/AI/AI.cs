@@ -42,6 +42,8 @@ public class AI : MonoBehaviour
     //공격대상 오브젝트
     private GameObject _attackObj;
 
+    private Player _attackPlayer;
+
     //행동력
     private int _stamina = 2;
 
@@ -79,6 +81,7 @@ public class AI : MonoBehaviour
     /// <returns></returns>
     private IEnumerator AIMove()
     {
+        _attackPlayer = _attackObj.GetComponent<Player>();
 
         if (_attackObj != gameObject) //공격대상이 본인 오브젝트가 아니라면 (공격대상이 지정됬다면)
         {
@@ -87,13 +90,14 @@ public class AI : MonoBehaviour
             {
                 if (AttackDistanceCheck())
                 {
-                    FightManager.Instance.player.Energy -= Energy;
+                    _attackPlayer.Energy -= Energy;
                     break;
                 }
 
-                if (_pos.x == FightManager.Instance.pPos.x)
+                if (_pos.x == _attackPlayer.Position.x)
                 {
-                    if (_pos.y - FightManager.Instance.pPos.y > 0)
+                    Debug.Log("Y이동");
+                    if (_pos.y - _attackPlayer.Position.y > 0)
                     {
                         if (!FightManager.Instance.ObjCheck(_pos, 'd'))
                             ObjMove(8);
@@ -108,9 +112,8 @@ public class AI : MonoBehaviour
                 }
                 else
                 {
-                    if (_pos.x - FightManager.Instance.pPos.x > 0)
+                    if (_pos.x - _attackPlayer.Position.x > 0)
                     {
-
                         if (!FightManager.Instance.ObjCheck(_pos, 'l'))
                             ObjMove(-1);
                     }
@@ -200,7 +203,7 @@ public class AI : MonoBehaviour
     /// <returns>공격대상 지정 여부</returns>
     private bool AttackDistanceCheck()
     { 
-        float distance = Vector2.Distance(_pos, FightManager.Instance.pPos);
+        float distance = Vector2.Distance(_pos, _attackObj.GetComponent<Player>().Position);
         if (distance <= 1)
             return true;
 
@@ -211,10 +214,23 @@ public class AI : MonoBehaviour
     {
         _attackObj = gameObject;
 
-        float distance = Vector2.Distance(_pos, FightManager.Instance.pPos);
+        float distance = 0;
+        distance = Vector2.Distance(_pos, FightManager.Instance.playerList[0].Position);
         if (distance <= 3)
         {
-            _attackObj = FightManager.Instance.player.gameObject;
+            _attackObj = FightManager.Instance.playerList[0].gameObject;
+        }
+
+        foreach (var p in FightManager.Instance.playerList)
+        {
+            Vector2 pos = p.Position;
+
+            float dis2 = Vector2.Distance(_pos, pos);
+            if(dis2 < distance)
+            {
+                distance = dis2;
+                _attackObj = p.gameObject;
+            }
         }
     }
 }

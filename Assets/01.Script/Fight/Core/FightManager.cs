@@ -38,8 +38,6 @@ public class FightManager : MonoBehaviour
     public List<ObjData> playerDataList = new List<ObjData>();
     public List<ObjData> aiDataList = new List<ObjData>();
 
-    private List<int> _noneEnemyList = new List<int>(); //움직이지 않은 적들 리스트
-
 
     //타일이 생성될 오브젝트 부모, 플레이어 프리팹, 플레이어가 움직이는 애니메이션 오브젝트
     public GameObject content, moveAni;
@@ -48,7 +46,6 @@ public class FightManager : MonoBehaviour
     public AI enemyPrefab;
     public Player playerPrefab;
 
-    public AI ai;
     public Player player;
 
     //현재 플레이어 애니메이션이 작동중인지
@@ -63,7 +60,7 @@ public class FightManager : MonoBehaviour
 
     public List<Tile> tileList = new List<Tile>();
     public List<AI> aiList = new List<AI>();
-    private List<Player> _playerList = new List<Player>();
+    public List<Player> playerList = new List<Player>();
 
     //액션 버튼 오브젝트
     [SerializeField] private GameObject _actionButton;
@@ -131,7 +128,7 @@ public class FightManager : MonoBehaviour
             seq.Join(_player.transform.DOScale(Vector2.one * 0.8f, 0.2f));
             seq.AppendCallback(() => AISpawn());
 
-            _playerList.Add(_player);
+            playerList.Add(_player);
             count++;
         }
         _turnCount = _maxTurnCount;
@@ -204,6 +201,8 @@ public class FightManager : MonoBehaviour
 
             aiList.Add(_ai);
         }
+
+        _aStar.PathFinding();
 
         OnUIChange?.Invoke();
         TurnChange();
@@ -300,6 +299,26 @@ public class FightManager : MonoBehaviour
             }
         }
 
+        return false;
+    }
+
+    /// <summary>
+    /// 플레이어가 움직일 수 있는 상태인지 체크
+    /// </summary>
+    /// <returns>움직일 수 있다면 True, 아니면 False</returns>
+    public bool MoveCheck(Tile tile)
+    {
+        if (turnType == TurnType.Player_Move
+            && isClickPlayer
+            && isIng == false
+            && tile.tile.isWall == false)
+        {
+            if (tile.isAI() == false)
+            {
+                if (DistanceCheck(tile.tile.Position))
+                    return true;
+            }
+        }
         return false;
     }
     #endregion
@@ -406,7 +425,7 @@ public class FightManager : MonoBehaviour
             else if (action == Action.Attack) player.isFight = true; 
 
             bool isNext = true;
-            foreach (var p in _playerList)
+            foreach (var p in playerList)
             {
                 if (!p.isMove)
                 {
@@ -466,7 +485,6 @@ public class FightManager : MonoBehaviour
         Transform moveTrm = _actionButton.transform.Find("Move");
         Transform attackTrm = _actionButton.transform.Find("Attack");
 
-
         TextMeshProUGUI moveText = moveTrm.GetComponentInChildren<TextMeshProUGUI>();
         TextMeshProUGUI fightText = attackTrm.GetComponentInChildren<TextMeshProUGUI>();
 
@@ -525,17 +543,12 @@ public class FightManager : MonoBehaviour
         }
     }
 
-    public void PlayerAttack(int enemyCount)
+    public void PlayerAttack(int aiID)
     {
-        player.Energy -= aiList[enemyCount].Energy;
-        
-        if(_noneEnemyList.Count > 0)
-        {
-            _noneEnemyList.RemoveAt(enemyCount);
-        }
-        
-        Destroy(aiList[enemyCount].gameObject);
-        aiList.RemoveAt(enemyCount);
+        player.Energy -= aiList[aiID].Energy;
+
+        Destroy(aiList[aiID].gameObject);
+        aiList.RemoveAt(aiID);
 
         for(int i = 0; i < aiList.Count; i++)
         {
@@ -567,9 +580,11 @@ public class FightManager : MonoBehaviour
         switch (turnType)
         {
             case TurnType.Wait_Player:
-                Debug.Log("Player Turn");
-                _turnCount = _maxTurnCount;
-                turnType = TurnType.Input_Action;
+                UIManager.Instance.ViewText("Player Turn", () =>
+                {
+                    _turnCount = _maxTurnCount;
+                    turnType = TurnType.Input_Action;
+                });
                 break;
 
             case TurnType.Player_Move:
@@ -579,43 +594,45 @@ public class FightManager : MonoBehaviour
                 break;
 
             case TurnType.Wait_AI:
-                Debug.Log("AI Turn");
-                turnType = TurnType.AI;
-
-                //움직이지 않는 적이 없다면
-                if(_noneEnemyList.Count <= 0)
+                UIManager.Instance.ViewText("Enemy Turn", () =>
                 {
-                    //모든 적들을 움직이지 않는 적 리스트에 다시 넣는다.
-                    for (int i = 0; i < aiList.Count; i++)
-                        _noneEnemyList.Add(i);
-                }
-
-                int _num = Random.Range(0, _noneEnemyList.Count);
-                aiList[_noneEnemyList[_num]].AIMoveStart(); //랜덤으로 지정한 적을 움직인다.
-                _noneEnemyList.RemoveAt(_num); //움직인 적은 움직이지 않은 적 리스트에서 제거
-                if (_noneEnemyList.Count < 1) //모든 적이 움직였다면
-                    _noneEnemyList.Clear(); //움직이지 않은 적 리스트 초기화
-
+                    AITurn();
+                });
                 break;
 
             case TurnType.AI:
                 turn--;
-                StartCoroutine(playerTurn());
+                isIng = false;
+                StartCoroutine(PlayerTurn());
                 break;
         }
     }
 
-    private IEnumerator playerTurn()
+    private void AITurn()
+    {
+        isIng = true;
+        turnType = TurnType.AI;
+
+        _aStar.PathFinding(); //벽, 오브젝트 데이터 리셋
+
+        foreach(var ai in aiList)
+        {
+            ai.AIMoveStart();
+        }
+    }
+
+    private IEnumerator PlayerTurn()
     {
         yield return null;   
         turnType = TurnType.Wait_Player;
 
-        foreach(var p in _playerList)
+        foreach(var p in playerList)
         {
             p.isFight = false;
             p.isMove = false;
         }
 
+        OnUIChange?.Invoke();
         TurnChange();
     }
 
@@ -668,26 +685,6 @@ public class FightManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 플레이어가 움직일 수 있는 상태인지 체크
-    /// </summary>
-    /// <returns>움직일 수 있다면 True, 아니면 False</returns>
-    public bool MoveCheck(Tile tile)
-    {
-        if (turnType == TurnType.Player_Move
-            && isClickPlayer
-            && isIng == false
-            && tile.tile.isWall == false)
-        {
-            if (tile.isAI() == false)
-            {
-                if (DistanceCheck(tile.tile.Position))
-                    return true;
-            }
-        }
-        return false;
-    }
-
     public void ShowUpdateStat(Player _player)
     {
         UIManager.Instance.ShowStatUI(_player.playerName, _player.Energy, _player.info, 1, _player.id);
@@ -697,4 +694,13 @@ public class FightManager : MonoBehaviour
     {
         UIManager.Instance.ShowStatUI(_ai.aiName, _ai.Energy, _ai.info, 2, _ai.id);
     }
+
+    public void TurnStop()
+    {
+        if(turnType == TurnType.Input_Action)
+        {
+            turnType = TurnType.Wait_AI;
+            TurnChange();
+        }
+    }    
 }

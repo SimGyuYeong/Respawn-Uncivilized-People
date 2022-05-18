@@ -74,7 +74,7 @@ public class Tile : MonoBehaviour
     /// </summary>
     private void OnMouseDown()
     {
-        FightManager.Instance.ClickTile(gameObject);     
+        FightManager.Instance.ClickTile(gameObject);
     }
 
     public bool isAI()
