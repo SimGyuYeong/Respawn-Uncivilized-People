@@ -31,6 +31,7 @@ public class FreeTimeText : TextManager
     {
         chatID = _ID;
         lineNumber = 1;
+        textPanelPrefab.SetActive(true);
         textPanelBTN.interactable = true;
         TextTyping?.Invoke();
     }
@@ -55,10 +56,103 @@ public class FreeTimeText : TextManager
 
     public void GoToMainScreen()
     {
-
-
         storyPanel.transform.position = new Vector3(0, 100, 0);
 
         //Typing();
+    }
+
+    IEnumerator ZoomIn()
+    {
+        //textPanelBTN.interactable = false;
+        FreeTimeDirect.Instance.ZoomIn();
+        yield return null;
+    }
+
+    IEnumerator ZoomOut()
+    {
+        FreeTimeDirect.Instance.ZoomOut();
+        textPanelBTN.interactable = true;
+        yield return null;
+    }
+
+    IEnumerator TakeALook()
+    {
+        textPanelBTN.interactable = false;
+        FreeTimeDirect.Instance.LookAround(() =>
+        {
+            SkipText();
+            textPanelBTN.interactable = true;
+        });
+
+        yield return new WaitForSeconds(3f);
+    }
+
+    IEnumerator Walking()
+    {
+        Debug.Log("ascasda");
+        textPanelBTN.interactable = false;
+        //_textPanel.text = string.Format("");
+        //FreeTimeDirect.Instance.FadeIn();
+        FreeTimeDirect.Instance.Walking();
+
+        textPanelObj.SetActive(false);
+        yield return new WaitForSeconds(3f);
+        textPanelObj.SetActive(true);
+        FreeTimeDirect.Instance.FadeOutTextPanel();
+        textPanelBTN.interactable = true;
+        SkipText();
+    }
+
+
+
+    IEnumerator FadeOut()
+    {
+        if (_isEnd == false)
+        {
+            textPanelBTN.interactable = false;
+            FreeTimeDirect.Instance.FadeOut();
+            yield return new WaitForSeconds(1.7f);
+            textPanelBTN.interactable = true;
+            SkipText();
+        }
+
+        else
+        {
+            FreeTimeDirect.Instance.FadeOut();
+            yield return new WaitForSeconds(1.7f);
+        }
+    }
+
+    IEnumerator FadeIn()
+    {
+        if (_isEnd == false)
+        {
+            textPanelBTN.interactable = false;
+            FreeTimeDirect.Instance.FadeIn();
+            yield return new WaitForSeconds(1.7f);
+            textPanelBTN.interactable = true;
+            SkipText();
+        }
+
+        else
+        {
+            FreeTimeDirect.Instance.FadeIn();
+            yield return new WaitForSeconds(1.7f);
+        }
+    }
+
+    IEnumerator GoToMain()
+    {
+        _time++;
+        _isEnd = true;
+        textPanelBTN.interactable = false;
+        FreeTimeDirect.Instance.FadeOutTextPanel();
+        textPanelObj.gameObject.SetActive(false);
+        StartCoroutine(FadeOut());
+        yield return new WaitForSeconds(1f);
+        transform.GetComponentInChildren<FreeTimeText>().GoToMainScreen();
+        yield return new WaitForSeconds(1f);
+        StartCoroutine(FadeIn());
+        transform.GetComponentInChildren<FreeTimeText>().SetButton();
     }
 }

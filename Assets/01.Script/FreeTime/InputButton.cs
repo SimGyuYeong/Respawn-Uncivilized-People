@@ -13,6 +13,8 @@ public class InputButton : ButtonManager
 
     private FreeTimeText _freeTimeText = null;
 
+    private string _timetext;
+
     private void Start()
     {
         _freeTimeText = transform.Find("TextManager").GetComponent<FreeTimeText>();
@@ -28,7 +30,7 @@ public class InputButton : ButtonManager
 
     public void InputSettingButton()
     {
-        settingPanel.transform.DOMoveY(0, 0.3f).SetEase(Ease.InCirc);
+        settingPanel.transform.DOMoveY(0, 0.34f);//.SetEase(Ease.OutBack);
     }
 
     public void InputContinueButton()
@@ -56,17 +58,27 @@ public class InputButton : ButtonManager
     {
         if (isDay) 
         {
-            timeText.SetText($"{weekCount}st Week Day {dayCount} Ante Meridiem");
+            timeText.text = string.Format($"{weekCount}st Week Day {dayCount} Ante Meridiem");
             mainImage.sprite = mainBackgroundImage[0];
             isDay = false; 
         }
-        else 
+        else
         {
-            timeText.SetText($"{weekCount}st Week Day {dayCount} Post Meridiem");
+            timeText.text = string.Format($"{weekCount}st Week Day {dayCount} Post Meridiem");
             mainImage.sprite = mainBackgroundImage[1];
             isDay = true;
             dayCount++;
         }
+    }
+
+    IEnumerator WriteTimeText()
+    {
+        for (int i = 0; i < _timetext.Length; i++)
+        {
+            timeText.text += _timetext[i];
+        }
+
+        yield return null;
     }
 
     IEnumerator ButtonMove()

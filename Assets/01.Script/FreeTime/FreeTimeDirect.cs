@@ -13,7 +13,7 @@ public class FreeTimeDirect : MonoBehaviour
 
     private Camera maincam;
 
-    public Image textpanelImage;
+    private Image textpanelImage;
 
     void Awake()
     {
@@ -27,6 +27,22 @@ public class FreeTimeDirect : MonoBehaviour
         freeTimeText = FindObjectOfType<FreeTimeText>();
     }
 
+    private void Start()
+    {
+        StartCoroutine(Init()); 
+
+        //textpanelImage = freeTimeText.textPanelObj.GetComponent<Image>();
+    }
+    IEnumerator Init()
+    {
+        GameObject g = TextManager.Instance.textPanelObj;
+        while (g == null)
+        {
+            g = TextManager.Instance.textPanelObj;
+            yield return null; 
+        }
+        textpanelImage = TextManager.Instance.textPanelObj.GetComponent<Image>();
+    }
     //public void FadeIn()
     //{
     //    StartCoroutine(Fade());
@@ -56,6 +72,8 @@ public class FreeTimeDirect : MonoBehaviour
 
     public IEnumerator FadeInTextPanel()
     {
+        //Debug.Log("aassdafafsasfbsestmsrsrsrmsrymsmsym");
+        //FreeTimeText.Instance._endAnimationObj.SetActive(false);
         while (textpanelImage.color.a >= 0)
         {
             Color alpha = textpanelImage.color;
@@ -63,7 +81,7 @@ public class FreeTimeDirect : MonoBehaviour
             textpanelImage.color = alpha;
             yield return new WaitForSeconds(0.007f);
         }
-        textpanelImage.gameObject.SetActive(true);
+        textpanelImage.gameObject.SetActive(false);
     }
 
     public void LookAround(Action action = null)
@@ -93,7 +111,7 @@ public class FreeTimeDirect : MonoBehaviour
 
     IEnumerator FadeOutCo()
     {
-        textpanelImage.gameObject.SetActive(true);
+        //textpanelImage.gameObject.SetActive(true);
         while (textpanelImage.color.a <= 1)
         {
             Color alpha = textpanelImage.color;
@@ -101,6 +119,8 @@ public class FreeTimeDirect : MonoBehaviour
             textpanelImage.color = alpha;
             yield return new WaitForSeconds(0.008f);
         }
+        //freeTimeText.textPanelObj.transform.Find("textEnd").gameObject.SetActive(true);
+        textpanelImage.gameObject.SetActive(true);
     }
     
     public void FadeOut()
@@ -136,4 +156,15 @@ public class FreeTimeDirect : MonoBehaviour
         }
     }
 
+    public void ZoomIn()
+    {
+        //StartCoroutine(FadeInTextPanel());
+        freeTimeText.storyPanel.transform.DOScale(1.35f, 1.2f);
+    }
+
+    public void ZoomOut()
+    {
+        freeTimeText.storyPanel.transform.DOScale(1f, 0.9f);
+        //StartCoroutine(FadeOutCo());
+    }
 }
