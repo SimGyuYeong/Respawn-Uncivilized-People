@@ -4181,6 +4181,7 @@ MonoBehaviour:
       m_Calls: []
   _fadeImage: {fileID: 0}
   storyPanel: {fileID: 2091017815}
+  restaurantOutImage: {fileID: 21300000, guid: 66b131ccdb7b8e84b955c5c69dc10d2f, type: 3}
   _istuto: 1
 --- !u!1 &1612995465
 GameObject:
@@ -5379,7 +5380,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: b6cfd5786656044418bb75ad65be4b48, type: 3}
   - {fileID: 21300000, guid: 864054bcd3f85714fafbf454e03ca920, type: 3}
   - {fileID: 21300000, guid: d50e9ab87ff56ee45b64fb828f66380a, type: 3}
-  - {fileID: 21300000, guid: c99ce5377a4752e43927c8cc79659f32, type: 3}
+  - {fileID: 21300000, guid: 40f3b413b1a8f9e49a5cfb4ab1e85c07, type: 3}
   - {fileID: 21300000, guid: 5c66dab265abe5541a600e421b97bc52, type: 3}
   mainBackgroundImage:
   - {fileID: 21300000, guid: 5d8d0afd205d2d448a509b3e6389b267, type: 3}

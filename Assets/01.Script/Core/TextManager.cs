@@ -333,9 +333,9 @@ public class TextManager : MonoBehaviour
 
     public void SkipText() // 텍스트 진행
     {
-        if (backgroundID >= 1) TextSO.backgroundList[backgroundID].gameObject.SetActive(true);
+        //if (backgroundID >= 1) TextSO.backgroundList[backgroundID].gameObject.SetActive(true);
 
-        if (Sentence[chatID][lineNumber, (int)IDType.ImageID] != "" && Sentence[chatID][lineNumber,(int)IDType.ImageID] != null) 
+        if (Sentence[chatID][lineNumber-1, (int)IDType.ImageID] != Sentence[chatID][lineNumber, (int)IDType.ImageID] && Sentence[chatID][lineNumber,(int)IDType.ImageID] != null) 
             ImageSetActive(false);
 
         if (Sentence[chatID][lineNumber+1, (int)IDType.Direct] != "" && Sentence[chatID][lineNumber+1, (int)IDType.Direct] != null)

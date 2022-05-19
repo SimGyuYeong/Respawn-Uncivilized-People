@@ -67,7 +67,7 @@ public class GameManager : MonoBehaviour
         audoSpeedSlider.value = audoSpeedSlider.value * -1;
         audoSpeedSlider.value = TEXT.autoSpeed;
         Debug.Log(PlayerPrefs.GetFloat("auto", 1));
-        bgmSoundManager.PlaySound(_textManager.TextSO.bgmList[0], true);
+        //bgmSoundManager.PlaySound(_textManager.TextSO.bgmList[0], true);
     }
 
     public void Update()

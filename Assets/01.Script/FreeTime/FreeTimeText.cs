@@ -13,6 +13,9 @@ public class FreeTimeText : TextManager
     [SerializeField]
     public GameObject storyPanel;
 
+    [SerializeField]
+    private Sprite restaurantOutImage = null;
+
     private Tutorial_FreeTime _tutorial_FreeTime = null;
 
     public bool _istuto = true;
@@ -126,6 +129,15 @@ public class FreeTimeText : TextManager
         textPanelBTN.interactable = true;
         SkipText();
     }
+
+    //IEnumerator ChangeBackground()
+    //{
+    //    SpriteRenderer _backgroundImage = storyPanel.transform.Find("BackGroundImage").GetComponent<SpriteRenderer>();
+
+    //    _backgroundImage.sprite = restaurantOutImage;
+
+    //    yield return null;
+    //}
 
     IEnumerator FadeOut()
     {
