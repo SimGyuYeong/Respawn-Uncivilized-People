@@ -5,6 +5,7 @@ using UnityEngine.Networking;
 using UnityEngine.UI;
 using System;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class FreeTimeText : TextManager
 {
@@ -22,6 +23,8 @@ public class FreeTimeText : TextManager
 
     private InputButton inputButton = null;
 
+    private int nextCount = 0;
+
     private void Awake()
     {
         StartCoroutine(LoadTextData(URL));
@@ -30,7 +33,7 @@ public class FreeTimeText : TextManager
 
     IEnumerator SetDelay1()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.7f);
 
         _tutorial_FreeTime = transform.Find("Tutorial").GetComponent<Tutorial_FreeTime>();
 
@@ -185,15 +188,26 @@ public class FreeTimeText : TextManager
     IEnumerator GoToMain()
     {
         _time++;
-        _isEnd = true;
-        textPanelBTN.interactable = false;
-        FreeTimeDirect.Instance.FadeOutTextPanel();
-        textPanelObj.gameObject.SetActive(false);
-        StartCoroutine(FadeOut());
-        yield return new WaitForSeconds(0.9f);
-        transform.GetComponentInChildren<FreeTimeText>().GoToMainScreen();
-        yield return new WaitForSeconds(0.9f);
-        StartCoroutine(FadeIn());
-        transform.GetComponentInChildren<FreeTimeText>().SetButton();
+        nextCount++;
+
+        if (nextCount < 2)
+        {
+            _isEnd = true;
+            textPanelBTN.interactable = false;
+            FreeTimeDirect.Instance.FadeOutTextPanel();
+            textPanelObj.gameObject.SetActive(false);
+            StartCoroutine(FadeOut());
+            yield return new WaitForSeconds(0.9f);
+            transform.GetComponentInChildren<FreeTimeText>().GoToMainScreen();
+            yield return new WaitForSeconds(0.9f);
+            StartCoroutine(FadeIn());
+            transform.GetComponentInChildren<FreeTimeText>().SetButton();
+        }
+        else
+        {
+            FightManager.sendChatID = 7;
+            nextCount = 0;
+            SceneManager.LoadScene("Typing");
+        }
     }
 }

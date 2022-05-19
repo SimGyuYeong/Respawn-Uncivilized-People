@@ -105,8 +105,13 @@ public class TextManager : MonoBehaviour
     {
         _textDataSO = GetComponentInChildren<TextDataSave>();
         StartCoroutine(LoadTextData(URL)); // 텍스트 데이터 읽기
+        //Action a = GameManager.Instance.OptionPanelOC(0);
+        //Action a = dataManager.SaveMenuPanelOpen(1);
 
         //textPanelObj = Instantiate(textPanelPrefab, textCanvasTrm);
+        textPanelPrefab.transform.Find("TextOptionButton/Auto").GetComponent<Button>().onClick.AddListener(AutoPlay);
+        //textPanelPrefab.transform.Find("Option").GetComponent<Button>().onClick.AddListener(GameManager.Instance.OptionPanelOC(0));
+       
     }
 
     public void Start()
@@ -350,7 +355,7 @@ public class TextManager : MonoBehaviour
 
     public void SkipText() // 텍스트 진행
     {
-        if (Sentence[chatID][lineNumber-1, (int)IDType.ImageID] != ""/*&& Sentence[chatID][lineNumber,(int)IDType.ImageID] != null*/)
+        if (Sentence[chatID][lineNumber, (int)IDType.ImageID] != "" && Sentence[chatID][lineNumber,(int)IDType.ImageID] != null)
             ImageSetActive(false);
 
         if (Sentence[chatID][lineNumber+1, (int)IDType.Direct] != "" && Sentence[chatID][lineNumber+1, (int)IDType.Direct] != null)
