@@ -111,16 +111,15 @@ public class FreeTimeDirect : MonoBehaviour
 
     IEnumerator FadeOutCo()
     {
-        //textpanelImage.gameObject.SetActive(true);
+        textpanelImage.gameObject.SetActive(true);
         while (textpanelImage.color.a <= 1)
         {
             Color alpha = textpanelImage.color;
-            alpha.a += 0.05f;
+            alpha.a += 0.01f;
             textpanelImage.color = alpha;
-            yield return new WaitForSeconds(0.008f);
+            yield return new WaitForSeconds(0.007f);
         }
         //freeTimeText.textPanelObj.transform.Find("textEnd").gameObject.SetActive(true);
-        textpanelImage.gameObject.SetActive(true);
     }
     
     public void FadeOut()
@@ -152,7 +151,7 @@ public class FreeTimeDirect : MonoBehaviour
         {
             color.a += 0.01f;
             ButtonManager.Instance.fadeImage.color = color;
-            yield return new WaitForSeconds(0.008f);
+            yield return new WaitForSeconds(0.007f);
         }
     }
 

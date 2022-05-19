@@ -65,6 +65,7 @@ public class FreeTimeText : TextManager
     {
         //textPanelBTN.interactable = false;
         FreeTimeDirect.Instance.ZoomIn();
+        //SkipText();
         yield return null;
     }
 
@@ -84,21 +85,22 @@ public class FreeTimeText : TextManager
             textPanelBTN.interactable = true;
         });
 
-        yield return new WaitForSeconds(3f);
+        yield return null;
     }
 
     IEnumerator Walking()
     {
-        Debug.Log("ascasda");
+        //Debug.Log("ascasda");
         textPanelBTN.interactable = false;
         //_textPanel.text = string.Format("");
         //FreeTimeDirect.Instance.FadeIn();
         FreeTimeDirect.Instance.Walking();
 
         textPanelObj.SetActive(false);
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(1.7f);
         textPanelObj.SetActive(true);
         FreeTimeDirect.Instance.FadeOutTextPanel();
+        yield return new WaitForSeconds(0.8f);
         textPanelBTN.interactable = true;
         SkipText();
     }
@@ -111,7 +113,7 @@ public class FreeTimeText : TextManager
         {
             textPanelBTN.interactable = false;
             FreeTimeDirect.Instance.FadeOut();
-            yield return new WaitForSeconds(1.7f);
+            yield return new WaitForSeconds(0.9f);
             textPanelBTN.interactable = true;
             SkipText();
         }
@@ -119,7 +121,7 @@ public class FreeTimeText : TextManager
         else
         {
             FreeTimeDirect.Instance.FadeOut();
-            yield return new WaitForSeconds(1.7f);
+            yield return new WaitForSeconds(0.9f);
         }
     }
 
@@ -129,7 +131,7 @@ public class FreeTimeText : TextManager
         {
             textPanelBTN.interactable = false;
             FreeTimeDirect.Instance.FadeIn();
-            yield return new WaitForSeconds(1.7f);
+            yield return new WaitForSeconds(0.9f);
             textPanelBTN.interactable = true;
             SkipText();
         }
@@ -137,7 +139,7 @@ public class FreeTimeText : TextManager
         else
         {
             FreeTimeDirect.Instance.FadeIn();
-            yield return new WaitForSeconds(1.7f);
+            yield return new WaitForSeconds(0.9f);
         }
     }
 
@@ -149,9 +151,9 @@ public class FreeTimeText : TextManager
         FreeTimeDirect.Instance.FadeOutTextPanel();
         textPanelObj.gameObject.SetActive(false);
         StartCoroutine(FadeOut());
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.9f);
         transform.GetComponentInChildren<FreeTimeText>().GoToMainScreen();
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.9f);
         StartCoroutine(FadeIn());
         transform.GetComponentInChildren<FreeTimeText>().SetButton();
     }

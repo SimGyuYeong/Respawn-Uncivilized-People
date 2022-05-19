@@ -27,7 +27,7 @@ public class ExplanaingText : MonoBehaviour
 
     public void ShowText(string msg)
     {
-        Vector2 position = new Vector2(0, -4);
+        Vector2 position = new Vector2(0, -4.5f);
         _expText.SetText(msg);
         DOTween.Kill(transform);
         if (_seq != null) _seq.Kill();
@@ -40,7 +40,7 @@ public class ExplanaingText : MonoBehaviour
 
     public void CloseText()
     {
-        Vector2 position = new Vector2(0, -7f);
+        Vector2 position = new Vector2(0, -8.6f);
         if (_seq != null) _seq.Kill();
         _seq = DOTween.Sequence();
         //_seq.Append(transform.DOMove(position * 1.1f, 0.08f));
