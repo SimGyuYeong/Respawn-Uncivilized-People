@@ -18,7 +18,7 @@ public class Tutorial_FreeTime : MonoBehaviour
 
     IEnumerator Tutorial_Co()
     {
-        yield return new WaitForSeconds(0.7f);
+        yield return new WaitForSeconds(0.5f);
         _freeTimeText.SetText(5);
         for (int i = 0; i < 4; i++)
         {

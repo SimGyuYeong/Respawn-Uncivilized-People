@@ -15,7 +15,7 @@ public class FreeTimeText : TextManager
 
     private Tutorial_FreeTime _tutorial_FreeTime = null;
 
-    private bool _istuto = true;
+    public bool _istuto = true;
 
     private InputButton inputButton = null;
 
@@ -71,6 +71,18 @@ public class FreeTimeText : TextManager
         //Typing();
     }
 
+    IEnumerator ActiveButton()
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            ButtonManager.Instance.storyButton[i].interactable = true;
+            yield return new WaitForSeconds(0.04f);
+        }
+
+        _istuto = false;
+        GoToMainScreen();
+    }
+
     IEnumerator ZoomIn()
     {
         //textPanelBTN.interactable = false;
@@ -121,7 +133,7 @@ public class FreeTimeText : TextManager
         {
             textPanelBTN.interactable = false;
             FreeTimeDirect.Instance.FadeOut();
-            yield return new WaitForSeconds(0.9f);
+            yield return new WaitForSeconds(1.6f);
             textPanelBTN.interactable = true;
             SkipText();
         }
