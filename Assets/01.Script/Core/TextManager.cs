@@ -222,10 +222,19 @@ public class TextManager : MonoBehaviour
     {
         if (Sentence[chatID][lineNumber, (int)IDType.BackgroundID] != "")
         {
+            int bID = backgroundID;
             backgroundID = Convert.ToInt32(Sentence[chatID][lineNumber, (int)IDType.BackgroundID]) - 1;
+            if(bID!=backgroundID)
+            {
+                TextSO.backgroundList[bID].gameObject.SetActive(true);
+            }
             TextSO.backgroundList[backgroundID].gameObject.SetActive(true);
             //StartCoroutine(GameManager.Instance.FadeIn());
             StartCoroutine(GameManager.Instance.FadeOut());
+        }
+        else
+        {
+            TextSO.backgroundList[backgroundID].gameObject.SetActive(false);
         }
     }
 
@@ -333,8 +342,6 @@ public class TextManager : MonoBehaviour
 
     public void SkipText() // 텍스트 진행
     {
-        //if (backgroundID >= 1) TextSO.backgroundList[backgroundID].gameObject.SetActive(true);
-
         if (Sentence[chatID][lineNumber-1, (int)IDType.ImageID] != Sentence[chatID][lineNumber, (int)IDType.ImageID] && Sentence[chatID][lineNumber,(int)IDType.ImageID] != null) 
             ImageSetActive(false);
 
