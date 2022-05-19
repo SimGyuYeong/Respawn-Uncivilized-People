@@ -511,17 +511,25 @@ MonoBehaviour:
   playerDataList:
   - DName: "A\uBD80\uB300"
     DEnergy: 100
-    DPos: {x: 3, y: 7}
+    DPos: {x: 5, y: 6}
     DInfo: "AI \uBD80\uB300 \uC81C 1\uD615\uD0DC    \uAC00\uC7A5 \uAE30\uBCF8\uC801\uC778
       \uD615\uD0DC\uC758 AI\uBD80\uB300. \uB2E4\uB978 \uBD80\uB300\uB4E4\uC758 \uD615\uD0DC\uC640
       \uBE44\uAD50\uD558\uC5EC \uC0C1\uB300\uC801\uC73C\uB85C \uBE60\uB978 \uAE30\uB3D9\uC131\uC774
       \uC7A5\uC810\uC774\uC9C0\uB9CC \uADFC\uC811\uD574\uC57C\uB9CC \uACF5\uACA9
       \uD560 \uC218 \uC788\uC73C\uB2C8 \uC219\uC9C0\uD560 \uAC83."
   aiDataList:
-  - DName: Type-c
-    DEnergy: 20
-    DPos: {x: 2, y: 5}
-    DInfo: "Type C AI\uC785\uB2C8\uB2E4."
+  - DName: Type A-a
+    DEnergy: 14
+    DPos: {x: 2, y: 6}
+    DInfo: "Type A AI\uC785\uB2C8\uB2E4."
+  - DName: Type A-b
+    DEnergy: 14
+    DPos: {x: 4, y: 4}
+    DInfo: "Type A AI\uC785\uB2C8\uB2E4."
+  - DName: Type A-c
+    DEnergy: 14
+    DPos: {x: 2, y: 3}
+    DInfo: "Type A AI\uC785\uB2C8\uB2E4."
   content: {fileID: 1718551215}
   moveAni: {fileID: 4460019810026274728, guid: 94cd5b94ebda27547838fdb3e82373ac, type: 3}
   tilePrefab: {fileID: 2317601914350064403, guid: 1d6d0f545e3055240bcab4713ac88eaf, type: 3}
@@ -689,7 +697,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32a1f3f510f5fab4d926d25db7f97f73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPos: {x: 1, y: 6}
+  playerPos: {x: 1, y: 7}
   targetPos: {x: 0, y: 0}
   maxPos: {x: 7, y: 7}
   minPos: {x: 0, y: 0}
