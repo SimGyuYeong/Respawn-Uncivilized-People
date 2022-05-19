@@ -123,7 +123,13 @@ public class TextManager : MonoBehaviour
 
         if(FightManager.sendChatID > 3)
         {
-            chatID = 3;
+            chatID = FightManager.sendChatID;
+            FightManager.sendChatID = 0;
+
+            GameManager.Instance.TitlePanel.SetActive(false);
+            GameManager.Instance.Buttons.SetActive(false);
+            StartCoroutine(GameManager.Instance.FadeIn());
+            TextTyping?.Invoke();
         }
     }
 
@@ -343,9 +349,6 @@ public class TextManager : MonoBehaviour
         if (Sentence[chatID][lineNumber, (int)IDType.SFX] != "" && Sentence[chatID][lineNumber, (int)IDType.SFX] != null)
         {
             string clipName = Sentence[chatID][lineNumber, (int)IDType.SFX].Trim();
-            //FreeTimeSFX.instance.PlaySoundClip(_coffeclip);
-            Debug.Log(_coffeclip);
-            FreeTimeSFX.instance.SfxSound.PlaySound(_coffeclip);
         }
 
         if (Sentence[chatID][lineNumber, (int)IDType.Event] != "" && Sentence[chatID][lineNumber, (int)IDType.Event] != null)

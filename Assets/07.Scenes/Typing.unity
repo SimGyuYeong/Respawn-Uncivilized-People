@@ -931,7 +931,7 @@ AudioSource:
   m_GameObject: {fileID: 73219011}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: 8dafcfc761c44c548a42120f675d5d63, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
@@ -1352,7 +1352,7 @@ SpriteRenderer:
   m_Size: {x: 19.2, y: 10.8}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &97045104
@@ -3364,7 +3364,7 @@ AudioSource:
   m_GameObject: {fileID: 445890123}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: 8dafcfc761c44c548a42120f675d5d63, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
@@ -4732,7 +4732,7 @@ MonoBehaviour:
   - {fileID: 1592563531}
   - {fileID: 1544503125}
   imageList:
-  - {fileID: 0}
+  - {fileID: 759012012}
   sfxList: []
   bgmList:
   - {fileID: 8300000, guid: 22bc77700d8db6b4da805315c27d1e9f, type: 3}
