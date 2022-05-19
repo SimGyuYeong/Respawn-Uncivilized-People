@@ -126,11 +126,17 @@ public class TextManager : MonoBehaviour
             chatID = FightManager.sendChatID;
             FightManager.sendChatID = 0;
 
-            GameManager.Instance.TitlePanel.SetActive(false);
-            GameManager.Instance.Buttons.SetActive(false);
-            StartCoroutine(GameManager.Instance.FadeIn());
-            TextTyping?.Invoke();
+            StartCoroutine(SetDelay());
         }
+    }
+
+    IEnumerator SetDelay()
+    {
+        yield return new WaitForSeconds(0.9f);
+        GameManager.Instance.TitlePanel.SetActive(false);
+        GameManager.Instance.Buttons.SetActive(false);
+        StartCoroutine(GameManager.Instance.FadeIn());
+        TextTyping?.Invoke();
     }
 
     protected virtual void ChildStart()
@@ -226,7 +232,7 @@ public class TextManager : MonoBehaviour
             backgroundID = Convert.ToInt32(Sentence[chatID][lineNumber, (int)IDType.BackgroundID]) - 1;
             if(bID!=backgroundID)
             {
-                TextSO.backgroundList[bID].gameObject.SetActive(true);
+                TextSO.backgroundList[bID].gameObject.SetActive(false);
             }
             TextSO.backgroundList[backgroundID].gameObject.SetActive(true);
             //StartCoroutine(GameManager.Instance.FadeIn());
@@ -247,6 +253,10 @@ public class TextManager : MonoBehaviour
         {
             ImageSetActive(true);
         }
+        //else if(Sentence[chatID][lineNumber - 1, (int)IDType.ImageID] != Sentence[chatID][lineNumber, (int)IDType.ImageID])
+        //{
+        //    ImageSetActive(false);
+        //}
     }
 
     /// <summary>
@@ -259,8 +269,6 @@ public class TextManager : MonoBehaviour
             StartCoroutine(LoadTextData(URL));
         }
         _isEnd = false;
-
-
         StartCoroutine(TypingCoroutine());
     }
 
@@ -342,7 +350,7 @@ public class TextManager : MonoBehaviour
 
     public void SkipText() // 텍스트 진행
     {
-        if (Sentence[chatID][lineNumber-1, (int)IDType.ImageID] != Sentence[chatID][lineNumber, (int)IDType.ImageID] && Sentence[chatID][lineNumber,(int)IDType.ImageID] != null) 
+        if (Sentence[chatID][lineNumber-1, (int)IDType.ImageID] != ""/*&& Sentence[chatID][lineNumber,(int)IDType.ImageID] != null*/)
             ImageSetActive(false);
 
         if (Sentence[chatID][lineNumber+1, (int)IDType.Direct] != "" && Sentence[chatID][lineNumber+1, (int)IDType.Direct] != null)
@@ -468,7 +476,7 @@ public class TextManager : MonoBehaviour
         print("따라란");
     }
 
-    IEnumerator GotoFreeTime()
+    IEnumerator GoToFreeTime()
     {
         SceneManager.LoadScene("FreeTime");
         yield return null;

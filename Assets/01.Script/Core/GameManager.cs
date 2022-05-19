@@ -162,7 +162,7 @@ public class GameManager : MonoBehaviour
         TEXT.TextSO.backgroundList[TEXT.backgroundID].gameObject.SetActive(false);
         TitlePanel.SetActive(true);
         Buttons.SetActive(true);
-        bgmSoundManager.PlaySound(_textManager.TextSO.bgmList[0], true);
+        //bgmSoundManager.PlaySound(_textManager.TextSO.bgmList[0], true);
     }
 
     public void InputName()

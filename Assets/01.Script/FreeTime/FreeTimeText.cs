@@ -25,9 +25,16 @@ public class FreeTimeText : TextManager
     private void Awake()
     {
         StartCoroutine(LoadTextData(URL));
+        StartCoroutine(SetDelay1());
+    }
+
+    IEnumerator SetDelay1()
+    {
+        yield return new WaitForSeconds(1f);
+
         _tutorial_FreeTime = transform.Find("Tutorial").GetComponent<Tutorial_FreeTime>();
 
-        if(_istuto)
+        if (_istuto)
         {
             _tutorial_FreeTime.StartTuto();
         }
