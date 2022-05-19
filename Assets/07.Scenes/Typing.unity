@@ -4732,7 +4732,7 @@ MonoBehaviour:
   - {fileID: 1592563531}
   - {fileID: 1544503125}
   imageList:
-  - {fileID: 759012012}
+  - {fileID: 0}
   sfxList: []
   bgmList:
   - {fileID: 8300000, guid: 22bc77700d8db6b4da805315c27d1e9f, type: 3}

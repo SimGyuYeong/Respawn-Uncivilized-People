@@ -13,11 +13,21 @@ public class FreeTimeText : TextManager
     [SerializeField]
     public GameObject storyPanel;
 
+    private Tutorial_FreeTime _tutorial_FreeTime = null;
+
+    private bool _istuto = true;
+
     private InputButton inputButton = null;
 
     private void Awake()
     {
         StartCoroutine(LoadTextData(URL));
+        _tutorial_FreeTime = transform.Find("Tutorial").GetComponent<Tutorial_FreeTime>();
+
+        if(_istuto)
+        {
+            _tutorial_FreeTime.StartTuto();
+        }
     }
 
     protected override void ChildStart()
@@ -104,8 +114,6 @@ public class FreeTimeText : TextManager
         textPanelBTN.interactable = true;
         SkipText();
     }
-
-
 
     IEnumerator FadeOut()
     {
