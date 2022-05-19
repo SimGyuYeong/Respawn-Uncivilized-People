@@ -123,7 +123,13 @@ public class TextManager : MonoBehaviour
 
         if(FightManager.sendChatID > 3)
         {
-            chatID = 3;
+            chatID = FightManager.sendChatID;
+            FightManager.sendChatID = 0;
+
+            GameManager.Instance.TitlePanel.SetActive(false);
+            GameManager.Instance.Buttons.SetActive(false);
+            StartCoroutine(GameManager.Instance.FadeIn());
+            TextTyping?.Invoke();
         }
     }
 
