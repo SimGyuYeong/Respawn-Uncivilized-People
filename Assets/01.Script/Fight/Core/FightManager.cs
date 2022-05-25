@@ -542,6 +542,9 @@ public class FightManager : MonoBehaviour
         if (value == Action.Attack && AttackCheck(pPos) == false)
             return;
 
+        if (value == Action.Move && player.isMove == true)
+            return;
+
         _actionButton.SetActive(false);
         switch(value)
         {

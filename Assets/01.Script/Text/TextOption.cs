@@ -8,6 +8,13 @@ public class TextOption : MonoBehaviour
 
     private float _defaultChatSpeed = 0;
 
+    public DataManager data;
+
+    private void Awake()
+    {
+        data = FindObjectOfType<DataManager>();
+    }
+
     /// <summary>
     /// 대사록 보기
     /// </summary>
@@ -31,5 +38,25 @@ public class TextOption : MonoBehaviour
         {
             TextManager.Instance.chatSpeed = _defaultChatSpeed;
         }
+    }
+
+    public void SavePanelShow()
+    {
+        data.SaveMenuPanelOpen(1);
+    }
+
+    public void AutoSave()
+    {
+        data.SaveMenuPanelOpen(0);
+    }
+
+    public void LoadPanelShow()
+    {
+        data.SaveMenuPanelOpen(2);
+    }
+
+    public void AutoLoad()
+    {
+        data.SaveMenuPanelOpen(3);
     }
 }
