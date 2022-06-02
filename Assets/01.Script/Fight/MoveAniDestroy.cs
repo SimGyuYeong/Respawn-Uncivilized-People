@@ -4,15 +4,8 @@ using UnityEngine;
 
 public class MoveAniDestroy : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    void Destroy()
     {
-        StartCoroutine(destroy());
-    }
-
-    IEnumerator destroy()
-    {
-        yield return new WaitForSeconds(0.9f);
         Destroy(gameObject);
     }
 }

@@ -1,5 +1,6 @@
 using DG.Tweening;
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,12 +18,14 @@ public class UIManager : MonoBehaviour
     private GameObject _aiStatusUI;
 
     [SerializeField] GameObject turnstopUI;
-    private TextMeshProUGUI _turnstopText;
+    public Image _turnstopObj;
     public bool isEmphasis = false;
 
     private Text _goalText;
 
     [SerializeField] private GameObject _broadTextObj;
+    public Image background;
+    public Image backgroundGray;
     private TextMeshProUGUI _broadText;
 
     private void Awake()
@@ -30,8 +33,6 @@ public class UIManager : MonoBehaviour
         _goalText = goalUI.transform.GetComponentInChildren<Text>();
 
         _broadText = _broadTextObj.GetComponent<TextMeshProUGUI>();
-
-        _turnstopText = turnstopUI.GetComponentInChildren<TextMeshProUGUI>();
     }
 
     public void UpdateTurnText()
@@ -94,21 +95,49 @@ public class UIManager : MonoBehaviour
     public void ViewText(string text, Action action = null)
     {
         _broadTextObj.SetActive(true);
+        background.gameObject.SetActive(true);
+        backgroundGray.gameObject.SetActive(true);
+        backgroundGray.DOFade(0.4f, 0.2f);
 
         _broadText.text = text;
-        
+
         Sequence seq = DOTween.Sequence();
-        seq.Append(_broadText.DOFade(1f, 1f));
-        seq.AppendInterval(0.5f);
-        seq.Append(_broadText.DOFade(0f, 1f));
-        seq.AppendCallback(()=>
-        {
-            action?.Invoke();
-        });
+        seq.AppendCallback(() => StartCoroutine(TextShow(action)));
+        seq.Append(background.gameObject.transform.DOScale(Vector3.one * 1.5f, 0));
+        seq.Append(background.DOFade(1, 0.2f));
+        seq.Join(background.gameObject.transform.DOScale(Vector3.one, 0.2f));
+    }
+
+    IEnumerator TextShow(Action action)
+    {
+        yield return new WaitForSeconds(0.1f);
+        Sequence seq = DOTween.Sequence();
+        seq.Append(_broadText.gameObject.transform.DOScale(Vector3.one * 1.3f, 0));
+        seq.Append(_broadText.DOFade(1, 0.2f));
+        seq.Join(_broadText.gameObject.transform.DOScale(Vector3.one, 0.2f));
+        seq.AppendInterval(1f);
+
+        //사라지는거
+        seq.AppendCallback(() => StartCoroutine(BackHide(action)));
+        seq.Append(_broadText.gameObject.transform.DOScale(Vector3.one * 1.3f, 0.2f));
+        seq.Join(_broadText.DOFade(0, 0.2f));
+        
+    }
+
+    IEnumerator BackHide(Action action)
+    {
+        yield return new WaitForSeconds(0.1f);
+        Sequence seq = DOTween.Sequence();
+        seq.Append(background.gameObject.transform.DOScale(Vector3.one * 1.3f, 0.2f));
+        seq.Join(background.DOFade(0, 0.2f));
+        seq.Append(backgroundGray.DOFade(0, 0.2f));
         seq.AppendCallback(() =>
         {
+            action?.Invoke();
             _broadTextObj.SetActive(false);
-        }); 
+            background.gameObject.SetActive(false);
+            backgroundGray.gameObject.SetActive(false);
+        });
     }
 
     public void ShowInfoUI(bool isActive)
@@ -121,14 +150,15 @@ public class UIManager : MonoBehaviour
         isEmphasis = true;
 
         Sequence seq = DOTween.Sequence();
-        seq.Append(_turnstopText.transform.DOScale(new Vector2(1.2f, 1.2f), 0.3f));
-        seq.Append(_turnstopText.transform.DOScale(new Vector2(1f, 1f), 0.3f));
+        seq.Append(_turnstopObj.transform.DOScale(Vector3.one * 1.5f, 1f));
+        seq.Join(_turnstopObj.DOFade(0, 1f));
         seq.AppendInterval(0.5f);
         seq.SetLoops(-1);
     }
 
     public void TurnstopEmphasisStop()
     {
+        DOTween.Rewind(_turnstopObj);
         DOTween.KillAll();
     }
 }
