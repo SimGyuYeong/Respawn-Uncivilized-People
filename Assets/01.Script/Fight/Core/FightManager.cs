@@ -40,8 +40,8 @@ public class FightManager : MonoBehaviour
     }
     #endregion
 
-    public List<ObjData> playerDataList = new List<ObjData>();
-    public List<ObjData> aiDataList = new List<ObjData>();
+    public List<PlayerData> playerDataList = new List<PlayerData>();
+    public List<AIData> aiDataList = new List<AIData>();
 
 
     //타일이 생성될 오브젝트 부모, 플레이어 프리팹, 플레이어가 움직이는 애니메이션 오브젝트
@@ -129,10 +129,10 @@ public class FightManager : MonoBehaviour
         int count = 0;
         foreach (var p in playerDataList)
         {
-            int slot = Mathf.FloorToInt((7 - p.DPos.y) * 8 + p.DPos.x);
+            int slot = Mathf.FloorToInt((7 - p.position.y) * 8 + p.position.x);
 
             var _player = Instantiate(playerPrefab, tileList[slot].transform);
-            _player.DataSet(count, p);
+            _player.Init(count, p);
             _maxTurnCount += 2;
 
             _player.transform.localScale = Vector2.one * 1.5f;
@@ -156,12 +156,12 @@ public class FightManager : MonoBehaviour
         int count = 0;
         foreach(var ai in aiDataList)
         {
-            int slot = Mathf.FloorToInt((7 - ai.DPos.y) * 8 + ai.DPos.x);
+            int slot = Mathf.FloorToInt((7 - ai.position.y) * 8 + ai.position.x);
 
             var _ai = aiList[count];
 
             _ai.gameObject.SetActive(true);
-            _ai.DataSet(count, ai);
+            _ai.Init(count, ai);
 
             _ai.transform.localScale = Vector2.one * 1.5f;
 
@@ -208,7 +208,7 @@ public class FightManager : MonoBehaviour
 
         foreach(var ai in aiDataList)
         {
-            int slot = Mathf.FloorToInt((7 - ai.DPos.y) * 8 + ai.DPos.x);
+            int slot = Mathf.FloorToInt((7 - ai.position.y) * 8 + ai.position.x);
 
             var _ai = Instantiate(enemyPrefab, tileList[slot].transform);
             _ai.gameObject.SetActive(false);
@@ -419,10 +419,10 @@ public class FightManager : MonoBehaviour
         {
             var obj = Instantiate(moveAni);
             obj.transform.position = new Vector2(_finalNodeList[i].x, _finalNodeList[i].y);
-            player.Energy -= 2;
+            player.DurabilityPoint -= 2;
             yield return new WaitForSeconds(0.2f);
         }
-        player.Energy += 2;
+        player.DurabilityPoint += 2;
         player.Position = tPos;
         player.gameObject.SetActive(true);
         OnUIChange?.Invoke();
@@ -440,33 +440,26 @@ public class FightManager : MonoBehaviour
         isIng = false;
         if (_turnCount > 0)
         {
-            if(action == Action.Move) player.isMove = true;
-            else if (action == Action.Attack) player.isFight = true; 
-
-            bool isNext = true;
-            foreach (var p in playerList)
+            if (action == Action.Move)
             {
-                if (!p.isMove)
+                player.isMove = true;
+                if (player.isFight == false && AttackCheck(player.IPos))
                 {
-                    isNext = false;
-                }
-                else if (!p.isFight)
-                {
-                    if (AttackCheck(p.Position))
-                    {
-                        isNext = false;
-                    }
+                    return;
                 }
             }
-
-            if(isNext == false)
+            else if (action == Action.Attack)
             {
-                turnType = TurnType.Input_Action;
-                return;
+                player.isFight = true;
+                if(player.isMove == false)
+                {
+                    return;
+                }
             }
-                
         }
 
+        turnType = TurnType.Input_Action;
+        _uiManager.TurnstopEmphasis();
         TurnChange();
     }
 
@@ -567,7 +560,7 @@ public class FightManager : MonoBehaviour
 
     public void PlayerAttack(int aiID)
     {
-        player.Energy -= aiList[aiID].Energy;
+        player.DurabilityPoint -= aiList[aiID].InfluencePoint;
 
         Destroy(aiList[aiID].gameObject);
         aiList.RemoveAt(aiID);
@@ -720,12 +713,12 @@ public class FightManager : MonoBehaviour
 
     public void ShowUpdateStat(Player _player)
     {
-        _uiManager.ShowStatUI(_player.playerName, _player.Energy, _player.info, 1, _player.id);
+        _uiManager.ShowPlayerStatusUI(_player);
     }
 
     public void ShowUpdateStat(AI _ai)
     {
-        _uiManager.ShowStatUI(_ai.aiName, _ai.Energy, _ai.info, 2, _ai.id);
+        _uiManager.ShowAIStatusUI(_ai);
     }
 
     public void TurnStop()
@@ -733,6 +726,7 @@ public class FightManager : MonoBehaviour
         if(turnType == TurnType.Input_Action)
         {
             turnType = TurnType.Wait_AI;
+            _uiManager.TurnstopEmphasisStop();
             TurnChange();
         }
     }

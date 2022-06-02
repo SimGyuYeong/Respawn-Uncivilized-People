@@ -65,7 +65,10 @@ public class Tile : MonoBehaviour
         if(_isShowUI)
         {
             _isShowUI = false;
-            FightManager.Instance.UI.HideStatUI();
+            if (isPlayer())
+                FightManager.Instance.UI.HidePlayerStatusUI();
+            else
+                FightManager.Instance.UI.HideAIStatusUI();
         }
     }
 

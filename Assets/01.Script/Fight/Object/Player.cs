@@ -3,21 +3,48 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+[System.Serializable]
+public class PlayerData
+{
+    public string name;
+    [Range(0, 100)]
+    public int durabilityPoint;
+    [Range(0, 100)]
+    public int kineticPoint;
+    public Vector2Int position;
+    public string info;
+}
+
 public class Player : MonoBehaviour
 {
     public string playerName;
 
-    private int _maxEnergy = 0;
-    private int _energy = 100;
-    public int Energy
+    private int _maxDurabilityPoint = 0;
+    public int MaxDurabilityPoint => _maxDurabilityPoint;
+    private int _durabilityPoint = 100;
+    public int DurabilityPoint
     {
-        get => _energy;
+        get => _durabilityPoint;
         set
         {
-            _energy = value;
-            if (_energy > _maxEnergy) _energy = _maxEnergy;
-            if (_energy < 0) _energy = 0;
-            transform.GetComponentInChildren<TextMeshProUGUI>().text = _energy.ToString();
+            _durabilityPoint = value;
+            if (_durabilityPoint > _maxDurabilityPoint) _durabilityPoint = _maxDurabilityPoint;
+            if (_durabilityPoint < 0) _durabilityPoint = 0;
+            transform.GetComponentInChildren<TextMeshProUGUI>().text = _durabilityPoint.ToString();
+        }
+    }
+
+    private int _maxKineticPoint = 0;
+    public int MaxKineticPoint => _maxKineticPoint;
+    private int _kineticPoint = 100;
+    public int KineticPoint
+    {
+        get => _kineticPoint;
+        set
+        {
+            _kineticPoint = value;
+            if (_kineticPoint > _maxKineticPoint) _kineticPoint = _maxKineticPoint;
+            if (_kineticPoint < 0) _kineticPoint = 0;
         }
     }
 
@@ -43,13 +70,15 @@ public class Player : MonoBehaviour
     public Vector2Int IPos => new Vector2Int((int)_pos.x, (int)_pos.y);
     public string info;
 
-    public void DataSet(int _id, ObjData pData)
+    public void Init(int _id, PlayerData pData)
     {
         id = _id;
-        playerName = pData.DName;
-        Position = pData.DPos;
-        info = pData.DInfo;
-        _maxEnergy = pData.DEnergy;
-        _energy = pData.DEnergy;
+        playerName = pData.name;
+        Position = pData.position;
+        info = pData.info;
+        _maxDurabilityPoint = pData.durabilityPoint;
+        _durabilityPoint = pData.durabilityPoint;
+        _maxKineticPoint = pData.kineticPoint;
+        _kineticPoint = pData.kineticPoint;
     }
 }

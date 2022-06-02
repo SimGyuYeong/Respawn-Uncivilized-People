@@ -9,24 +9,29 @@ public class UIManager : MonoBehaviour
     [SerializeField] Text turnText;
 
     public GameObject infoUI;
-    [SerializeField] GameObject tileUI;
     [SerializeField] GameObject goalUI;
 
-    private Text _energyText;
-    private Text _goalText;
+    [SerializeField]
+    private GameObject _playerStatusUI;
+    [SerializeField]
+    private GameObject _aiStatusUI;
 
-    public Color aiColor;
-    public Color playerColor;
+    [SerializeField] GameObject turnstopUI;
+    private TextMeshProUGUI _turnstopText;
+    public bool isEmphasis = false;
+
+    private Text _goalText;
 
     [SerializeField] private GameObject _broadTextObj;
     private TextMeshProUGUI _broadText;
 
     private void Awake()
     {
-        _energyText = tileUI.transform.GetComponentInChildren<Text>();
         _goalText = goalUI.transform.GetComponentInChildren<Text>();
 
         _broadText = _broadTextObj.GetComponent<TextMeshProUGUI>();
+
+        _turnstopText = turnstopUI.GetComponentInChildren<TextMeshProUGUI>();
     }
 
     public void UpdateTurnText()
@@ -36,6 +41,7 @@ public class UIManager : MonoBehaviour
 
     public void UpdateGoalUI()
     {
+        _goalText.transform.DORewind();
         Sequence seq = DOTween.Sequence();
         seq.Append(goalUI.transform.GetChild(3).transform.DOScaleX((float)FightManager.Instance.aiList.Count / 3, 1.5f));
         seq.Append(_goalText.transform.DOShakeScale(0.4f, 0.7f, 5));
@@ -45,45 +51,44 @@ public class UIManager : MonoBehaviour
         });
     }
 
-    public void UpdateEnergyUI(float energy)
+    public void ShowPlayerStatusUI(Player p)
     {
-        Sequence seq = DOTween.Sequence();
-        seq.Append(tileUI.transform.GetChild(3).transform.DOScaleX(energy / 100, 1.5f));
-        seq.Append(_energyText.transform.DOShakeScale(0.4f, 0.7f, 5));
-        seq.AppendCallback(() =>
-        {
-            _energyText.text = energy.ToString();
-        });
+        _playerStatusUI.SetActive(true);
+
+        _playerStatusUI.transform.Find("Name").GetComponent<Text>().text = p.playerName;
+        _playerStatusUI.transform.Find("Info").GetComponent<TextMeshProUGUI>().text = p.info;
+
+        GameObject durabilityBar = _playerStatusUI.transform.Find("DurabilityPoint").gameObject;
+        GameObject kineticPoint = _playerStatusUI.transform.Find("KineticPoint").gameObject;
+
+        durabilityBar.transform.Find("valueText").GetComponent<Text>().text = p.DurabilityPoint.ToString();
+        kineticPoint.transform.Find("valueText").GetComponent<Text>().text = p.KineticPoint.ToString();
+
+        durabilityBar.transform.DOScaleX((float)p.DurabilityPoint / p.MaxDurabilityPoint, 0);
+        kineticPoint.transform.DOScaleX((float)p.KineticPoint / p.MaxKineticPoint, 0);
     }
 
-    public void ShowStatUI(string name, int energy, string info, int type, int id)
+    public void ShowAIStatusUI(AI ai)
     {
-        tileUI.SetActive(true);
-        int maxEnergy = 0;
-
-        if (type == 1)
-        {
-            tileUI.GetComponent<Image>().color = playerColor;
-            maxEnergy = FightManager.Instance.playerDataList[id].DEnergy;
-        }
-        else if(type == 2)
-        {
-            tileUI.GetComponent<Image>().color = aiColor;
-            maxEnergy = FightManager.Instance.aiDataList[id].DEnergy;
-        }
-
-        tileUI.transform.Find("Name").GetComponent<Text>().text = name;
-        tileUI.transform.Find("Energy").GetComponent<Text>().text = energy.ToString();
-        tileUI.transform.Find("Info").GetComponent<TextMeshProUGUI>().text = info;
-
         
-        tileUI.transform.Find("Bar").DOScaleX((float)energy / maxEnergy, 0);
-        _energyText.text = energy.ToString();
+        _aiStatusUI.SetActive(true);
+
+        _aiStatusUI.transform.Find("Name").GetComponent<Text>().text = ai.aiName;
+        _aiStatusUI.transform.Find("Info").GetComponent<TextMeshProUGUI>().text = ai.info;
+
+        GameObject influenceBar = _aiStatusUI.transform.Find("InfluencePoint").gameObject;
+        influenceBar.transform.Find("valueText").GetComponent<Text>().text = ai.InfluencePoint.ToString();
+        influenceBar.transform.DOScaleX((float)ai.InfluencePoint / ai.MaxInfluencePoint, 0);
     }
 
-    public void HideStatUI()
+    public void HidePlayerStatusUI()
     {
-        tileUI.SetActive(false);
+        _playerStatusUI.SetActive(false);
+    }
+
+    public void HideAIStatusUI()
+    {
+        _aiStatusUI.SetActive(false);
     }
 
     public void ViewText(string text, Action action = null)
@@ -109,5 +114,21 @@ public class UIManager : MonoBehaviour
     public void ShowInfoUI(bool isActive)
     {
         infoUI.SetActive(isActive);
+    }
+
+    public void TurnstopEmphasis()
+    {
+        isEmphasis = true;
+
+        Sequence seq = DOTween.Sequence();
+        seq.Append(_turnstopText.transform.DOScale(new Vector2(1.2f, 1.2f), 0.3f));
+        seq.Append(_turnstopText.transform.DOScale(new Vector2(1f, 1f), 0.3f));
+        seq.AppendInterval(0.5f);
+        seq.SetLoops(-1);
+    }
+
+    public void TurnstopEmphasisStop()
+    {
+        DOTween.KillAll();
     }
 }

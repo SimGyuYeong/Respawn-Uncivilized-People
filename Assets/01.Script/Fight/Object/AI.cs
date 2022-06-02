@@ -4,24 +4,35 @@ using UnityEngine;
 using DG.Tweening;
 using TMPro;
 
+[System.Serializable]
+public class AIData
+{
+    public string name;
+    [Range(0, 100)]
+    public int influencePoint;
+    public Vector2Int position;
+    public string info;
+}
+
 public class AI : MonoBehaviour
 {
     public string aiName;
     public int id;
 
-    private int _maxEnergy;
-    private int _energy;
-    public int Energy
+    private int _maxInfluencePoint;
+    public int MaxInfluencePoint => _maxInfluencePoint;
+    private int _influence;
+    public int InfluencePoint
     {
-        get => _energy;
+        get => _influence;
         set
         {
-            _energy = value;
+            _influence = value;
             
-            if (_energy > _maxEnergy) _energy = _maxEnergy;
-            if (_energy < 0) _energy = 0;
+            if (_influence > _maxInfluencePoint) _influence = _maxInfluencePoint;
+            if (_influence < 0) _influence = 0;
             
-            transform.GetComponentInChildren<TextMeshProUGUI>().text = _energy.ToString();
+            transform.GetComponentInChildren<TextMeshProUGUI>().text = _influence.ToString();
         }
     }
     public string info;
@@ -56,14 +67,14 @@ public class AI : MonoBehaviour
     //AI 상태 초기설정
     private AI_STATE _state = AI_STATE.WAIT_L;
 
-    public void DataSet(int _id, ObjData aData)
+    public void Init(int _id, AIData aData)
     {
         id = _id;
-        aiName = aData.DName;
-        Position = aData.DPos;
-        info = aData.DInfo;
-        _maxEnergy = aData.DEnergy;
-        Energy = aData.DEnergy;
+        aiName = aData.name;
+        Position = aData.position;
+        info = aData.info;
+        _maxInfluencePoint = aData.influencePoint;
+        InfluencePoint = aData.influencePoint;
     }
 
     /// <summary>
@@ -90,7 +101,7 @@ public class AI : MonoBehaviour
             {
                 if (AttackDistanceCheck())
                 {
-                    _attackPlayer.Energy -= Energy;
+                    _attackPlayer.DurabilityPoint -= InfluencePoint;
                     break;
                 }
 
