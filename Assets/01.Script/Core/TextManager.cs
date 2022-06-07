@@ -28,9 +28,7 @@ public class TextManager : MonoBehaviour
     protected Button textPanelBTN;
 
     [SerializeField] protected GameObject _selectButton;
-    public GameObject[] background; // 게임 배경화면 배열
-    public GameObject[] image;    // 추가로 띄워둘 이미지 
-    public GameObject _endAnimationObj; // 텍스트 끝나면 텍스트 패널 오른쪽 아래에서 뛰옹뛰옹 뱅글뱅글 하는 애
+    public GameObject endAnimationObj; // 텍스트 끝나면 텍스트 패널 오른쪽 아래에서 뛰옹뛰옹 뱅글뱅글 하는 애
     [SerializeField] protected float shakeTime = 0.13f;
     [SerializeField] protected float shakestr = 0;
     [SerializeField] protected GameObject textlogPrefab;
@@ -120,7 +118,7 @@ public class TextManager : MonoBehaviour
 
         _textPanel = textPanelObj.transform.Find("text").GetComponent<TextMeshPro>();
         textPanelBTN = textPanelObj.transform.Find("Button").GetComponent<Button>();
-        _endAnimationObj = textPanelObj.transform.Find("textEnd").gameObject;
+        endAnimationObj = textPanelObj.transform.Find("textEnd").gameObject;
 
         textPanelBTN.onClick.AddListener(() => SkipTextClick());
         textPanelObj.SetActive(false);
@@ -284,7 +282,7 @@ public class TextManager : MonoBehaviour
     public IEnumerator TypingCoroutine()
     {
         textPanelObj.SetActive(true);
-        if (!isAuto) _endAnimationObj.SetActive(false);
+        if (!isAuto) endAnimationObj.SetActive(false);
 
         isTyping = true;
         string pName = Sentence[chatID][lineNumber, (int)IDType.CharacterName];
@@ -319,7 +317,7 @@ public class TextManager : MonoBehaviour
         }
         ///↓↓↓ 타이핑 끝난 후 실행
 
-        if (!isAuto) _endAnimationObj.SetActive(true);
+        if (!isAuto) endAnimationObj.SetActive(true);
         isTyping = false;
 
         GameObject tl = Instantiate(textlogPrefab, textlogView);
@@ -398,7 +396,7 @@ public class TextManager : MonoBehaviour
                     backgroundID = Convert.ToInt32(Sentence[chatID][lineNumber, (int)IDType.BackgroundID]) - 1;
                     TextSO.backgroundList[backgroundID].SetActive(true);
                 }
-                _endAnimationObj.SetActive(false);
+                endAnimationObj.SetActive(false);
                 SelectOpen();
                 return;
             }
@@ -420,7 +418,7 @@ public class TextManager : MonoBehaviour
             SkipText();
         }
  
-        _endAnimationObj.SetActive(false);
+        endAnimationObj.SetActive(false);
     }
 
     public void SelectOpen()
