@@ -615,6 +615,7 @@ public class FightManager : MonoBehaviour
                 break;
 
             case TurnType.Wait_AI:
+                _actionButton.SetActive(false);
                 _aiMoveCount = aiList.Count;
                 _uiManager.ViewText("Enemy Turn", () =>
                 {
@@ -656,10 +657,23 @@ public class FightManager : MonoBehaviour
         {
             p.isFight = false;
             p.isMove = false;
+            if(p.DurabilityPoint == 0)
+            {
+                Destroy(p.gameObject);
+                playerList.Remove(p);
+            }
         }
 
-        OnUIChange?.Invoke();
-        TurnChange();
+        Debug.Log(playerList.Count);
+        if(playerList.Count == 0)
+        {
+            StartCoroutine(Defeat());
+        }
+        else
+        {
+            OnUIChange?.Invoke();
+            TurnChange();
+        }
     }
 
     public void ClickTile(GameObject tileObj)

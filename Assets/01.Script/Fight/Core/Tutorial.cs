@@ -105,7 +105,7 @@ public class Tutorial : MonoBehaviour
     {
         if(_isTyping)
         {
-            DOTween.KillAll();
+            _text.DOKill();
 
             _text.text = _tutorialText[_number];
             _textEndObj.SetActive(true);
@@ -116,8 +116,6 @@ public class Tutorial : MonoBehaviour
             _number++;
             if(_number >= _lineSize - 1)
             {
-                DOTween.KillAll();
-
                 Sequence seq = DOTween.Sequence();
                 seq.Append(textPanel.transform.DOLocalMoveY(-700f, 1f));
                 seq.AppendCallback(() =>

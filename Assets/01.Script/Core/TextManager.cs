@@ -109,7 +109,7 @@ public class TextManager : MonoBehaviour
         //Action a = dataManager.SaveMenuPanelOpen(1);
 
         //textPanelObj = Instantiate(textPanelPrefab, textCanvasTrm);
-        textPanelPrefab.transform.Find("TextOptionButton/Auto").GetComponent<Button>().onClick.AddListener(AutoPlay);
+        textPanelPrefab.transform.Find("TextOptionButton/Auto").GetComponent<TextPanelButton>().ButtonPress.AddListener(AutoPlay);
         //textPanelPrefab.transform.Find("Option").GetComponent<Button>().onClick.AddListener(GameManager.Instance.OptionPanelOC(0));
        
     }
@@ -398,7 +398,7 @@ public class TextManager : MonoBehaviour
                     backgroundID = Convert.ToInt32(Sentence[chatID][lineNumber, (int)IDType.BackgroundID]) - 1;
                     TextSO.backgroundList[backgroundID].SetActive(true);
                 }
-                textPanelObj.SetActive(false);
+                _endAnimationObj.SetActive(false);
                 SelectOpen();
                 return;
             }
@@ -425,7 +425,7 @@ public class TextManager : MonoBehaviour
 
     public void SelectOpen()
     {
-        for (int i = 6; i < Convert.ToInt32(Sentence[chatID][lineNumber, 19]); i++)
+        for (int i = (int)IDType.Event+1; i < Convert.ToInt32(Sentence[chatID][lineNumber, 19]); i += 2)
         {
             select.Add(Sentence[chatID][lineNumber, i]);
             GameObject button = Instantiate(_selectButton, selectPanel);
@@ -433,6 +433,10 @@ public class TextManager : MonoBehaviour
             selectText.text = Sentence[chatID][lineNumber, i];
             select.Add(Sentence[chatID][lineNumber, ++i]);
             button.SetActive(true);
+            button.GetComponent<Button>().onClick.AddListener(() =>
+            {
+                Select(button);
+            });
         }
         selectPanel.gameObject.SetActive(true);
     }
@@ -446,7 +450,6 @@ public class TextManager : MonoBehaviour
                 int num = (i - 1) * 2;
                 chatID = Convert.ToInt32(select[num + 1]);
                 selectPanel.gameObject.SetActive(false);
-                _textPanel.gameObject.SetActive(true);
                 
                 lineNumber = 1;
                 TextTyping?.Invoke();
