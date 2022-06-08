@@ -27,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4053891988606985858}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 871.8, y: -90.0899, z: -256}
+  m_LocalPosition: {x: 871.8, y: -90.0899, z: 0}
   m_LocalScale: {x: 2, y: 1.5, z: 2}
   m_Children: []
   m_Father: {fileID: 4053891989768110735}
@@ -105,8 +105,7 @@ GameObject:
   - component: {fileID: 4053891988853983373}
   - component: {fileID: 4053891988853983410}
   - component: {fileID: 4053891988853983411}
-  - component: {fileID: 5819767624543301821}
-  - component: {fileID: 5878366167849867939}
+  - component: {fileID: 369767393202761541}
   m_Layer: 5
   m_Name: Load
   m_TagString: Untagged
@@ -175,33 +174,7 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "\uBD88\uB7EC\uC624\uAE30"
---- !u!61 &5819767624543301821
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4053891988853983374}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 120, y: 50}
-  m_EdgeRadius: 0
---- !u!114 &5878366167849867939
+--- !u!114 &369767393202761541
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -210,24 +183,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4053891988853983374}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: adc15f45132254b4995a479a072604b7, type: 3}
+  m_Script: {fileID: 11500000, guid: 3319c4a98e28fd644aaddcc49654e139, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ButtonPress:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4053891989702694286}
-        m_TargetAssemblyTypeName: TextOption, Assembly-CSharp
-        m_MethodName: LoadPanelShow
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &4053891988922675953
 GameObject:
   m_ObjectHideFlags: 0
@@ -362,8 +320,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 450
-  m_fontSizeBase: 450
+  m_fontSize: 300
+  m_fontSizeBase: 300
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 0
@@ -419,7 +377,7 @@ GameObject:
   - component: {fileID: 4053891988935813044}
   - component: {fileID: 4053891988935813045}
   - component: {fileID: 8620521802679722268}
-  - component: {fileID: 5817711790650082973}
+  - component: {fileID: 1759809979458816231}
   m_Layer: 5
   m_Name: Auto
   m_TagString: Untagged
@@ -514,7 +472,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 120, y: 50}
   m_EdgeRadius: 0
---- !u!114 &5817711790650082973
+--- !u!114 &1759809979458816231
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -523,12 +481,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4053891988935813040}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: adc15f45132254b4995a479a072604b7, type: 3}
+  m_Script: {fileID: 11500000, guid: 3319c4a98e28fd644aaddcc49654e139, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ButtonPress:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &4053891989424289908
 GameObject:
   m_ObjectHideFlags: 0
@@ -672,8 +627,7 @@ GameObject:
   - component: {fileID: 4053891989626832335}
   - component: {fileID: 4053891989626832332}
   - component: {fileID: 4053891989626832333}
-  - component: {fileID: 8945040825535383160}
-  - component: {fileID: 2341427953737350893}
+  - component: {fileID: 4884299399012200258}
   m_Layer: 5
   m_Name: AutoSave
   m_TagString: Untagged
@@ -742,33 +696,7 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "\uBE60\uB978 \uC800\uC7A5\uD558\uAE30"
---- !u!61 &8945040825535383160
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4053891989626832328}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 180, y: 50}
-  m_EdgeRadius: 0
---- !u!114 &2341427953737350893
+--- !u!114 &4884299399012200258
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -777,24 +705,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4053891989626832328}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: adc15f45132254b4995a479a072604b7, type: 3}
+  m_Script: {fileID: 11500000, guid: 3319c4a98e28fd644aaddcc49654e139, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ButtonPress:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4053891989702694286}
-        m_TargetAssemblyTypeName: TextOption, Assembly-CSharp
-        m_MethodName: AutoSave
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &4053891989702694280
 GameObject:
   m_ObjectHideFlags: 0
@@ -853,7 +766,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textLogPanel: {fileID: 4053891990404427236}
-  data: {fileID: 0}
+  defaultColor: {r: 0.6431373, g: 0.6431373, b: 0.6431373, a: 1}
+  activeColor: {r: 0.9245283, g: 0.27386966, b: 0.27386966, a: 1}
 --- !u!114 &3779011821131852671
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -956,8 +870,7 @@ GameObject:
   - component: {fileID: 4053891989787905324}
   - component: {fileID: 4053891989787905489}
   - component: {fileID: 4053891989787905490}
-  - component: {fileID: 3060914765895295542}
-  - component: {fileID: 5438095884903814382}
+  - component: {fileID: 3365145388412855245}
   m_Layer: 5
   m_Name: AutoLoad
   m_TagString: Untagged
@@ -1026,33 +939,7 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "\uBE60\uB978 \uBD88\uB7EC\uC624\uAE30"
---- !u!61 &3060914765895295542
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4053891989787905325}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 180, y: 50}
-  m_EdgeRadius: 0
---- !u!114 &5438095884903814382
+--- !u!114 &3365145388412855245
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1061,24 +948,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4053891989787905325}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: adc15f45132254b4995a479a072604b7, type: 3}
+  m_Script: {fileID: 11500000, guid: 3319c4a98e28fd644aaddcc49654e139, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ButtonPress:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4053891989702694286}
-        m_TargetAssemblyTypeName: TextOption, Assembly-CSharp
-        m_MethodName: AutoLoad
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &4053891989806250452
 GameObject:
   m_ObjectHideFlags: 0
@@ -1090,8 +962,7 @@ GameObject:
   - component: {fileID: 4053891989806250459}
   - component: {fileID: 4053891989806250456}
   - component: {fileID: 4053891989806250457}
-  - component: {fileID: 629776333724257659}
-  - component: {fileID: 488447410393231581}
+  - component: {fileID: 3101590193059018217}
   m_Layer: 5
   m_Name: Speed
   m_TagString: Untagged
@@ -1160,33 +1031,7 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "\uBE68\uB9AC\uAC10\uAE30"
---- !u!61 &629776333724257659
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4053891989806250452}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 110, y: 50}
-  m_EdgeRadius: 0
---- !u!114 &488447410393231581
+--- !u!114 &3101590193059018217
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1195,24 +1040,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4053891989806250452}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: adc15f45132254b4995a479a072604b7, type: 3}
+  m_Script: {fileID: 11500000, guid: 3319c4a98e28fd644aaddcc49654e139, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ButtonPress:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4053891989702694286}
-        m_TargetAssemblyTypeName: TextOption, Assembly-CSharp
-        m_MethodName: FastSkipText
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &4053891990053428063
 GameObject:
   m_ObjectHideFlags: 0
@@ -1224,8 +1054,7 @@ GameObject:
   - component: {fileID: 4053891990053428062}
   - component: {fileID: 4053891990053428035}
   - component: {fileID: 4053891990053428060}
-  - component: {fileID: 5139015977568784776}
-  - component: {fileID: 8337687727095367715}
+  - component: {fileID: 5391439614790793229}
   m_Layer: 5
   m_Name: Save
   m_TagString: Untagged
@@ -1294,33 +1123,7 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "\uC800\uC7A5\uD558\uAE30"
---- !u!61 &5139015977568784776
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4053891990053428063}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 120, y: 50}
-  m_EdgeRadius: 0
---- !u!114 &8337687727095367715
+--- !u!114 &5391439614790793229
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1329,24 +1132,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4053891990053428063}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: adc15f45132254b4995a479a072604b7, type: 3}
+  m_Script: {fileID: 11500000, guid: 3319c4a98e28fd644aaddcc49654e139, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ButtonPress:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4053891989702694286}
-        m_TargetAssemblyTypeName: TextOption, Assembly-CSharp
-        m_MethodName: SavePanelShow
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &4053891990404427236
 GameObject:
   m_ObjectHideFlags: 0
@@ -1358,8 +1146,7 @@ GameObject:
   - component: {fileID: 4053891990404427243}
   - component: {fileID: 4053891990404427240}
   - component: {fileID: 4053891990404427241}
-  - component: {fileID: 6817567225829308317}
-  - component: {fileID: 5311379149179642840}
+  - component: {fileID: 8312931288395072427}
   m_Layer: 5
   m_Name: Log
   m_TagString: Untagged
@@ -1428,7 +1215,7 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "\uB300\uC0AC\uB85D"
---- !u!114 &6817567225829308317
+--- !u!114 &8312931288395072427
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1437,50 +1224,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4053891990404427236}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: adc15f45132254b4995a479a072604b7, type: 3}
+  m_Script: {fileID: 11500000, guid: 3319c4a98e28fd644aaddcc49654e139, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ButtonPress:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4053891989702694286}
-        m_TargetAssemblyTypeName: TextOption, Assembly-CSharp
-        m_MethodName: ShowTextLog
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
---- !u!61 &5311379149179642840
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4053891990404427236}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 90, y: 50}
-  m_EdgeRadius: 0
 --- !u!1 &4053891990610553733
 GameObject:
   m_ObjectHideFlags: 0
@@ -1492,9 +1238,7 @@ GameObject:
   - component: {fileID: 4053891990610553732}
   - component: {fileID: 4053891990610553737}
   - component: {fileID: 4053891990610553738}
-  - component: {fileID: 4053891990610553739}
-  - component: {fileID: 8117733093471244543}
-  - component: {fileID: 380759818012381797}
+  - component: {fileID: 5484284755307692368}
   m_Layer: 5
   m_Name: Option
   m_TagString: Untagged
@@ -1563,7 +1307,7 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "\uC124\uC815"
---- !u!114 &4053891990610553739
+--- !u!114 &5484284755307692368
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1572,91 +1316,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 4053891990610553733}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 3319c4a98e28fd644aaddcc49654e139, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 3
-    m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_SelectedTrigger: Selected
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 4053891990610553738}
-  m_OnClick:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: OptionPanelOC
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
---- !u!61 &8117733093471244543
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4053891990610553733}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 60, y: 50}
-  m_EdgeRadius: 0
---- !u!114 &380759818012381797
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4053891990610553733}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: adc15f45132254b4995a479a072604b7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ButtonPress:
-    m_PersistentCalls:
-      m_Calls: []

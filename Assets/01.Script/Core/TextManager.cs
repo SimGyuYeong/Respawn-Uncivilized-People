@@ -40,7 +40,7 @@ public class TextManager : MonoBehaviour
     protected List<string> select = new List<string>();
 
     public int chatID = 1, lineNumber = 1, backgroundID = 0, slotID = 0; // ID 기본 값 설정
-    protected bool isTyping = false, skip = false; // 텍스트 스킵 불 기본 값 설정
+    public bool isTyping = false, skip = false; // 텍스트 스킵 불 기본 값 설정
     public float chatSpeed = 0.1f, autoSpeed = 1f; // 텍스트 나오는 속도와 Auto 속도 기본 값 설정
     public bool isAuto = false;
 
@@ -87,18 +87,6 @@ public class TextManager : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        //if(isAuto == true)
-        //{
-        //    autoChecker.text = "<color=red>자동진행</color>";
-        //}
-        //else
-        //{
-        //    autoChecker.text = "자동진행";
-        //}
-    }
-
     private void Awake()
     {
         _textDataSO = GetComponentInChildren<TextDataSave>();
@@ -107,8 +95,6 @@ public class TextManager : MonoBehaviour
         //Action a = dataManager.SaveMenuPanelOpen(1);
 
         //textPanelObj = Instantiate(textPanelPrefab, textCanvasTrm);
-        textPanelPrefab.transform.Find("TextOptionButton/Auto").GetComponent<TextPanelButton>().ButtonPress.AddListener(AutoPlay);
-        //textPanelPrefab.transform.Find("Option").GetComponent<Button>().onClick.AddListener(GameManager.Instance.OptionPanelOC(0));
        
     }
 
@@ -176,29 +162,6 @@ public class TextManager : MonoBehaviour
             }
             Sentence[chatID][lineCount, 19] = j.ToString();
 
-            vertualText = Sentence[chatID][lineCount, 2];
-
-            if (vertualText != null)
-            {
-                foreach(char N in vertualText)
-                {
-                    if(N == 'N')
-                    {
-                        vText = vertualText.Split('N');
-                        if (vText[1] != null)
-                        {
-                            Sentence[chatID][lineCount, 2] = $"{vText[0]}{GameManager.Instance.playerName}{vText[1]}";
-                        }
-                        else
-                        {
-                            Sentence[chatID][lineCount, 2] = $"{GameManager.Instance.playerName}{vText[0]}";
-                        }
-                        break;
-                    }
-                }
-            }
-
-
             Sentence[chatID][lineCount, ++j] = "x";
             max[chatID]++;
             lineCount++;
@@ -233,16 +196,22 @@ public class TextManager : MonoBehaviour
         {
             int bID = backgroundID;
             backgroundID = Convert.ToInt32(Sentence[chatID][lineNumber, (int)IDType.BackgroundID]) - 1;
-            if(bID!=backgroundID)
+
+            Sequence seq = DOTween.Sequence();
+            if (bID!=backgroundID)
             {
-                TextSO.backgroundList[bID].gameObject.SetActive(false);
+                seq.Append(TextSO.backgroundList[bID].transform.GetComponent<SpriteRenderer>().DOFade(0, 1f));
+                seq.AppendCallback(()=>TextSO.backgroundList[bID].gameObject.SetActive(false));
+                seq.AppendCallback(() => TextSO.backgroundList[backgroundID].gameObject.SetActive(true));
+                seq.Append(TextSO.backgroundList[backgroundID].transform.GetComponent<SpriteRenderer>().DOFade(1, 1f));
+                
             }
+            TextSO.backgroundList[backgroundID].transform.GetComponent<SpriteRenderer>().DOFade(1, 1f);
             TextSO.backgroundList[backgroundID].gameObject.SetActive(true);
-            //StartCoroutine(GameManager.Instance.FadeIn());
-            StartCoroutine(GameManager.Instance.FadeOut());
         }
         else
         {
+            TextSO.backgroundList[backgroundID].transform.GetComponent<SpriteRenderer>().DOFade(0, 1f);
             TextSO.backgroundList[backgroundID].gameObject.SetActive(false);
         }
     }
@@ -360,8 +329,6 @@ public class TextManager : MonoBehaviour
         {
             string directName = Sentence[chatID][lineNumber+1, (int)IDType.Direct];
             StartCoroutine(directName.Trim());
-            //Invoke(directName.Trim(), 0f);
-            Debug.Log(directName.Trim());
         }
 
         if (Sentence[chatID][lineNumber, (int)IDType.SFX] != "" && Sentence[chatID][lineNumber, (int)IDType.SFX] != null)
@@ -397,6 +364,7 @@ public class TextManager : MonoBehaviour
                     TextSO.backgroundList[backgroundID].SetActive(true);
                 }
                 endAnimationObj.SetActive(false);
+                textPanelObj.transform.Find("Button").GetComponent<Button>().enabled = false;
                 SelectOpen();
                 return;
             }
@@ -423,6 +391,12 @@ public class TextManager : MonoBehaviour
 
     public void SelectOpen()
     {
+        select.Clear();
+        for(int i = 1; i < selectPanel.childCount; i++)
+        {
+            Destroy(selectPanel.GetChild(i).gameObject);
+        }
+
         for (int i = (int)IDType.Event+1; i < Convert.ToInt32(Sentence[chatID][lineNumber, 19]); i += 2)
         {
             select.Add(Sentence[chatID][lineNumber, i]);
@@ -436,6 +410,7 @@ public class TextManager : MonoBehaviour
                 Select(button);
             });
         }
+
         selectPanel.gameObject.SetActive(true);
     }
 
@@ -451,6 +426,8 @@ public class TextManager : MonoBehaviour
                 
                 lineNumber = 1;
                 TextTyping?.Invoke();
+
+                textPanelObj.transform.Find("Button").GetComponent<Button>().enabled = true;
             }
         }
     }
@@ -470,11 +447,6 @@ public class TextManager : MonoBehaviour
     {
         //Camera.main.GetComponent<CameraShaking>().ShakeCam(shakeTime);
         CameraShaking.Instance.ShakeCam(shakeTime, shakestr);
-    }
-
-    public void InputNameCanvasOpen()
-    {
-        GameManager.Instance.InputNameCanvas.SetActive(true);
     }
 
     private void TestFunction()

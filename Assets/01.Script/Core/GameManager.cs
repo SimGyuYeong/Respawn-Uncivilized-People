@@ -24,8 +24,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] public GameObject TitlePanel;
     [SerializeField] GameObject optionPanel;
 
-    public string playerName = "무명";
-
     //옵션
     [SerializeField] Slider chatSpeedSlider;
     [SerializeField] Slider audoSpeedSlider;
@@ -33,11 +31,6 @@ public class GameManager : MonoBehaviour
     //FadeIn
     [SerializeField] Image BlackImage;
     [SerializeField] GameObject BlackImageObject;
-
-    //이름입력
-    public GameObject InputNameCanvas;
-    [SerializeField] private InputField inputField;
-
 
     private void Awake()
     {
@@ -72,10 +65,21 @@ public class GameManager : MonoBehaviour
 
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && !TextUIManager.instance.isLoading)
         {
-            Time.timeScale = 0;
-            OptionPanelOC(0);
+            if(DATA.savemenuPanel.activeSelf == true)
+            {
+                DATA.SaveMenuPanelClose();
+            }
+            else if(optionPanel.activeSelf == true)
+            {
+                ShowOptionPanel(false);
+            }
+            else
+            {
+                Time.timeScale = 0;
+                ShowOptionPanel(true);
+            }
         }
     }
 
@@ -84,12 +88,16 @@ public class GameManager : MonoBehaviour
         switch (name)
         {
             case "시작":
-                TitlePanel.SetActive(false);
-                Buttons.SetActive(false);
-                _textManager.chatID = 1;
-                //bgmSoundManager.PlaySound(_textManager.TextSO.bgmList[0], true);
-                StartCoroutine(FadeIn());
-                TEXT.TextTyping?.Invoke();
+                TextUIManager.instance.Loading(() =>
+                {
+                    TitlePanel.SetActive(false);
+                    Buttons.SetActive(false);
+                    _textManager.chatID = 1;
+                    //bgmSoundManager.PlaySound(_textManager.TextSO.bgmList[0], true);
+                    StartCoroutine(FadeIn());
+                    TEXT.TextTyping?.Invoke();
+                });
+                
                 break;
             case "종료":
 #if UNITY_EDITOR
@@ -103,14 +111,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void OptionPanelOC(int check)
+    public void ShowOptionPanel(bool check)
     {
-        if (check == 1)
-        {
-            optionPanel.SetActive(false);
-            Time.timeScale = 1f;
-        }
-        else optionPanel.SetActive(true);
+        optionPanel.SetActive(check);
+        if (check == true) Time.timeScale = 0f;
+        else Time.timeScale = 1f;
     }
 
     public IEnumerator FadeIn()
@@ -156,20 +161,12 @@ public class GameManager : MonoBehaviour
     public void BackTitle()
     {
         StopAllCoroutines();
-        OptionPanelOC(1);
+        ShowOptionPanel(false);
         BlackImageObject.SetActive(false);
         TEXT.textPanelObj.SetActive(false); 
         TEXT.TextSO.backgroundList[TEXT.backgroundID].gameObject.SetActive(false);
         TitlePanel.SetActive(true);
         Buttons.SetActive(true);
         //bgmSoundManager.PlaySound(_textManager.TextSO.bgmList[0], true);
-    }
-
-    public void InputName()
-    {
-        playerName = inputField.text;
-        InputNameCanvas.SetActive(false);
-        TEXT.chatID = 100003;
-        TEXT.TextTyping?.Invoke();
     }
 }

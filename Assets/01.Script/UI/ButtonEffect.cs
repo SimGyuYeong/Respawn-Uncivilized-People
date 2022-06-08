@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 public class ButtonEffect : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    private float spd = 0.08f;
+    private float spd = 0.15f;
 
     public void OnPointerEnter(PointerEventData eventData)
     {

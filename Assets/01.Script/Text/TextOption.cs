@@ -1,27 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
- 
+using UnityEngine.UI;
+
 public class TextOption : MonoBehaviour
 {
     [SerializeField] private GameObject _textLogPanel;
 
+    [SerializeField] private Color defaultColor;
+    [SerializeField] private Color activeColor;
+
     private float _defaultChatSpeed = 0;
 
-    public DataManager data;
+    private DataManager _dataManager;
 
     private void Awake()
     {
-        data = FindObjectOfType<DataManager>();
+        _dataManager = FindObjectOfType<DataManager>();
+
+        transform.Find("Log").GetComponent<PrefabButton>().OnClickEvent += ShowTextLog;
+        transform.Find("Speed").GetComponent<PrefabButton>().OnClickEvent += FastSkipText;
+        transform.Find("Auto").GetComponent<PrefabButton>().OnClickEvent += AutoPlay;
+        transform.Find("Save").GetComponent<PrefabButton>().OnClickEvent += SavePanelShow;
+        transform.Find("AutoSave").GetComponent<PrefabButton>().OnClickEvent += AutoSave;
+        transform.Find("Load").GetComponent<PrefabButton>().OnClickEvent += LoadPanelShow;
+        transform.Find("AutoLoad").GetComponent<PrefabButton>().OnClickEvent += AutoLoad;
+        transform.Find("Option").GetComponent<PrefabButton>().OnClickEvent += ShowOptionPanel;
     }
 
-    /// <summary>
-    /// 대사록 보기
-    /// </summary>
-    /// <param name="check"></param>
-    public void ShowTextLog(bool check)
+    public void ShowTextLog()
     {
-        _textLogPanel.SetActive(check);
+        _textLogPanel.SetActive(true);
     }
 
     /// <summary>
@@ -33,30 +42,50 @@ public class TextOption : MonoBehaviour
         {
             _defaultChatSpeed = TextManager.Instance.chatSpeed;
             TextManager.Instance.chatSpeed = 0.01f;
+            transform.Find("Speed").GetComponent<Text>().color = activeColor;
         }
         else if (TextManager.Instance.chatSpeed == 0.01f)
         {
             TextManager.Instance.chatSpeed = _defaultChatSpeed;
+            transform.Find("Speed").GetComponent<Text>().color = defaultColor;
         }
     }
 
     public void SavePanelShow()
     {
-        data.SaveMenuPanelOpen(1);
+        _dataManager.SaveMenuPanelOpen(1);
     }
 
     public void AutoSave()
     {
-        data.SaveMenuPanelOpen(0);
+        _dataManager.SaveMenuPanelOpen(0);
     }
 
     public void LoadPanelShow()
     {
-        data.SaveMenuPanelOpen(2);
+        _dataManager.SaveMenuPanelOpen(2);
     }
 
     public void AutoLoad()
     {
-        data.SaveMenuPanelOpen(3);
+        _dataManager.SaveMenuPanelOpen(3);
+    }
+
+    public void ShowOptionPanel()
+    {
+        GameManager.Instance.ShowOptionPanel(true);
+    }
+
+    public void AutoPlay()
+    {
+        TextManager.Instance.AutoPlay();
+        if(TextManager.Instance.isAuto)
+        {
+            transform.Find("Auto").GetComponent<Text>().color = activeColor;
+        }
+        else
+        {
+            transform.Find("Auto").GetComponent<Text>().color = defaultColor;
+        }
     }
 }

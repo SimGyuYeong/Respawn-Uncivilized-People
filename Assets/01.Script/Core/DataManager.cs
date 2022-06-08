@@ -5,19 +5,17 @@ using UnityEngine.UI;
 using System.IO;
 using Newtonsoft.Json;
 using System;
-
+using DG.Tweening;
 
 class saveData
 {
-    public string playerName;
     public int id;
     public string date;
     public int typdingID;
     public int imageID;
 
-    public saveData(string name, int id, string date, int typing, int image)
+    public saveData(int id, string date, int typing, int image)
     {
-        playerName = name;
         this.id = id;
         this.date = date;
         typdingID = typing;
@@ -34,6 +32,8 @@ public class DataManager : MonoBehaviour
     [SerializeField] private Sprite nullImage;
     [SerializeField] List<GameObject> menu = new List<GameObject>();
 
+    
+
     private int SLCheck = 1;
 
     private void Start()
@@ -46,25 +46,14 @@ public class DataManager : MonoBehaviour
     {
         for (int i = 0; i < 8; i++)
         {
-            for (int j = 1; j < 3; j++)
+            if (data[i].date != " ")
             {
-                GameObject obj = menu[i].transform.GetChild(j).gameObject;
-                if (j == 2)
-                {
-                    SpriteRenderer image = obj.GetComponent<SpriteRenderer>();
-                    image.sprite = nullImage;
-                    if (data[i].id != 0) {
-                        image.sprite = TextManager.Instance.TextSO.backgroundList[data[i].imageID].GetComponent<SpriteRenderer>().sprite;
-                    }
-                }
-                else
-                {
-                    Text text = obj.GetComponent<Text>();
-                    if (j == 0) text.text = data[i].playerName;
-                    else text.text = data[i].date;
-                }
-                
+                Transform trm = menu[i].transform;
+
+                trm.Find("Date").GetComponent<Text>().text = data[i].date;
+                trm.Find("Image").GetComponent<Image>().sprite = TextManager.Instance.TextSO.backgroundList[data[i].imageID].GetComponent<SpriteRenderer>().sprite;
             }
+            
         }
     }
 
@@ -82,16 +71,21 @@ public class DataManager : MonoBehaviour
         }
         else
         {
-            Time.timeScale = 0f;
-            savemenuPanel.SetActive(true);
-            SLCheck = num;
+            TextUIManager.instance.Loading(() =>
+            {
+                savemenuPanel.SetActive(true);
+                SLCheck = num;
+                if (!TextManager.Instance.isTyping) TextManager.Instance.endAnimationObj.SetActive(false);
+            });
         }
     }
 
     public void SaveMenuPanelClose()
     {
-        Time.timeScale = 1f;
-        savemenuPanel.SetActive(false);
+        TextUIManager.instance.Loading(() => {
+            savemenuPanel.SetActive(false);
+            if (!TextManager.Instance.isTyping) TextManager.Instance.endAnimationObj.SetActive(true);
+        });
     }
 
     public void SaveOrLoad(int slot)
@@ -99,7 +93,6 @@ public class DataManager : MonoBehaviour
         
         if (SLCheck < 2)
         {
-            data[slot].playerName = GameManager.Instance.playerName;
             data[slot].date = DateTime.Now.ToString("yyyy³â MM¿ù ddÀÏ\n HH:mm:ss");
             data[slot].id = GameManager.Instance.TEXT.chatID;
             data[slot].typdingID = GameManager.Instance.TEXT.lineNumber;
@@ -113,7 +106,6 @@ public class DataManager : MonoBehaviour
             StartCoroutine(GameManager.Instance.FadeIn());
             GameManager.Instance.TEXT.chatID = data[slot].id;
             GameManager.Instance.TEXT.lineNumber = data[slot].typdingID;
-            GameManager.Instance.playerName = data[slot].playerName;
             GameManager.Instance.TitlePanel.SetActive(false);
             GameManager.Instance.Buttons.SetActive(false);
             SaveMenuPanelClose();
@@ -138,10 +130,13 @@ public class DataManager : MonoBehaviour
         {
             for(int i = 0; i < 8; i++)
             {
-                data[i] = new saveData("???", 0, " ", 0, 0);
+                data[i] = new saveData(0, " ", 0, 0);
             }
             SaveToJson();
         }   
         
     }
+
+    
+
 }
