@@ -23,16 +23,20 @@ public class UIManager : MonoBehaviour
 
     private Text _goalText;
 
-    [SerializeField] private GameObject _broadTextObj;
-    public Image background;
-    public Image backgroundGray;
+    #region 전체 메세지
+    [SerializeField] private GameObject _broadcastObj;
+    private Image _panel;
+    private Image _background; 
     private TextMeshProUGUI _broadText;
+    #endregion
 
     private void Awake()
     {
         _goalText = goalUI.transform.GetComponentInChildren<Text>();
 
-        _broadText = _broadTextObj.GetComponent<TextMeshProUGUI>();
+        _background = _broadcastObj.transform.Find("background").GetComponent<Image>();
+        _panel = _broadcastObj.transform.Find("panel").GetComponent<Image>();
+        _broadText = _broadcastObj.transform.Find("text").GetComponent<TextMeshProUGUI>();
     }
 
     public void UpdateTurnText()
@@ -49,6 +53,7 @@ public class UIManager : MonoBehaviour
         seq.AppendCallback(() =>
         {
             _goalText.text = FightManager.Instance.aiList.Count.ToString();
+            _goalText.transform.DORewind();
         });
     }
 
@@ -65,8 +70,8 @@ public class UIManager : MonoBehaviour
         durabilityBar.transform.Find("valueText").GetComponent<Text>().text = p.DurabilityPoint.ToString();
         kineticPoint.transform.Find("valueText").GetComponent<Text>().text = p.KineticPoint.ToString();
 
-        durabilityBar.transform.DOScaleX((float)p.DurabilityPoint / p.MaxDurabilityPoint, 0);
-        kineticPoint.transform.DOScaleX((float)p.KineticPoint / p.MaxKineticPoint, 0);
+        durabilityBar.transform.Find("sprite").DOScaleX((float)p.DurabilityPoint / p.MaxDurabilityPoint, 0);
+        kineticPoint.transform.Find("sprite").DOScaleX((float)p.KineticPoint / p.MaxKineticPoint, 0);
     }
 
     public void ShowAIStatusUI(AI ai)
@@ -94,18 +99,16 @@ public class UIManager : MonoBehaviour
 
     public void ViewText(string text, Action action = null)
     {
-        _broadTextObj.SetActive(true);
-        background.gameObject.SetActive(true);
-        backgroundGray.gameObject.SetActive(true);
-        backgroundGray.DOFade(0.4f, 0.2f);
+        _broadcastObj.SetActive(true);
+        _background.DOFade(0.4f, 0.2f);
 
         _broadText.text = text;
 
         Sequence seq = DOTween.Sequence();
         seq.AppendCallback(() => StartCoroutine(TextShow(action)));
-        seq.Append(background.gameObject.transform.DOScale(Vector3.one * 1.5f, 0));
-        seq.Append(background.DOFade(1, 0.2f));
-        seq.Join(background.gameObject.transform.DOScale(Vector3.one, 0.2f));
+        seq.Append(_panel.gameObject.transform.DOScale(Vector3.one * 1.5f, 0));
+        seq.Append(_panel.DOFade(1, 0.2f));
+        seq.Join(_panel.gameObject.transform.DOScale(Vector3.one, 0.2f));
     }
 
     IEnumerator TextShow(Action action)
@@ -128,15 +131,13 @@ public class UIManager : MonoBehaviour
     {
         yield return new WaitForSeconds(0.1f);
         Sequence seq = DOTween.Sequence();
-        seq.Append(background.gameObject.transform.DOScale(Vector3.one * 1.3f, 0.2f));
-        seq.Join(background.DOFade(0, 0.2f));
-        seq.Append(backgroundGray.DOFade(0, 0.2f));
+        seq.Append(_panel.gameObject.transform.DOScale(Vector3.one * 1.3f, 0.2f));
+        seq.Join(_panel.DOFade(0, 0.2f));
+        seq.Append(_background.DOFade(0, 0.2f));
         seq.AppendCallback(() =>
         {
             action?.Invoke();
-            _broadTextObj.SetActive(false);
-            background.gameObject.SetActive(false);
-            backgroundGray.gameObject.SetActive(false);
+            _broadcastObj.SetActive(false);
         });
     }
 
@@ -158,7 +159,7 @@ public class UIManager : MonoBehaviour
 
     public void TurnstopEmphasisStop()
     {
-        DOTween.Rewind(_turnstopObj);
+        _turnstopObj.transform.DORewind();
         DOTween.KillAll();
     }
 }
