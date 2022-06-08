@@ -26,8 +26,8 @@ public class Loading : MonoBehaviour
     {
         Sequence seq = DOTween.Sequence();
 
-        textImage.transform.DOMoveX(2060, 1.2f).SetEase(Ease.InOutQuart).SetLoops(-1, LoopType.Restart);
-        textBackgroundImage.transform.DOMoveX(2060, 1.2f).SetEase(Ease.InOutQuart).SetLoops(-1, LoopType.Restart);
+        textImage.transform.DOMoveX(2060, 1.5f).SetEase(Ease.InOutQuart).SetLoops(-1, LoopType.Restart);
+        textBackgroundImage.transform.DOMoveX(2060, 1.5f).SetEase(Ease.InOutQuart).SetLoops(-1, LoopType.Restart);
 
         //StartCoroutine(MoveText());
     }
