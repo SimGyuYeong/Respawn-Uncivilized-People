@@ -57,6 +57,8 @@ public class TextManager : MonoBehaviour
 
     protected int _time = 0;
 
+    public Camera maincam;
+
     protected enum IDType
     {
         ChatID = 0,
@@ -91,6 +93,7 @@ public class TextManager : MonoBehaviour
     {
         _textDataSO = GetComponentInChildren<TextDataSave>();
         StartCoroutine(LoadTextData(URL)); // 텍스트 데이터 읽기
+        maincam = Camera.main;
         //Action a = GameManager.Instance.OptionPanelOC(0);
         //Action a = dataManager.SaveMenuPanelOpen(1);
 
@@ -464,5 +467,31 @@ public class TextManager : MonoBehaviour
     {
         SceneManager.LoadScene("Fight");
         yield return null;
+    }
+
+    public void Walking()
+    {
+        Sequence _seq = DOTween.Sequence();
+        Debug.Log("a");
+        _seq.Join(maincam.transform.DOMoveY(0.76f, 0.44f)).SetEase(Ease.OutQuad);
+        _seq.Append(maincam.transform.DOMoveY(0, 0.34f)).SetEase(Ease.OutSine);
+        _seq.Append(maincam.transform.DOMoveY(0.76f, 0.44f)).SetEase(Ease.OutQuad);
+        _seq.Append(maincam.transform.DOMoveY(0f, 0.34f)).SetEase(Ease.OutSine);
+        _seq.Append(maincam.transform.DOMoveY(0.76f, 0.44f)).SetEase(Ease.OutQuad);
+        _seq.Append(maincam.transform.DOMoveY(0f, 0.34f)).SetEase(Ease.OutSine);
+        //_seq.Append(freeTimeText.storyPanel.transform.DOScale(1f, 3.5f)).SetEase(Ease.Flash);
+        //freeTimeText.storyPanel.transform.DOScale(2f, 2f);
+        //yield return new WaitForSeconds(0.8f);
+    }
+
+    public void TakeALook()
+    {
+        Sequence _seq = DOTween.Sequence();
+        //_seq.Append(freeTimeText.storyPanel.transform.DOScale(1.35f, 1.2f)).SetEase(Ease.OutSine);
+        _seq.Append(maincam.transform.DOMoveX(3f, 1f)).SetEase(Ease.Linear);
+        _seq.Append(maincam.transform.DOMoveX(-3f, 1.8f)).SetEase(Ease.Linear);
+        _seq.Append(maincam.transform.DOMoveX(0, 1f)).SetEase(Ease.Linear);
+       // _seq.Append(freeTimeText.storyPanel.transform.DOScale(1f, 1.2f)).SetEase(Ease.OutSine);
+        _seq.AppendInterval(0.5f);
     }
 }
