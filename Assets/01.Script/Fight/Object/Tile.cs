@@ -14,7 +14,7 @@ public class Tile : MonoBehaviour
     /// </summary>
     void OnMouseEnter()
     {
-        if(FightManager.Instance.isIng == false)
+        if (FightManager.Instance.isIng == false && FightManager.Instance.pInput != FightManager.InputType.Input_Skill)
         {
             if (transform.childCount > 1)
             {
@@ -25,12 +25,13 @@ public class Tile : MonoBehaviour
                     FightManager.Instance.ShowUpdateStat(transform.GetChild(1).GetComponent<AI>());
             }
 
-            if (FightManager.Instance.turnType == FightManager.TurnType.Player_Move || FightManager.Instance.turnType == FightManager.TurnType.Player_Attack)
+            if (FightManager.Instance.turnType == FightManager.TurnType.Player)
             {
                 _highlight.SetActive(true);
             }
 
-            if (FightManager.Instance.turnType == FightManager.TurnType.Player_Attack)
+            //АјАн
+            if (FightManager.Instance.pInput == FightManager.InputType.Input_Skill)
             {
                 if (isAI())
                 {

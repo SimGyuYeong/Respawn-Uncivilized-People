@@ -87,15 +87,23 @@ public class FightManager : MonoBehaviour
 
     public enum TurnType
     {
-        Wait_AI = 0,
+        AI_Wait = 0,
         AI,
-        Wait_Player,
-        Input_Action,
-        Player_Attack,
-        Player_Move
+        Player_Wait,
+        Player,
+        Player_Ing,
     }
 
-    public TurnType turnType = TurnType.Wait_Player;
+    public TurnType turnType = TurnType.Player_Wait;
+
+    public enum InputType
+    { 
+        None,
+        Input_Move,
+        Input_Skill
+    }
+
+    public InputType pInput = InputType.None;
 
     public enum Action
     {
@@ -119,8 +127,9 @@ public class FightManager : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(TileSpawn());
-        isIng = true;
+        turnType = TurnType.Player_Wait;
+        StartCoroutine(TileSpawn(false));
+        //isIng = true;
         turn = maxTurn;
     }
 
@@ -327,7 +336,7 @@ public class FightManager : MonoBehaviour
     /// <returns>움직일 수 있다면 True, 아니면 False</returns>
     public bool MoveCheck(Tile tile)
     {
-        if (turnType == TurnType.Player_Move
+        if (pInput == InputType.Input_Move
             && isClickPlayer
             && isIng == false
             && tile.tile.isWall == false)
@@ -342,31 +351,21 @@ public class FightManager : MonoBehaviour
     }
     #endregion
 
-    public void ShowDistance(string type)
+    public void ShowDistance(int distance)
     {
         SpriteRenderer _spriteRenderer;
-
+        _aStar.PathFinding();
         foreach(var _tile in tileList)
         {
             TileInform _tileInform = _tile.GetComponent<Tile>().tile;
 
-            if(_tileInform.isWall == false)
+            if(_tileInform.isWall == false && _tile.transform.childCount < 2)
             {
                 _spriteRenderer = _tile.GetComponent<SpriteRenderer>();
-
-                if (type == "Move")
+                if (Vector2.Distance(_tileInform.Position, player.Position) <= distance)
                 {
-                    if (DistanceCheck(_tileInform.Position))
-                    {
-                        _spriteRenderer.color = Color.yellow;
-                    }
-                }
-                else if (type == "Attack")
-                {
-                    if (Vector2.Distance(_tileInform.Position, pPos) <= 1)
-                    {
-                        _spriteRenderer.color = Color.red;
-                    }
+                    Debug.Log(Vector2.Distance(_tileInform.Position, player.Position));
+                    _spriteRenderer.color = Color.yellow;
                 }
             }
         }
@@ -440,25 +439,23 @@ public class FightManager : MonoBehaviour
         isIng = false;
         if (_turnCount > 0)
         {
-            if (action == Action.Move)
+            if (action == Action.Move) player.isMove = true;  
+            else if (action == Action.Attack)  player.isFight = true; 
+
+            foreach(Player p in playerList)
             {
-                player.isMove = true;
-                if (player.isFight == false && AttackCheck(player.IPos))
+                if (p.isFight == false && p.KineticPoint > 15)
                 {
                     return;
                 }
-            }
-            else if (action == Action.Attack)
-            {
-                player.isFight = true;
-                if(player.isMove == false)
+                if (p.isMove == false)
                 {
                     return;
                 }
             }
         }
 
-        turnType = TurnType.Input_Action;
+        turnType = TurnType.Player_Ing;
         _uiManager.TurnstopEmphasis();
         TurnChange();
     }
@@ -516,7 +513,7 @@ public class FightManager : MonoBehaviour
 
         image = attackTrm.GetComponent<Image>();
         c = image.color;
-        if (player.isFight || AttackCheck(pPos) == false)
+        if (player.isFight)
         {
             fightText.color = Color.red;
             c.a = 0.5f;
@@ -532,7 +529,7 @@ public class FightManager : MonoBehaviour
 
     public void PlayerAction(Action value)
     {
-        if (value == Action.Attack && AttackCheck(pPos) == false)
+        if (value == Action.Attack  && player.KineticPoint < 15)
             return;
 
         if (value == Action.Move && player.isMove == true)
@@ -542,15 +539,15 @@ public class FightManager : MonoBehaviour
         switch(value)
         {
             case Action.Move:
-                ShowDistance("Move");
-                turnType = TurnType.Player_Move;
+                ShowDistance(moveDistance);
+                pInput = InputType.Input_Move;
                 break;
             case Action.Attack:
-                ShowDistance("Attack");
-                turnType = TurnType.Player_Attack;
+                pInput = InputType.Input_Skill;
+                _uiManager.ShowSkillUI(true, player);
                 break;
             case Action.Stop:
-                turnType = TurnType.Player_Move;
+                turnType = TurnType.Player_Ing;
                 TurnChange();
                 break;
             default:
@@ -600,21 +597,21 @@ public class FightManager : MonoBehaviour
 
         switch (turnType)
         {
-            case TurnType.Wait_Player:
+            case TurnType.Player_Wait:
                 _uiManager.ViewText("Player Turn", () =>
                 {
                     _turnCount = _maxTurnCount;
-                    turnType = TurnType.Input_Action;
+                    turnType = TurnType.Player;
                 });
                 break;
 
-            case TurnType.Player_Move:
-            case TurnType.Player_Attack:
-                turnType = TurnType.Wait_AI;
+            case TurnType.Player_Ing:
+                turnType = TurnType.AI_Wait;
+                pInput = InputType.None;
                 TurnChange();
                 break;
 
-            case TurnType.Wait_AI:
+            case TurnType.AI_Wait:
                 _actionButton.SetActive(false);
                 _aiMoveCount = aiList.Count;
                 _uiManager.ViewText("Enemy Turn", () =>
@@ -651,12 +648,13 @@ public class FightManager : MonoBehaviour
     private IEnumerator PlayerTurn()
     {
         yield return null;   
-        turnType = TurnType.Wait_Player;
+        turnType = TurnType.Player_Wait;
 
         foreach(var p in playerList)
         {
             p.isFight = false;
             p.isMove = false;
+            p.KineticPoint += 25;
             if(p.DurabilityPoint == 0)
             {
                 Destroy(p.gameObject);
@@ -684,7 +682,7 @@ public class FightManager : MonoBehaviour
         if (isIng == false)
         {
             highLight.SetActive(false);
-            if (turnType == TurnType.Input_Action)
+            if (pInput == InputType.None)
             {
                 if(tileObj.transform.childCount >= 2)
                 {
@@ -695,11 +693,11 @@ public class FightManager : MonoBehaviour
                 }
             }
 
-            else if (turnType == TurnType.Player_Move)
+            else if (pInput == InputType.Input_Move)
             {
                 if (tile.isPlayer())
                 {
-                    turnType = TurnType.Input_Action;
+                    pInput = InputType.None;
                     HideDistance();
                     return;
                 }
@@ -709,12 +707,12 @@ public class FightManager : MonoBehaviour
                     PlayerMove(tile.tile.Position, tileObj.transform);
                 }
             }
-            else if (turnType == TurnType.Player_Attack)
+            else if (pInput == InputType.Input_Skill)
             {
                 if (tile.isPlayer())
                 {
-                    turnType = TurnType.Input_Action;
-                    HideDistance();
+                    pInput = InputType.None;
+                    _uiManager.ShowSkillUI(false, player);
                 }
                 else if(tile.isAI())
                 {
@@ -737,9 +735,9 @@ public class FightManager : MonoBehaviour
 
     public void TurnStop()
     {
-        if(turnType == TurnType.Input_Action)
+        if(turnType == TurnType.Player)
         {
-            turnType = TurnType.Wait_AI;
+            turnType = TurnType.Player_Ing;
             _uiManager.TurnstopEmphasisStop();
             TurnChange();
         }

@@ -120,7 +120,7 @@ public class Tutorial : MonoBehaviour
                 seq.Append(textPanel.transform.DOLocalMoveY(-700f, 1f));
                 seq.AppendCallback(() =>
                 {
-                    FightManager.Instance.turnType = FightManager.TurnType.Wait_Player;
+                    FightManager.Instance.turnType = FightManager.TurnType.Player_Wait;
                     FightManager.Instance.TurnChange();
                     FightManager.Instance.isIng = false;
                 });

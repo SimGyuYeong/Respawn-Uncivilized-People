@@ -16,6 +16,8 @@ public class UIManager : MonoBehaviour
     private GameObject _playerStatusUI;
     [SerializeField]
     private GameObject _aiStatusUI;
+    [SerializeField]
+    private GameObject _skillUI;
 
     [SerializeField] GameObject turnstopUI;
     public Image _turnstopObj;
@@ -161,5 +163,16 @@ public class UIManager : MonoBehaviour
     {
         _turnstopObj.transform.DORewind();
         DOTween.KillAll();
+    }
+
+    public void ShowSkillUI(bool value, Player p)
+    {
+        _skillUI.SetActive(value);
+
+        _skillUI.transform.Find("IronFist").GetComponent<Image>().color = p.KineticPoint < 15 ? Color.gray : Color.white;
+        _skillUI.transform.Find("IntensiveAttack").GetComponent<Image>().color = p.KineticPoint < 15 ? Color.gray : Color.white;
+        _skillUI.transform.Find("KnockDown").GetComponent<Image>().color = p.KineticPoint < 15 ? Color.gray : Color.white;
+        _skillUI.transform.Find("SuppressionDrone").GetComponent<Image>().color = p.KineticPoint < 15 ? Color.gray : Color.white;
+
     }
 }
