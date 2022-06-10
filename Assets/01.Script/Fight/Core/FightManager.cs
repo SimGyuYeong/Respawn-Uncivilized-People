@@ -100,7 +100,7 @@ public class FightManager : MonoBehaviour
     { 
         None,
         Input_Move,
-        Input_Skill
+        Input_Skill,
     }
 
     public InputType pInput = InputType.None;
@@ -111,6 +111,8 @@ public class FightManager : MonoBehaviour
         Attack = 1,
         Stop = 2
     }
+
+    public Skill.SkillType pSkill = Skill.SkillType.None;
 
     private void Awake()
     {
@@ -253,8 +255,8 @@ public class FightManager : MonoBehaviour
     public void EnemyDraw()
     {
         lineRenderer.positionCount = 2;
-        lineRenderer.startColor = Color.red;
-        lineRenderer.endColor = Color.red;
+        lineRenderer.startColor = Color.white;
+        lineRenderer.endColor = Color.yellow;
 
         lineRenderer.SetPosition(0, new Vector3(pPos.x, pPos.y));
         lineRenderer.SetPosition(1, new Vector3(tPos.x, tPos.y));
@@ -351,27 +353,44 @@ public class FightManager : MonoBehaviour
     }
     #endregion
 
-    public void ShowDistance(int distance)
+    public void ShowDistance(int distance, bool isSkill = false)
     {
         SpriteRenderer _spriteRenderer;
-        _aStar.PathFinding();
+        
         foreach(var _tile in tileList)
         {
             TileInform _tileInform = _tile.GetComponent<Tile>().tile;
 
-            if(_tileInform.isWall == false && _tile.transform.childCount < 2)
+            bool isDistance = false;
+            if(isSkill == true)
             {
-                _spriteRenderer = _tile.GetComponent<SpriteRenderer>();
-                if (Vector2.Distance(_tileInform.Position, player.Position) <= distance)
+                if(_tile.transform.childCount > 1)
                 {
-                    Debug.Log(Vector2.Distance(_tileInform.Position, player.Position));
-                    _spriteRenderer.color = Color.yellow;
+                    if(_tile.transform.GetChild(1).name == "AI(Clone)")
+                    {
+                        isDistance = true;
+                    }
                 }
             }
+
+            if(_tileInform.isWall == false && _tile.transform.childCount < 2) isDistance = true;
+
+            if (isDistance)
+            {
+                _spriteRenderer = _tile.GetComponent<SpriteRenderer>();
+                _aStar.targetPos = _tileInform.Position;
+                _aStar.PathFinding(isSkill);
+                if (_finalNodeList.Count <= distance + 1 && _finalNodeList.Count > 0)
+                {
+                    _spriteRenderer.color = isSkill == true ? Color.red : Color.yellow;
+                }
+            }
+
         }
     }
     public void HideDistance()
     {
+        _uiManager.selectSkillNum = 5;
         SpriteRenderer _spriteRenderer;
         int count = 0;
 
@@ -444,7 +463,7 @@ public class FightManager : MonoBehaviour
 
             foreach(Player p in playerList)
             {
-                if (p.isFight == false && p.KineticPoint > 15)
+                if (p.isFight == false && p.KineticPoint >= 15)
                 {
                     return;
                 }
@@ -455,9 +474,7 @@ public class FightManager : MonoBehaviour
             }
         }
 
-        turnType = TurnType.Player_Ing;
         _uiManager.TurnstopEmphasis();
-        TurnChange();
     }
 
     /// <summary>
@@ -608,6 +625,7 @@ public class FightManager : MonoBehaviour
             case TurnType.Player_Ing:
                 turnType = TurnType.AI_Wait;
                 pInput = InputType.None;
+                pSkill = Skill.SkillType.None;
                 TurnChange();
                 break;
 
@@ -655,14 +673,8 @@ public class FightManager : MonoBehaviour
             p.isFight = false;
             p.isMove = false;
             p.KineticPoint += 25;
-            if(p.DurabilityPoint == 0)
-            {
-                Destroy(p.gameObject);
-                playerList.Remove(p);
-            }
         }
 
-        Debug.Log(playerList.Count);
         if(playerList.Count == 0)
         {
             StartCoroutine(Defeat());
@@ -716,10 +728,44 @@ public class FightManager : MonoBehaviour
                 }
                 else if(tile.isAI())
                 {
-                    if (Vector2Int.Distance(tile.tile.Position, pPos) <= 1)
-                        PlayerAttack(tileObj.GetComponentInChildren<AI>().id);
+                    if(tileObj.GetComponent<SpriteRenderer>().color == Color.red)
+                    {
+                        AI ai = tileObj.GetComponentInChildren<AI>();
+                        UseSkill(ai);
+
+                        HideDistance();
+                        NextPlayerTurn(Action.Attack);
+                    }
                 }
             }
+        }
+    }
+
+    public void UseSkill(AI ai)
+    {
+        switch (pSkill)
+        {
+            case Skill.SkillType.IntensiveAttack:
+                player.KineticPoint -= (int)Skill.SkillCost.IntensiveAttack;
+                ai.InfluencePoint -= 20;
+                _uiManager.ShowSkillUI(false, player);
+                break;
+            case Skill.SkillType.KnockDown:
+                player.KineticPoint -= (int)Skill.SkillCost.KnockDown;
+                ai.InfluencePoint -= 50;
+                if (ai.isRestructuring == true)
+                {
+                    ai.Death();
+                }
+                _uiManager.ShowSkillUI(false, player);
+                break;
+            case Skill.SkillType.SuppressionDrone:
+                player.KineticPoint -= (int)Skill.SkillCost.SuppressionDrone;
+                if(ai.isRestructuring == true)
+                {
+                    ai.Death();
+                }
+                break;
         }
     }
 

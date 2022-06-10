@@ -29,8 +29,13 @@ public class Player : MonoBehaviour
         {
             _durabilityPoint = value;
             if (_durabilityPoint > _maxDurabilityPoint) _durabilityPoint = _maxDurabilityPoint;
-            if (_durabilityPoint < 0) _durabilityPoint = 0;
             transform.GetComponentInChildren<TextMeshProUGUI>().text = _durabilityPoint.ToString();
+            
+            if (_durabilityPoint <= 0)
+            {
+                FightManager.Instance.playerList.Remove(this);
+                Destroy(gameObject);
+            }
         }
     }
 

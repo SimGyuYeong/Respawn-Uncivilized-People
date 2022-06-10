@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using TMPro;
+using System;
 
 [System.Serializable]
 public class AIData
@@ -18,6 +19,7 @@ public class AI : MonoBehaviour
 {
     public string aiName;
     public int id;
+    public bool isRestructuring = false;
 
     private int _maxInfluencePoint;
     public int MaxInfluencePoint => _maxInfluencePoint;
@@ -30,11 +32,31 @@ public class AI : MonoBehaviour
             _influence = value;
             
             if (_influence > _maxInfluencePoint) _influence = _maxInfluencePoint;
-            if (_influence < 0) _influence = 0;
-            
+
             transform.GetComponentInChildren<TextMeshProUGUI>().text = _influence.ToString();
+
+            if (_influence <= 0)
+            {
+                if(isRestructuring == true)
+                {
+                    Death();
+                }
+                else
+                {
+                    _influence = 0;
+                    isRestructuring = true;
+                    transform.GetComponentInChildren<TextMeshProUGUI>().text = "R";
+                }
+            }
         }
     }
+
+    public void Death()
+    {
+        FightManager.Instance.aiList.Remove(this);
+        Destroy(gameObject);
+    }
+
     public string info;
 
     private Vector2 _pos = Vector2.zero;

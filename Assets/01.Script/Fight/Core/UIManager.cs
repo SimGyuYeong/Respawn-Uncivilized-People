@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,8 +17,6 @@ public class UIManager : MonoBehaviour
     private GameObject _playerStatusUI;
     [SerializeField]
     private GameObject _aiStatusUI;
-    [SerializeField]
-    private GameObject _skillUI;
 
     [SerializeField] GameObject turnstopUI;
     public Image _turnstopObj;
@@ -32,6 +31,13 @@ public class UIManager : MonoBehaviour
     private TextMeshProUGUI _broadText;
     #endregion
 
+    #region 스킬버튼
+    [SerializeField] private GameObject _skillUI;
+    public int selectSkillNum = 5;
+
+    private List<Image> _skillButton = new List<Image>();
+    #endregion
+
     private void Awake()
     {
         _goalText = goalUI.transform.GetComponentInChildren<Text>();
@@ -39,6 +45,11 @@ public class UIManager : MonoBehaviour
         _background = _broadcastObj.transform.Find("background").GetComponent<Image>();
         _panel = _broadcastObj.transform.Find("panel").GetComponent<Image>();
         _broadText = _broadcastObj.transform.Find("text").GetComponent<TextMeshProUGUI>();
+
+        _skillButton.Add(_skillUI.transform.Find("IronFist").GetComponent<Image>());
+        _skillButton.Add(_skillUI.transform.Find("IntensiveAttack").GetComponent<Image>());
+        _skillButton.Add(_skillUI.transform.Find("KnockDown").GetComponent<Image>());
+        _skillButton.Add(_skillUI.transform.Find("SuppressionDrone").GetComponent<Image>());
     }
 
     public void UpdateTurnText()
@@ -86,7 +97,7 @@ public class UIManager : MonoBehaviour
 
         GameObject influenceBar = _aiStatusUI.transform.Find("InfluencePoint").gameObject;
         influenceBar.transform.Find("valueText").GetComponent<Text>().text = ai.InfluencePoint.ToString();
-        influenceBar.transform.DOScaleX((float)ai.InfluencePoint / ai.MaxInfluencePoint, 0);
+        influenceBar.transform.Find("sprite").DOScaleX((float)ai.InfluencePoint / ai.MaxInfluencePoint, 0);
     }
 
     public void HidePlayerStatusUI()
@@ -161,18 +172,53 @@ public class UIManager : MonoBehaviour
 
     public void TurnstopEmphasisStop()
     {
-        _turnstopObj.transform.DORewind();
         DOTween.KillAll();
+        _turnstopObj.transform.DORewind();
     }
 
     public void ShowSkillUI(bool value, Player p)
     {
         _skillUI.SetActive(value);
 
-        _skillUI.transform.Find("IronFist").GetComponent<Image>().color = p.KineticPoint < 15 ? Color.gray : Color.white;
-        _skillUI.transform.Find("IntensiveAttack").GetComponent<Image>().color = p.KineticPoint < 15 ? Color.gray : Color.white;
-        _skillUI.transform.Find("KnockDown").GetComponent<Image>().color = p.KineticPoint < 15 ? Color.gray : Color.white;
-        _skillUI.transform.Find("SuppressionDrone").GetComponent<Image>().color = p.KineticPoint < 15 ? Color.gray : Color.white;
+        _skillButton[0].color = p.KineticPoint < (int)Skill.SkillCost.IronFist ? Color.gray : Color.white;
+        _skillButton[1].color = p.KineticPoint < (int)Skill.SkillCost.IntensiveAttack ? Color.gray : Color.white;
+        _skillButton[2].color = p.KineticPoint < (int)Skill.SkillCost.KnockDown ? Color.gray : Color.white;
+        _skillButton[3].color = p.KineticPoint < (int)Skill.SkillCost.SuppressionDrone ? Color.gray : Color.white;
 
+    }
+
+    public void SelectSkillButton(int num)
+    {
+        if(selectSkillNum == num)
+        {
+            selectSkillNum = 5;
+            _skillButton[num].color = Color.white;
+            FightManager.Instance.HideDistance();
+            FightManager.Instance.pSkill = Skill.SkillType.None;
+        }
+        else
+        {
+            if (selectSkillNum != 5) _skillButton[selectSkillNum].color = Color.white;
+            selectSkillNum = num;
+            _skillButton[selectSkillNum].color = Color.red;
+            switch(num)
+            {
+                case (int)Skill.SkillType.IronFist:
+                    FightManager.Instance.pSkill = Skill.SkillType.IronFist;
+                    break;
+                case (int)Skill.SkillType.IntensiveAttack:
+                    FightManager.Instance.ShowDistance(3, true);
+                    FightManager.Instance.pSkill = Skill.SkillType.IntensiveAttack;
+                    break;
+                case (int)Skill.SkillType.KnockDown:
+                    FightManager.Instance.ShowDistance(1, true);
+                    FightManager.Instance.pSkill = Skill.SkillType.KnockDown;
+                    break;
+                case (int)Skill.SkillType.SuppressionDrone:
+                    FightManager.Instance.ShowDistance(2, true);
+                    FightManager.Instance.pSkill = Skill.SkillType.SuppressionDrone;
+                    break;
+            }
+        }
     }
 }

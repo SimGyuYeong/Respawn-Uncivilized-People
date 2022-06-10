@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Tile : MonoBehaviour
 {
@@ -14,15 +15,18 @@ public class Tile : MonoBehaviour
     /// </summary>
     void OnMouseEnter()
     {
-        if (FightManager.Instance.isIng == false && FightManager.Instance.pInput != FightManager.InputType.Input_Skill)
+        if (FightManager.Instance.isIng == false)
         {
-            if (transform.childCount > 1)
+            if(FightManager.Instance.pInput != FightManager.InputType.Input_Skill)
             {
-                _isShowUI = true;
-                if (isPlayer())
-                    FightManager.Instance.ShowUpdateStat(transform.GetChild(1).GetComponent<Player>());
-                else if (isAI())
-                    FightManager.Instance.ShowUpdateStat(transform.GetChild(1).GetComponent<AI>());
+                if (transform.childCount > 1)
+                {
+                    _isShowUI = true;
+                    if (isPlayer())
+                        FightManager.Instance.ShowUpdateStat(transform.GetChild(1).GetComponent<Player>());
+                    else if (isAI())
+                        FightManager.Instance.ShowUpdateStat(transform.GetChild(1).GetComponent<AI>());
+                }
             }
 
             if (FightManager.Instance.turnType == FightManager.TurnType.Player)
@@ -31,11 +35,11 @@ public class Tile : MonoBehaviour
             }
 
             //АјАн
-            if (FightManager.Instance.pInput == FightManager.InputType.Input_Skill)
+            if (FightManager.Instance.pSkill != Skill.SkillType.None)
             {
                 if (isAI())
                 {
-                    if (Vector2Int.Distance(tile.Position, FightManager.Instance.pPos) <= 1)
+                    if (transform.GetComponent<SpriteRenderer>().color == Color.red)
                     {
                         FightManager.Instance.tPos = tile.Position;
                         FightManager.Instance.EnemyDraw();

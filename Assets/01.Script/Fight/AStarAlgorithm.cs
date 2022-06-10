@@ -32,7 +32,7 @@ public class AStarAlgorithm : MonoBehaviour
     private Node StartNode, TargetNode, CurNode;
     private List<Node> OpenList, ClosedList;
 
-    public void PathFinding()
+    public void PathFinding(bool isSkill = false)
     {
         sizeX = maxPos.x - minPos.x + 1;
         sizeY = maxPos.y - minPos.y + 1;
@@ -46,9 +46,10 @@ public class AStarAlgorithm : MonoBehaviour
                 bool isWall = false;
                 int slot = (7 - i) * 8 + j;
 
-                if(FightManager.Instance.tileList[slot].transform.childCount >= 2 || FightManager.Instance.isWallList[slot] == true)
+                if(FightManager.Instance.isWallList[slot] == true) isWall = true;
+                if(isSkill == false)
                 {
-                    isWall = true;
+                    if (FightManager.Instance.tileList[slot].transform.childCount >= 2)  isWall = true;
                 }
 
                 NodeArray[j, i] = new Node(isWall, j, i); // º®¿©ºÎ, xÁÂÇ¥, yÁÂÇ¥
