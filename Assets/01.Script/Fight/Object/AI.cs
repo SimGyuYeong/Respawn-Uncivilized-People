@@ -19,7 +19,9 @@ public class AI : MonoBehaviour
 {
     public string aiName;
     public int id;
+
     public bool isRestructuring = false;
+    private bool _isDead = false;
 
     private int _maxInfluencePoint;
     public int MaxInfluencePoint => _maxInfluencePoint;
@@ -104,8 +106,21 @@ public class AI : MonoBehaviour
     /// </summary>
     public void AIMoveStart()
     {
-        TargetOfAttackCheck();
-        StartCoroutine(AIMove());
+        if(isRestructuring == false)
+        {
+            TargetOfAttackCheck();
+            StartCoroutine(AIMove());
+        }else
+        {
+            if(_isDead == true)
+            {
+                _isDead = false;
+                isRestructuring = false;
+                InfluencePoint = _maxInfluencePoint;
+            }
+            else  _isDead = true;
+            FightManager.Instance.TurnChange();
+        }
     }
 
     /// <summary>
