@@ -353,22 +353,29 @@ public class FightManager : MonoBehaviour
     }
     #endregion
 
-    public void ShowDistance(int distance, bool isSkill = false)
+    public void ShowDistance(int distance, Skill.SkillType skill = Skill.SkillType.None)
     {
         SpriteRenderer _spriteRenderer;
-        
+       
         foreach(var _tile in tileList)
         {
+            bool isSkill = false;
             TileInform _tileInform = _tile.GetComponent<Tile>().tile;
 
             bool isDistance = false;
-            if(isSkill == true)
+            if(skill != Skill.SkillType.None)
             {
+                isSkill = true;
                 if(_tile.transform.childCount > 1)
                 {
-                    if(_tile.transform.GetChild(1).name == "AI(Clone)")
+                    Transform childObj = _tile.transform.GetChild(1);
+                    if(childObj.name == "AI(Clone)")
                     {
                         isDistance = true;
+                        if(skill == Skill.SkillType.SuppressionDrone)
+                        {
+                            isDistance = childObj.GetComponent<AI>().isRestructuring;
+                        }
                     }
                 }
             }
@@ -546,7 +553,7 @@ public class FightManager : MonoBehaviour
 
     public void PlayerAction(Action value)
     {
-        if (value == Action.Attack  && player.KineticPoint < 15)
+        if (value == Action.Attack  && player.isFight == true)
             return;
 
         if (value == Action.Move && player.isMove == true)
@@ -572,38 +579,6 @@ public class FightManager : MonoBehaviour
         }
     }
 
-    public void PlayerAttack(int aiID)
-    {
-        player.DurabilityPoint -= aiList[aiID].InfluencePoint;
-
-        Destroy(aiList[aiID].gameObject);
-        aiList.RemoveAt(aiID);
-
-        if(aiList.Count == 0)
-        {
-            StartCoroutine(Win());
-            return;
-        }
-
-        for(int i = 0; i < aiList.Count; i++)
-        {
-            if(aiList[i].id != i)
-            {
-                aiList[i].id--;
-            }
-        }
-
-        ClickPlayer();
-        OnUIChange?.Invoke();
-        StartCoroutine(AfterAttack());
-    }
-
-    IEnumerator AfterAttack()
-    {
-        yield return new WaitForSeconds(2f);
-        NextPlayerTurn(Action.Attack);
-    }
-
     public void TurnChange()
     {
         if(turn==0)
@@ -623,6 +598,8 @@ public class FightManager : MonoBehaviour
                 break;
 
             case TurnType.Player_Ing:
+                if (aiList.Count == 0) StartCoroutine(Defeat());
+
                 turnType = TurnType.AI_Wait;
                 pInput = InputType.None;
                 pSkill = Skill.SkillType.None;
@@ -644,7 +621,7 @@ public class FightManager : MonoBehaviour
                 {
                     turn--;
                     isIng = false;
-                    StartCoroutine(PlayerTurn());
+                    PlayerTurn();
                 }
                 break;
         }
@@ -663,27 +640,23 @@ public class FightManager : MonoBehaviour
         }
     }
 
-    private IEnumerator PlayerTurn()
+    private void PlayerTurn()
     {
-        yield return null;   
         turnType = TurnType.Player_Wait;
+        if (playerList.Count == 0)
+        {
+            StartCoroutine(Defeat());
+        }
 
-        foreach(var p in playerList)
+        foreach (var p in playerList)
         {
             p.isFight = false;
             p.isMove = false;
             p.KineticPoint += 25;
         }
 
-        if(playerList.Count == 0)
-        {
-            StartCoroutine(Defeat());
-        }
-        else
-        {
-            OnUIChange?.Invoke();
-            TurnChange();
-        }
+        OnUIChange?.Invoke();
+        TurnChange();
     }
 
     public void ClickTile(GameObject tileObj)
@@ -760,23 +733,14 @@ public class FightManager : MonoBehaviour
                 _uiManager.ShowSkillUI(false, player);
                 break;
             case Skill.SkillType.SuppressionDrone:
-                player.KineticPoint -= (int)Skill.SkillCost.SuppressionDrone;
                 if(ai.isRestructuring == true)
                 {
+                    player.KineticPoint -= (int)Skill.SkillCost.SuppressionDrone;
                     ai.Death();
                 }
+                _uiManager.ShowSkillUI(false, player);
                 break;
         }
-    }
-
-    public void ShowUpdateStat(Player _player)
-    {
-        _uiManager.ShowPlayerStatusUI(_player);
-    }
-
-    public void ShowUpdateStat(AI _ai)
-    {
-        _uiManager.ShowAIStatusUI(_ai);
     }
 
     public void TurnStop()

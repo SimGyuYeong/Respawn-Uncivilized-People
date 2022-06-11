@@ -55,19 +55,19 @@ public class Skill : MonoBehaviour
             {
                 case SkillType.IronFist:
                     if (FightManager.Instance.player.KineticPoint >= (int)SkillCost.IronFist)
-                        FightManager.Instance.ShowDistance(1, true);
+                        FightManager.Instance.ShowDistance(1, SkillType.IronFist);
                     break;
                 case SkillType.IntensiveAttack:
                     if (FightManager.Instance.player.KineticPoint >= (int)SkillCost.IntensiveAttack)
-                        FightManager.Instance.ShowDistance(3, true);
+                        FightManager.Instance.ShowDistance(3, SkillType.IntensiveAttack);
                     break;
                 case SkillType.KnockDown:
                     if (FightManager.Instance.player.KineticPoint >= (int)SkillCost.KnockDown)
-                        FightManager.Instance.ShowDistance(1, true);
+                        FightManager.Instance.ShowDistance(1, SkillType.KnockDown);
                     break;
                 case SkillType.SuppressionDrone:
                     if (FightManager.Instance.player.KineticPoint >= (int)SkillCost.SuppressionDrone)
-                        FightManager.Instance.ShowDistance(2, true);
+                        FightManager.Instance.ShowDistance(2, SkillType.SuppressionDrone);
                     break;
                 default:
                     break;

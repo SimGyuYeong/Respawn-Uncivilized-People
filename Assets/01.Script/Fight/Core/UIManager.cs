@@ -173,7 +173,7 @@ public class UIManager : MonoBehaviour
     public void TurnstopEmphasisStop()
     {
         DOTween.KillAll();
-        _turnstopObj.transform.DORewind();
+        _turnstopObj.transform.localScale = Vector3.one;
     }
 
     public void ShowSkillUI(bool value, Player p)
@@ -207,15 +207,15 @@ public class UIManager : MonoBehaviour
                     FightManager.Instance.pSkill = Skill.SkillType.IronFist;
                     break;
                 case (int)Skill.SkillType.IntensiveAttack:
-                    FightManager.Instance.ShowDistance(3, true);
+                    FightManager.Instance.ShowDistance(3, Skill.SkillType.IntensiveAttack);
                     FightManager.Instance.pSkill = Skill.SkillType.IntensiveAttack;
                     break;
                 case (int)Skill.SkillType.KnockDown:
-                    FightManager.Instance.ShowDistance(1, true);
+                    FightManager.Instance.ShowDistance(1, Skill.SkillType.KnockDown);
                     FightManager.Instance.pSkill = Skill.SkillType.KnockDown;
                     break;
                 case (int)Skill.SkillType.SuppressionDrone:
-                    FightManager.Instance.ShowDistance(2, true);
+                    FightManager.Instance.ShowDistance(2, Skill.SkillType.SuppressionDrone);
                     FightManager.Instance.pSkill = Skill.SkillType.SuppressionDrone;
                     break;
             }

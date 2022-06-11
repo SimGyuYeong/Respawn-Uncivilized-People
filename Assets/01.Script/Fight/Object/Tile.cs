@@ -23,9 +23,9 @@ public class Tile : MonoBehaviour
                 {
                     _isShowUI = true;
                     if (isPlayer())
-                        FightManager.Instance.ShowUpdateStat(transform.GetChild(1).GetComponent<Player>());
+                        FightManager.Instance.UI.ShowPlayerStatusUI(transform.GetChild(1).GetComponent<Player>());
                     else if (isAI())
-                        FightManager.Instance.ShowUpdateStat(transform.GetChild(1).GetComponent<AI>());
+                        FightManager.Instance.UI.ShowAIStatusUI(transform.GetChild(1).GetComponent<AI>());
                 }
             }
 
