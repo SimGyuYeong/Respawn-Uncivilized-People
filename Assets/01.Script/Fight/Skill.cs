@@ -28,7 +28,11 @@ public class Skill : MonoBehaviour
         {
             case SkillType.IronFist:
                 if (FightManager.Instance.player.KineticPoint >= (int)SkillCost.IronFist)
-                    FightManager.Instance.UI.SelectSkillButton((int)SkillType.IronFist);
+                {
+                    List<AI> attackAIList = FightManager.Instance.IronFistAttackList();
+                    if(attackAIList.Count > 0)
+                        FightManager.Instance.UI.SelectSkillButton((int)SkillType.IronFist);
+                }
                 break;
             case SkillType.IntensiveAttack:
                 if (FightManager.Instance.player.KineticPoint >= (int)SkillCost.IntensiveAttack)

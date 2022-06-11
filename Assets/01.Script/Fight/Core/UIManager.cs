@@ -180,7 +180,11 @@ public class UIManager : MonoBehaviour
     {
         _skillUI.SetActive(value);
 
+        List<AI> attackAIList = FightManager.Instance.IronFistAttackList();
+
         _skillButton[0].color = p.KineticPoint < (int)Skill.SkillCost.IronFist ? Color.gray : Color.white;
+        if (attackAIList.Count == 0) _skillButton[0].color = Color.gray;
+
         _skillButton[1].color = p.KineticPoint < (int)Skill.SkillCost.IntensiveAttack ? Color.gray : Color.white;
         _skillButton[2].color = p.KineticPoint < (int)Skill.SkillCost.KnockDown ? Color.gray : Color.white;
         _skillButton[3].color = p.KineticPoint < (int)Skill.SkillCost.SuppressionDrone ? Color.gray : Color.white;
@@ -205,6 +209,7 @@ public class UIManager : MonoBehaviour
             {
                 case (int)Skill.SkillType.IronFist:
                     FightManager.Instance.pSkill = Skill.SkillType.IronFist;
+                    FightManager.Instance.UseSkill();
                     break;
                 case (int)Skill.SkillType.IntensiveAttack:
                     FightManager.Instance.ShowDistance(3, Skill.SkillType.IntensiveAttack);

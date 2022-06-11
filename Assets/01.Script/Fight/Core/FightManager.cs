@@ -646,6 +646,7 @@ public class FightManager : MonoBehaviour
         if (playerList.Count == 0)
         {
             StartCoroutine(Defeat());
+            return;
         }
 
         foreach (var p in playerList)
@@ -705,24 +706,41 @@ public class FightManager : MonoBehaviour
                     {
                         AI ai = tileObj.GetComponentInChildren<AI>();
                         UseSkill(ai);
-
-                        HideDistance();
-                        NextPlayerTurn(Action.Attack);
                     }
                 }
             }
         }
     }
 
-    public void UseSkill(AI ai)
+    public List<AI> IronFistAttackList()
+    {
+        List<AI> attackAIList = new List<AI>();
+        foreach (var _ai in aiList)
+        {
+            if (Vector2.Distance(_ai.Position, player.Position) == 1)
+                attackAIList.Add(_ai);
+        }
+        return attackAIList;
+    }
+
+    public void UseSkill(AI ai = null)
     {
         switch (pSkill)
         {
+            case Skill.SkillType.IronFist:
+                player.KineticPoint -= (int)Skill.SkillCost.IronFist;
+
+                List<AI> attackAIList = IronFistAttackList();
+                attackAIList.ForEach(x => x.InfluencePoint -= 10);
+                _uiManager.ShowSkillUI(false, player);
+                break;
+
             case Skill.SkillType.IntensiveAttack:
                 player.KineticPoint -= (int)Skill.SkillCost.IntensiveAttack;
                 ai.InfluencePoint -= 20;
                 _uiManager.ShowSkillUI(false, player);
                 break;
+
             case Skill.SkillType.KnockDown:
                 player.KineticPoint -= (int)Skill.SkillCost.KnockDown;
                 ai.InfluencePoint -= 50;
@@ -732,6 +750,7 @@ public class FightManager : MonoBehaviour
                 }
                 _uiManager.ShowSkillUI(false, player);
                 break;
+
             case Skill.SkillType.SuppressionDrone:
                 if(ai.isRestructuring == true)
                 {
@@ -741,6 +760,9 @@ public class FightManager : MonoBehaviour
                 _uiManager.ShowSkillUI(false, player);
                 break;
         }
+
+        HideDistance();
+        NextPlayerTurn(Action.Attack);
     }
 
     public void TurnStop()
