@@ -494,4 +494,9 @@ public class TextManager : MonoBehaviour
        // _seq.Append(freeTimeText.storyPanel.transform.DOScale(1f, 1.2f)).SetEase(Ease.OutSine);
         _seq.AppendInterval(0.5f);
     }
+
+    public void Memorial(string keyWord)
+    {
+
+    }
 }
