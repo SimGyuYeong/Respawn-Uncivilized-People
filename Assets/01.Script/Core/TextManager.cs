@@ -45,6 +45,7 @@ public class TextManager : MonoBehaviour
     public bool isAuto = false;
 
     private static TextManager instance;
+    private MemorialManager memorialManager; 
 
     public AudioClip _coffeclip = null;
 
@@ -94,11 +95,12 @@ public class TextManager : MonoBehaviour
         _textDataSO = GetComponentInChildren<TextDataSave>();
         StartCoroutine(LoadTextData(URL)); // 텍스트 데이터 읽기
         maincam = Camera.main;
+        memorialManager = GetComponent<MemorialManager>();
         //Action a = GameManager.Instance.OptionPanelOC(0);
         //Action a = dataManager.SaveMenuPanelOpen(1);
 
         //textPanelObj = Instantiate(textPanelPrefab, textCanvasTrm);
-       
+
     }
 
     public void Start()
@@ -493,5 +495,11 @@ public class TextManager : MonoBehaviour
         _seq.Append(maincam.transform.DOMoveX(0, 1f)).SetEase(Ease.Linear);
        // _seq.Append(freeTimeText.storyPanel.transform.DOScale(1f, 1.2f)).SetEase(Ease.OutSine);
         _seq.AppendInterval(0.5f);
+    }
+
+    public void keyWordAdd(string keyWord)
+    {
+        //memorialManager.memorialAdd(keyWord);
+        
     }
 }
