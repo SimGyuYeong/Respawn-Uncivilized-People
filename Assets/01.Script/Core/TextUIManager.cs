@@ -6,7 +6,11 @@ using UnityEngine;
 
 public class TextUIManager : MonoBehaviour
 {
+    [Tooltip("넘엉가는 화면 이미지")]
     [SerializeField] private GameObject _loadingSprite;
+
+    [Tooltip("설정창 UI")]
+    [SerializeField] private GameObject _optionUI;
 
     public bool isLoading = false;
 

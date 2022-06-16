@@ -59,7 +59,10 @@ public class Skill : MonoBehaviour
             {
                 case SkillType.IronFist:
                     if (FightManager.Instance.player.KineticPoint >= (int)SkillCost.IronFist)
+                    {
                         FightManager.Instance.ShowDistance(1, SkillType.IronFist);
+                    }
+                        
                     break;
                 case SkillType.IntensiveAttack:
                     if (FightManager.Instance.player.KineticPoint >= (int)SkillCost.IntensiveAttack)

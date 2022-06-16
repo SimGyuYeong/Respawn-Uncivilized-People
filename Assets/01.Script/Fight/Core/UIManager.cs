@@ -35,6 +35,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject _skillUI;
     public int selectSkillNum = 5;
 
+    [SerializeField] private GameObject _skillInfoUI;
+
     private List<Image> _skillButton = new List<Image>();
     #endregion
 
@@ -225,5 +227,14 @@ public class UIManager : MonoBehaviour
                     break;
             }
         }
+    }
+
+    public void SkillInfoUIShow(bool value, Vector3 pos)
+    {
+        _skillInfoUI.transform.localPosition = pos;
+        if(value == true)
+            _skillInfoUI.GetComponent<Image>().DOFade(1, .2f);
+        else
+            _skillInfoUI.GetComponent<Image>().DOFade(0, .2f);
     }
 }

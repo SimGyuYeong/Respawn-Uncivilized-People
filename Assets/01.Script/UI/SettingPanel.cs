@@ -67,13 +67,13 @@ public class SettingPanel : MonoBehaviour
                 option += $" {resolution.refreshRate}Hz";
             }
             options.Add(option);
+            Debug.Log(option);
         }
 
         resolutionDropdown.ClearOptions();
         resolutionDropdown.AddOptions(options);
 
         resolutionDropdown.value = ResolutionIndex;
-        fullscreenToggle.isOn = IsFullscreen;
 
         resolutionDropdown.RefreshShownValue();
     }

@@ -356,7 +356,8 @@ public class FightManager : MonoBehaviour
     public void ShowDistance(int distance, Skill.SkillType skill = Skill.SkillType.None)
     {
         SpriteRenderer _spriteRenderer;
-       
+        int aiCount = 0;
+
         foreach(var _tile in tileList)
         {
             bool isSkill = false;
@@ -365,6 +366,7 @@ public class FightManager : MonoBehaviour
             bool isDistance = false;
             if(skill != Skill.SkillType.None)
             {
+                aiCount++;
                 isSkill = true;
                 if(_tile.transform.childCount > 1)
                 {
@@ -374,7 +376,9 @@ public class FightManager : MonoBehaviour
                         isDistance = true;
                         if(skill == Skill.SkillType.SuppressionDrone)
                         {
-                            isDistance = childObj.GetComponent<AI>().isRestructuring;
+                            AI ai = childObj.GetComponent<AI>();
+                            isDistance = ai.isRestructuring;
+                            if (ai.isRestructuring == false) aiCount--;
                         }
                     }
                 }
@@ -395,6 +399,12 @@ public class FightManager : MonoBehaviour
 
         }
     }
+
+    public bool WhetherUseSkill(int count)
+    {
+        return count != 0;
+    }
+
     public void HideDistance()
     {
         _uiManager.selectSkillNum = 5;
@@ -598,7 +608,7 @@ public class FightManager : MonoBehaviour
                 break;
 
             case TurnType.Player_Ing:
-                if (aiList.Count == 0) StartCoroutine(Defeat());
+                if (aiList.Count == 0) StartCoroutine(Win());
 
                 turnType = TurnType.AI_Wait;
                 pInput = InputType.None;
@@ -640,6 +650,9 @@ public class FightManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// AI턴이 끝나면 Player 턴으로 넘어갈때 사용되는 함수
+    /// </summary>
     private void PlayerTurn()
     {
         turnType = TurnType.Player_Wait;
@@ -761,6 +774,7 @@ public class FightManager : MonoBehaviour
                 break;
         }
 
+        pSkill = Skill.SkillType.None;
         HideDistance();
         NextPlayerTurn(Action.Attack);
     }
