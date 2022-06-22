@@ -2519,18 +2519,20 @@ MonoBehaviour:
   m_Value: 0
   m_Options:
     m_Options:
-    - m_Text: Option A
+    - m_Text: "\uC804\uCCB4\uD654\uBA74"
       m_Image: {fileID: 0}
-    - m_Text: Option B
+    - m_Text: "\uC804\uCCB4\uD654\uBA74 \uCC3D\uBAA8\uB4DC"
       m_Image: {fileID: 0}
-    - m_Text: Option C
+    - m_Text: "\uCC3D\uBAA8\uB4DC"
+      m_Image: {fileID: 0}
+    - m_Text: XX
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1757475164}
         m_TargetAssemblyTypeName: SettingPanel, Assembly-CSharp
-        m_MethodName: DropdownOptionChanged
+        m_MethodName: ScreenModeChange
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7763,7 +7765,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Option A
+  m_Text: "\uCC3D\uBAA8\uB4DC"
 --- !u!222 &1225558552
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -11149,7 +11151,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1757475164}
         m_TargetAssemblyTypeName: SettingPanel, Assembly-CSharp
-        m_MethodName: DropdownOptionChanged
+        m_MethodName: ResolutionChange
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -11306,6 +11308,7 @@ MonoBehaviour:
   hasHz: 0
   fullscreenToggle: {fileID: 0}
   resolutionDropdown: {fileID: 1751482782}
+  screenModeDropdown: {fileID: 0}
 --- !u!114 &1757475166
 MonoBehaviour:
   m_ObjectHideFlags: 0
