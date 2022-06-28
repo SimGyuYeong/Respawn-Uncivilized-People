@@ -3,14 +3,27 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class TextUIManager : MonoBehaviour
 {
     [Tooltip("넘엉가는 화면 이미지")]
     [SerializeField] private GameObject _loadingSprite;
 
+    #region 설정창
+    [Header("설정창")]
     [Tooltip("설정창 UI")]
     [SerializeField] private GameObject _optionUI;
+
+    private GameObject _defaultOption;
+    private GameObject _soundOption;
+
+    public Color selectColor;
+    private TextMeshProUGUI _defaultText;
+    private TextMeshProUGUI _soundText;
+    private TextMeshProUGUI _goTitleText;
+    private TextMeshProUGUI _backText;
+    #endregion
 
     public bool isLoading = false;
 
@@ -19,6 +32,14 @@ public class TextUIManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
+
+        _defaultOption = _optionUI.transform.Find("DefaultSetting").gameObject;
+        _soundOption = _optionUI.transform.Find("SoundSetting").gameObject;
+
+        _defaultText = _optionUI.transform.Find("Default").GetComponent<TextMeshProUGUI>();
+        _soundText = _optionUI.transform.Find("Sound").GetComponent<TextMeshProUGUI>();
+        _goTitleText = _optionUI.transform.Find("GoTitle").GetComponent<TextMeshProUGUI>();
+        _backText = _optionUI.transform.Find("Back").GetComponent<TextMeshProUGUI>();
     }
 
     public void Loading(Action action)
@@ -34,5 +55,33 @@ public class TextUIManager : MonoBehaviour
             isLoading = false;
             seq.Rewind();
         });
+    }
+
+    public void ShowOptionPanel(bool check)
+    {
+        _optionUI.SetActive(check);
+        if (check == true) Time.timeScale = 0f;
+        else
+        {
+            Time.timeScale = 1f;
+            _goTitleText.color = Color.gray;
+            _backText.color = Color.gray;
+        }
+    }
+
+    public void DefaultOptionClick()
+    {
+        _soundOption.SetActive(false);
+        _defaultOption.SetActive(true);
+        _soundText.color = Color.gray;
+        _defaultText.color = selectColor;
+    }
+
+    public void SoundOptionClick()
+    {
+        _soundOption.SetActive(true);
+        _defaultOption.SetActive(false);
+        _soundText.color = selectColor;
+        _defaultText.color = Color.gray;
     }
 }

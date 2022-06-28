@@ -72,12 +72,12 @@ public class GameManager : MonoBehaviour
             }
             else if(optionPanel.activeSelf == true)
             {
-                ShowOptionPanel(false);
+                TextUIManager.instance.ShowOptionPanel(false);
             }
             else
             {
                 Time.timeScale = 0;
-                ShowOptionPanel(true);
+                TextUIManager.instance.ShowOptionPanel(true);
             }
         }
     }
@@ -108,13 +108,6 @@ public class GameManager : MonoBehaviour
             default:
                 break;
         }
-    }
-
-    public void ShowOptionPanel(bool check)
-    {
-        optionPanel.SetActive(check);
-        if (check == true) Time.timeScale = 0f;
-        else Time.timeScale = 1f;
     }
 
     public IEnumerator FadeIn()
@@ -160,7 +153,7 @@ public class GameManager : MonoBehaviour
     public void BackTitle()
     {
         StopAllCoroutines();
-        ShowOptionPanel(false);
+        TextUIManager.instance.ShowOptionPanel(false);
         BlackImageObject.SetActive(false);
         TEXT.textPanelObj.SetActive(false); 
         TEXT.TextSO.backgroundList[TEXT.backgroundID].gameObject.SetActive(false);

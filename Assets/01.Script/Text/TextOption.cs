@@ -73,7 +73,7 @@ public class TextOption : MonoBehaviour
 
     public void ShowOptionPanel()
     {
-        GameManager.Instance.ShowOptionPanel(true);
+        TextUIManager.instance.ShowOptionPanel(true);
     }
 
     public void AutoPlay()
