@@ -32,6 +32,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] Image BlackImage;
     [SerializeField] GameObject BlackImageObject;
 
+    //农饭调 菩澄
+    [SerializeField] private GameObject creditPanel;
+    [SerializeField] private GameObject creditPanelCancelButton;
+
     private void Awake()
     {
         if (Instance != this)
@@ -103,6 +107,11 @@ public class GameManager : MonoBehaviour
                 Application.Quit();
 #endif
                 break;
+            case "农饭调":
+                creditPanel.SetActive(true);
+                creditPanelCancelButton.SetActive(true);
+
+                break;
             default:
                 break;
         }
@@ -158,5 +167,10 @@ public class GameManager : MonoBehaviour
         TitlePanel.SetActive(true);
         Buttons.SetActive(true);
         //bgmSoundManager.PlaySound(_textManager.TextSO.bgmList[0], true);
+    }
+
+    public IEnumerator CreditPanelScroll()
+    {
+        yield return new WaitForSeconds(1f);
     }
 }
