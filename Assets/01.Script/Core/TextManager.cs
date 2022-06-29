@@ -192,6 +192,12 @@ public class TextManager : MonoBehaviour
         }
     }
 
+    public void SFXPlay()
+    {
+        string sfxName = Sentence[chatID][lineNumber, (int)IDType.SFX];
+        GameManager.Instance.SfxSound.PlaySound(TextSO.sfxList[Convert.ToInt32(sfxName)], true);
+    }
+
     /// <summary>
     /// 배경화면 설정
     /// </summary>
