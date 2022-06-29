@@ -16,6 +16,10 @@ public class FightManager : MonoBehaviour
     private UIManager _uiManager;
     public UIManager UI { get => _uiManager; }
 
+    // 전투 전용 사운드 매니저
+    private FightSoundManager _soundManager;
+    public FightSoundManager SoundManager { get => _soundManager; }
+
     #region A* 알고리즘
     
     private AStarAlgorithm _aStar; // A* 알고리즘 캐싱
@@ -125,6 +129,7 @@ public class FightManager : MonoBehaviour
         _aStar = GetComponent<AStarAlgorithm>();
         _tuto = transform.parent.Find("Tutorial").GetComponent<Tutorial>();
         _uiManager = transform.parent.Find("UIManager").GetComponent<UIManager>();
+        _soundManager = transform.parent.Find("FightSoundManager").GetComponent<FightSoundManager>();
     }
 
     private void Start()
