@@ -33,9 +33,9 @@ public class UIManager : MonoBehaviour
 
     #region 스킬버튼
     [SerializeField] private GameObject _skillUI;
-    public int selectSkillNum = 5;
-
     [SerializeField] private GameObject _skillInfoUI;
+
+    public Skill selectSkill;
 
     private List<Image> _skillButton = new List<Image>();
     #endregion
@@ -178,53 +178,15 @@ public class UIManager : MonoBehaviour
         _turnstopObj.transform.localScale = Vector3.one;
     }
 
-    public void ShowSkillUI(bool value, Player p)
+    public void ShowSkillUI(bool value)
     {
         _skillUI.SetActive(value);
 
-        List<AI> attackAIList = FightManager.Instance.IronFistAttackList();
-
-        _skillButton[0].color = p.KineticPoint < (int)Skill.SkillCost.IronFist ? Color.gray : Color.white;
-        if (attackAIList.Count == 0) _skillButton[0].color = Color.gray;
-
-        _skillButton[1].color = p.KineticPoint < (int)Skill.SkillCost.IntensiveAttack ? Color.gray : Color.white;
-        _skillButton[2].color = p.KineticPoint < (int)Skill.SkillCost.KnockDown ? Color.gray : Color.white;
-        _skillButton[3].color = p.KineticPoint < (int)Skill.SkillCost.SuppressionDrone ? Color.gray : Color.white;
-
-    }
-
-    public void SelectSkillButton(int num)
-    {
-        if(selectSkillNum == num)
+        if (value == true)
         {
-            selectSkillNum = 5;
-            _skillButton[num].color = Color.white;
-            FightManager.Instance.HideDistance();
-            FightManager.Instance.pSkill = Skill.SkillType.None;
-        }
-        else
-        {
-            if (selectSkillNum != 5) _skillButton[selectSkillNum].color = Color.white;
-            selectSkillNum = num;
-            _skillButton[selectSkillNum].color = Color.red;
-            switch(num)
+            foreach (var button in _skillButton)
             {
-                case (int)Skill.SkillType.IronFist:
-                    FightManager.Instance.pSkill = Skill.SkillType.IronFist;
-                    FightManager.Instance.UseSkill();
-                    break;
-                case (int)Skill.SkillType.IntensiveAttack:
-                    FightManager.Instance.ShowDistance(3, Skill.SkillType.IntensiveAttack);
-                    FightManager.Instance.pSkill = Skill.SkillType.IntensiveAttack;
-                    break;
-                case (int)Skill.SkillType.KnockDown:
-                    FightManager.Instance.ShowDistance(1, Skill.SkillType.KnockDown);
-                    FightManager.Instance.pSkill = Skill.SkillType.KnockDown;
-                    break;
-                case (int)Skill.SkillType.SuppressionDrone:
-                    FightManager.Instance.ShowDistance(2, Skill.SkillType.SuppressionDrone);
-                    FightManager.Instance.pSkill = Skill.SkillType.SuppressionDrone;
-                    break;
+                button.color = button.GetComponent<Skill>().SkillWhether() ? Color.white : Color.gray;
             }
         }
     }

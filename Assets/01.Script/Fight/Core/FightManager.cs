@@ -27,7 +27,7 @@ public class FightManager : MonoBehaviour
     public AStarAlgorithm AStar => _aStar;
 
     //A* 알고리즘에서 길정보를 가져옴
-    private List<Node> _finalNodeList { get => _aStar.FinalNodeList; }
+    public List<Node> finalNodeList { get => _aStar.FinalNodeList; }
 
     //A* 알고리즘에 등록된 플레이어 부대의 좌표를 가져오거나 설정
     public Vector2Int pPos
@@ -87,6 +87,8 @@ public class FightManager : MonoBehaviour
 
     public LineRenderer lineRenderer;
 
+    public bool isSkillSelect = false;
+
     [field: SerializeField] public UnityEvent OnUIChange { get; set; }
 
     public enum TurnType
@@ -115,8 +117,6 @@ public class FightManager : MonoBehaviour
         Attack = 1,
         Stop = 2
     }
-
-    public Skill.SkillType pSkill = Skill.SkillType.None;
 
     private void Awake()
     {
@@ -249,9 +249,9 @@ public class FightManager : MonoBehaviour
         lineRenderer.startColor = Color.white;
         lineRenderer.endColor = Color.white;
         lineRenderer.positionCount = 0;
-        for (int i = 0; i < _finalNodeList.Count; i++)
+        for (int i = 0; i < finalNodeList.Count; i++)
         {
-            Vector2 pos = new Vector2(_finalNodeList[i].x, _finalNodeList[i].y);
+            Vector2 pos = new Vector2(finalNodeList[i].x, finalNodeList[i].y);
             lineRenderer.positionCount++;
             lineRenderer.SetPosition(i, pos);
         }
@@ -278,7 +278,7 @@ public class FightManager : MonoBehaviour
     {
         tPos = new Vector2Int((int)pos.x, (int)pos.y);
         _aStar.PathFinding();
-        if (_finalNodeList.Count <= moveDistance+1 && _finalNodeList.Count > 0) return true;
+        if (finalNodeList.Count <= moveDistance+1 && finalNodeList.Count > 0) return true;
         return false;
     }
      
@@ -358,10 +358,9 @@ public class FightManager : MonoBehaviour
     }
     #endregion
 
-    public void ShowDistance(int distance, Skill.SkillType skill = Skill.SkillType.None)
+    public void ShowDistance(int distance)
     {
         SpriteRenderer _spriteRenderer;
-        int aiCount = 0;
 
         foreach(var _tile in tileList)
         {
@@ -369,25 +368,6 @@ public class FightManager : MonoBehaviour
             TileInform _tileInform = _tile.GetComponent<Tile>().tile;
 
             bool isDistance = false;
-            if(skill != Skill.SkillType.None)
-            {
-                aiCount++;
-                isSkill = true;
-                if(_tile.transform.childCount > 1)
-                {
-                    Transform childObj = _tile.transform.GetChild(1);
-                    if(childObj.name == "AI(Clone)")
-                    {
-                        isDistance = true;
-                        if(skill == Skill.SkillType.SuppressionDrone)
-                        {
-                            AI ai = childObj.GetComponent<AI>();
-                            isDistance = ai.isRestructuring;
-                            if (ai.isRestructuring == false) aiCount--;
-                        }
-                    }
-                }
-            }
 
             if(_tileInform.isWall == false && _tile.transform.childCount < 2) isDistance = true;
 
@@ -396,7 +376,7 @@ public class FightManager : MonoBehaviour
                 _spriteRenderer = _tile.GetComponent<SpriteRenderer>();
                 _aStar.targetPos = _tileInform.Position;
                 _aStar.PathFinding(isSkill);
-                if (_finalNodeList.Count <= distance + 1 && _finalNodeList.Count > 0)
+                if (finalNodeList.Count <= distance + 1 && finalNodeList.Count > 0)
                 {
                     _spriteRenderer.color = isSkill == true ? Color.red : Color.yellow;
                 }
@@ -412,7 +392,6 @@ public class FightManager : MonoBehaviour
 
     public void HideDistance()
     {
-        _uiManager.selectSkillNum = 5;
         SpriteRenderer _spriteRenderer;
         int count = 0;
 
@@ -455,10 +434,10 @@ public class FightManager : MonoBehaviour
         lineRenderer.positionCount = 0;
         player.gameObject.SetActive(false);
 
-        for(int i = 0; i < _finalNodeList.Count; i++)
+        for(int i = 0; i < finalNodeList.Count; i++)
         {
             var obj = Instantiate(moveAni);
-            obj.transform.position = new Vector2(_finalNodeList[i].x, _finalNodeList[i].y);
+            obj.transform.position = new Vector2(finalNodeList[i].x, finalNodeList[i].y);
             player.DurabilityPoint -= 2;
             yield return new WaitForSeconds(0.2f);
         }
@@ -474,7 +453,7 @@ public class FightManager : MonoBehaviour
     /// <summary>
     /// 플레이어 행동 후 진행함수
     /// </summary>
-    private void NextPlayerTurn(Action action)
+    public void NextPlayerTurn(Action action)
     {
         _turnCount--;
         isIng = false;
@@ -583,7 +562,7 @@ public class FightManager : MonoBehaviour
                 break;
             case Action.Attack:
                 pInput = InputType.Input_Skill;
-                _uiManager.ShowSkillUI(true, player);
+                _uiManager.ShowSkillUI(true);
                 break;
             case Action.Stop:
                 turnType = TurnType.Player_Ing;
@@ -617,7 +596,6 @@ public class FightManager : MonoBehaviour
 
                 turnType = TurnType.AI_Wait;
                 pInput = InputType.None;
-                pSkill = Skill.SkillType.None;
                 TurnChange();
                 break;
 
@@ -716,14 +694,14 @@ public class FightManager : MonoBehaviour
                 if (tile.isPlayer())
                 {
                     pInput = InputType.None;
-                    _uiManager.ShowSkillUI(false, player);
+                    _uiManager.ShowSkillUI(false);
                 }
                 else if(tile.isAI())
                 {
                     if(tileObj.GetComponent<SpriteRenderer>().color == Color.red)
                     {
                         AI ai = tileObj.GetComponentInChildren<AI>();
-                        UseSkill(ai);
+                        UI.selectSkill.SelectAI(ai);
                     }
                 }
             }
@@ -739,49 +717,6 @@ public class FightManager : MonoBehaviour
                 attackAIList.Add(_ai);
         }
         return attackAIList;
-    }
-
-    public void UseSkill(AI ai = null)
-    {
-        switch (pSkill)
-        {
-            case Skill.SkillType.IronFist:
-                player.KineticPoint -= (int)Skill.SkillCost.IronFist;
-
-                List<AI> attackAIList = IronFistAttackList();
-                attackAIList.ForEach(x => x.InfluencePoint -= 10);
-                _uiManager.ShowSkillUI(false, player);
-                break;
-
-            case Skill.SkillType.IntensiveAttack:
-                player.KineticPoint -= (int)Skill.SkillCost.IntensiveAttack;
-                ai.InfluencePoint -= 20;
-                _uiManager.ShowSkillUI(false, player);
-                break;
-
-            case Skill.SkillType.KnockDown:
-                player.KineticPoint -= (int)Skill.SkillCost.KnockDown;
-                ai.InfluencePoint -= 50;
-                if (ai.isRestructuring == true)
-                {
-                    ai.Death();
-                }
-                _uiManager.ShowSkillUI(false, player);
-                break;
-
-            case Skill.SkillType.SuppressionDrone:
-                if(ai.isRestructuring == true)
-                {
-                    player.KineticPoint -= (int)Skill.SkillCost.SuppressionDrone;
-                    ai.Death();
-                }
-                _uiManager.ShowSkillUI(false, player);
-                break;
-        }
-
-        pSkill = Skill.SkillType.None;
-        HideDistance();
-        NextPlayerTurn(Action.Attack);
     }
 
     public void TurnStop()

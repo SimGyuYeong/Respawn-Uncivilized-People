@@ -378,55 +378,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 61560248}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 342c3ab9eafc8dc4e9e3abadf8030df1, type: 3}
+  m_Script: {fileID: 11500000, guid: 42f7c37b7b772eb4f86d7134870822b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillType: 1
-  OnClickEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 360682139}
-        m_TargetAssemblyTypeName: Skill, Assembly-CSharp
-        m_MethodName: Skilling
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnEnterEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 360682139}
-        m_TargetAssemblyTypeName: Skill, Assembly-CSharp
-        m_MethodName: ShowSkillDIstance
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnExitEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 360682139}
-        m_TargetAssemblyTypeName: Skill, Assembly-CSharp
-        m_MethodName: SelectButtonExit
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+  _name: "\uC9D1\uC911 \uD3EC\uACA9"
+  _cost: 20
+  _damage: 15
+  _range: 3
+  _info: 
 --- !u!114 &61560252
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1568,55 +1527,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 237436113}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 342c3ab9eafc8dc4e9e3abadf8030df1, type: 3}
+  m_Script: {fileID: 11500000, guid: 747032489dd7d07438f547f0a1811d48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillType: 0
-  OnClickEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 360682139}
-        m_TargetAssemblyTypeName: Skill, Assembly-CSharp
-        m_MethodName: Skilling
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnEnterEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 360682139}
-        m_TargetAssemblyTypeName: Skill, Assembly-CSharp
-        m_MethodName: ShowSkillDIstance
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnExitEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 360682139}
-        m_TargetAssemblyTypeName: Skill, Assembly-CSharp
-        m_MethodName: SelectButtonExit
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+  _name: "\uC544\uC774\uC5B8 \uD53C\uC2A4\uD2B8"
+  _cost: 15
+  _damage: 10
+  _range: 1
+  _info: 
 --- !u!114 &237436117
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2424,6 +2342,7 @@ MonoBehaviour:
   isClickPlayer: 0
   moveDistance: 4
   lineRenderer: {fileID: 0}
+  isSkillSelect: 0
   <OnUIChange>k__BackingField:
     m_PersistentCalls:
       m_Calls:
@@ -2453,7 +2372,6 @@ MonoBehaviour:
         m_CallState: 2
   turnType: 3
   pInput: 0
-  pSkill: 4
 --- !u!4 &668040824
 Transform:
   m_ObjectHideFlags: 0
@@ -3769,7 +3687,7 @@ GameObject:
   - component: {fileID: 1220752146}
   - component: {fileID: 1220752150}
   - component: {fileID: 1220752149}
-  - component: {fileID: 1220752147}
+  - component: {fileID: 1220752148}
   m_Layer: 5
   m_Name: KnockDown
   m_TagString: Untagged
@@ -3798,7 +3716,7 @@ RectTransform:
   m_AnchoredPosition: {x: 443.92, y: -269}
   m_SizeDelta: {x: 595.39, y: 68.71}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1220752147
+--- !u!114 &1220752148
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3807,55 +3725,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1220752145}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 342c3ab9eafc8dc4e9e3abadf8030df1, type: 3}
+  m_Script: {fileID: 11500000, guid: 4aacfb9f5715a2f4698c00c9d4a0c70f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillType: 2
-  OnClickEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 360682139}
-        m_TargetAssemblyTypeName: Skill, Assembly-CSharp
-        m_MethodName: Skilling
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnEnterEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 360682139}
-        m_TargetAssemblyTypeName: Skill, Assembly-CSharp
-        m_MethodName: ShowSkillDIstance
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnExitEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 360682139}
-        m_TargetAssemblyTypeName: Skill, Assembly-CSharp
-        m_MethodName: SelectButtonExit
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+  _name: "\uB109 \uB2E4\uC6B4"
+  _cost: 50
+  _damage: 25
+  _range: 1
+  _info: 
 --- !u!114 &1220752149
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4493,55 +4370,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1568953769}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 342c3ab9eafc8dc4e9e3abadf8030df1, type: 3}
+  m_Script: {fileID: 11500000, guid: adc551abd5aed1c42a72115a5e3f9e0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillType: 3
-  OnClickEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 360682139}
-        m_TargetAssemblyTypeName: Skill, Assembly-CSharp
-        m_MethodName: Skilling
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnEnterEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 360682139}
-        m_TargetAssemblyTypeName: Skill, Assembly-CSharp
-        m_MethodName: ShowSkillDIstance
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnExitEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 360682139}
-        m_TargetAssemblyTypeName: Skill, Assembly-CSharp
-        m_MethodName: SelectButtonExit
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+  _name: "\uC81C\uC555 \uB4DC\uB860"
+  _cost: 25
+  _damage: 1
+  _range: 2
+  _info: 
 --- !u!114 &1568953773
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5515,8 +5351,8 @@ MonoBehaviour:
   isEmphasis: 0
   _broadcastObj: {fileID: 978738579}
   _skillUI: {fileID: 728272383}
-  selectSkillNum: 5
   _skillInfoUI: {fileID: 93690211}
+  selectSkill: {fileID: 0}
 --- !u!1 &1959517837
 GameObject:
   m_ObjectHideFlags: 0

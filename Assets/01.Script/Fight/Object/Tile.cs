@@ -35,7 +35,7 @@ public class Tile : MonoBehaviour
             }
 
             //АјАн
-            if (FightManager.Instance.pSkill != Skill.SkillType.None)
+            if (FightManager.Instance.isSkillSelect)
             {
                 if (isAI())
                 {
