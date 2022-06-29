@@ -16,9 +16,9 @@ public class FightSoundManager : MonoBehaviour
     [SerializeField] // 배경음악, 효과음 등등 오디오 소스 배열
     private AudioClip[] Sounds;
 
-    enum SoundsIndexNumber 
+    enum SoundsIndexNumber
     {
-        BGM,
+        BGM = 0,
         GameOver,
         PlayerMove,
         EnemyMove,
@@ -26,8 +26,9 @@ public class FightSoundManager : MonoBehaviour
         PlayerClick,
         TurnEndButton,
         AttackEffect,
-        Effect2
     };
+
+    SoundsIndexNumber soundsIndexNumber = SoundsIndexNumber.BGM;
 
     private void Awake()
     {
@@ -39,8 +40,19 @@ public class FightSoundManager : MonoBehaviour
         
     }
 
-    public void BGMSet()
+    public void BGMSet(int SoundsNum)
     {
-        BGM.clip = Sounds[0];
+        switch (SoundsNum)
+        {
+            case (int)SoundsIndexNumber.BGM :
+                BGM.clip = Sounds[SoundsNum];
+                BGM.Play();
+                Debug.Log("f");
+                break;  
+
+            case (int)SoundsIndexNumber.GameOver :
+
+                break;
+        }
     }
 }

@@ -3679,6 +3679,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7dbd6189469d7c84985838b6ffd6f6cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BGM: {fileID: 35408761}
+  Effect1: {fileID: 1169727728}
+  Effect2: {fileID: 1581853050}
+  Sounds: []
 --- !u!1 &1218029293
 GameObject:
   m_ObjectHideFlags: 0
