@@ -708,17 +708,6 @@ public class FightManager : MonoBehaviour
         }
     }
 
-    public List<AI> IronFistAttackList()
-    {
-        List<AI> attackAIList = new List<AI>();
-        foreach (var _ai in aiList)
-        {
-            if (Vector2.Distance(_ai.Position, player.Position) == 1)
-                attackAIList.Add(_ai);
-        }
-        return attackAIList;
-    }
-
     public void TurnStop()
     {
         if(turnType == TurnType.Player)

@@ -36,6 +36,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject _skillInfoUI;
 
     public Skill selectSkill;
+    public Transform skillInfoTrm;
 
     private List<Image> _skillButton = new List<Image>();
     #endregion
@@ -52,6 +53,7 @@ public class UIManager : MonoBehaviour
         _skillButton.Add(_skillUI.transform.Find("IntensiveAttack").GetComponent<Image>());
         _skillButton.Add(_skillUI.transform.Find("KnockDown").GetComponent<Image>());
         _skillButton.Add(_skillUI.transform.Find("SuppressionDrone").GetComponent<Image>());
+        skillInfoTrm = _skillUI.transform.Find("Info");
     }
 
     public void UpdateTurnText()
