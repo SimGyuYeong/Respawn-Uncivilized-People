@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96681997e352a2a4c8c56b2c48da3f34, type: 3}
+  m_Name: MemorialData
+  m_EditorClassIdentifier: 
+  wordImage:
+  - {fileID: 21300000, guid: 161ec08e9230a354686e66d6309982cb, type: 3}
+  - {fileID: 21300000, guid: c99ce5377a4752e43927c8cc79659f32, type: 3}
+  - {fileID: 21300000, guid: b6cfd5786656044418bb75ad65be4b48, type: 3}
+  - {fileID: 21300000, guid: e6d63987003700f4097d2bd90a411274, type: 3}
+  - {fileID: 21300000, guid: 98660f38c65b17948b1e0485eafa9737, type: 3}
+  wordMeaning:
+  - "\uC9C0\uB77C\uCE58\uB294 \uADC0\uC5FD\uB2E4..."
+  - "\uC815\uC815\uC815\uC740 \uADC0\uC5FD\uC9C0 \uC54A\uB2E4.."
+  - "\uD544\uADDC\uB294 \uADC0\uC5FD\uB2E4.."
+  - "\uADDC\uD544\uC740 \uC870\uB3D9\uADE0\uC774\uB2E4....."
+  - "\uB9F9\uC740 \uC774\uAC8C \uB9DE\uC544"
