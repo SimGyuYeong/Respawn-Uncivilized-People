@@ -96,8 +96,8 @@ public class UIManager : MonoBehaviour
         
         _aiStatusUI.SetActive(true);
 
-        _aiStatusUI.transform.Find("Name").GetComponent<Text>().text = ai.aiName;
-        _aiStatusUI.transform.Find("Info").GetComponent<TextMeshProUGUI>().text = ai.info;
+        _aiStatusUI.transform.Find("Name").GetComponent<Text>().text = ai.Name;
+        _aiStatusUI.transform.Find("Info").GetComponent<TextMeshProUGUI>().text = ai.Info;
 
         GameObject influenceBar = _aiStatusUI.transform.Find("InfluencePoint").gameObject;
         influenceBar.transform.Find("valueText").GetComponent<Text>().text = ai.InfluencePoint.ToString();

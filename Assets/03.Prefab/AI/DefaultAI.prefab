@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 3215769194769982548}
   - component: {fileID: 260357518349244417}
   - component: {fileID: 4431821355054434906}
-  - component: {fileID: -2207744645624167480}
+  - component: {fileID: 8065235965113104806}
   m_Layer: 0
-  m_Name: AI
+  m_Name: DefaultAI
   m_TagString: AI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -98,7 +98,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5261302399730442904}
   m_CullTransparentMesh: 1
---- !u!114 &-2207744645624167480
+--- !u!114 &8065235965113104806
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -107,9 +107,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 5261302399730442904}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9cb00cb5ae4debf43a43609adbf61e8d, type: 3}
+  m_Script: {fileID: 11500000, guid: 04a9365532dc81e4cbfa344db20e071a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  aiName: 
+  id: 0
+  isRestructuring: 0
+  info: 
 --- !u!1 &6699640484094434887
 GameObject:
   m_ObjectHideFlags: 0

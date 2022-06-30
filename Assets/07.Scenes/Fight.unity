@@ -2550,19 +2550,28 @@ MonoBehaviour:
   - name: a
     influencePoint: 89
     position: {x: 3, y: 7}
+    range: 3
     info: 
+    type: 0
   - name: b
     influencePoint: 76
     position: {x: 2, y: 5}
+    range: 4
     info: 
+    type: 1
   - name: c
     influencePoint: 55
     position: {x: 5, y: 5}
+    range: 3
     info: 
+    type: 0
+  aiList11: []
   content: {fileID: 1718551215}
   moveAni: {fileID: 4460019810026274728, guid: 94cd5b94ebda27547838fdb3e82373ac, type: 3}
   tilePrefab: {fileID: 2317601914350064403, guid: 1d6d0f545e3055240bcab4713ac88eaf, type: 3}
-  enemyPrefab: {fileID: -2207744645624167480, guid: 41f1e032b3f2925449965e949233d550, type: 3}
+  enemyPrefab:
+  - {fileID: 8065235965113104806, guid: 41f1e032b3f2925449965e949233d550, type: 3}
+  - {fileID: 4781902403009463198, guid: a3cae7086b91dc4438f25b8ccaa08f3e, type: 3}
   playerPrefab: {fileID: 3645703542393351946, guid: dcf50200f706fc5408ba9b43daae04bd, type: 3}
   player: {fileID: 5606823143333977831, guid: 17f7354047f4e884e85b8b6444bf56f4, type: 3}
   isIng: 0
