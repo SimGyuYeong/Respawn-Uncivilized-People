@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TextSpeedSetting
+public class TextSpeedSetting : MonoBehaviour
 {
     public void SetTextSpeed(float volume)
     {
