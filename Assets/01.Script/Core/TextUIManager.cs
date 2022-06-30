@@ -17,8 +17,10 @@ public class TextUIManager : MonoBehaviour
 
     private GameObject _defaultOption;
     private GameObject _soundOption;
+    public GameObject _memorialOption;
 
     public Color selectColor;
+    private TextMeshProUGUI _memorialText;
     private TextMeshProUGUI _defaultText;
     private TextMeshProUGUI _soundText;
     private TextMeshProUGUI _goTitleText;
@@ -35,11 +37,15 @@ public class TextUIManager : MonoBehaviour
 
         _defaultOption = _optionUI.transform.Find("DefaultSetting").gameObject;
         _soundOption = _optionUI.transform.Find("SoundSetting").gameObject;
+        //_memorialOption = _optionUI.transform.Find("Memorial").gameObject;
 
+        _memorialText = _optionUI.transform.Find("Memorial").GetComponent<TextMeshProUGUI>();
         _defaultText = _optionUI.transform.Find("Default").GetComponent<TextMeshProUGUI>();
         _soundText = _optionUI.transform.Find("Sound").GetComponent<TextMeshProUGUI>();
         _goTitleText = _optionUI.transform.Find("GoTitle").GetComponent<TextMeshProUGUI>();
         _backText = _optionUI.transform.Find("Back").GetComponent<TextMeshProUGUI>();
+
+        SetMemorialPanel();
     }
 
     public void Loading(Action action)
@@ -73,7 +79,9 @@ public class TextUIManager : MonoBehaviour
     {
         _soundOption.SetActive(false);
         _defaultOption.SetActive(true);
+        _memorialOption.SetActive(false);
         _soundText.color = Color.gray;
+        _memorialText.color = Color.gray;
         _defaultText.color = selectColor;
     }
 
@@ -81,7 +89,24 @@ public class TextUIManager : MonoBehaviour
     {
         _soundOption.SetActive(true);
         _defaultOption.SetActive(false);
+        _memorialOption.SetActive(false);
         _soundText.color = selectColor;
+        _memorialText.color = Color.gray;
         _defaultText.color = Color.gray;
+    }
+
+    public void MemorialonClick()
+    {
+        _soundOption.SetActive(false);
+        _defaultOption.SetActive(false);
+        _memorialOption.SetActive(true);
+        _soundText.color = Color.gray;
+        _memorialText.color = selectColor;
+        _defaultText.color = Color.gray;
+    }
+
+    private void SetMemorialPanel()
+    {
+        Instantiate(_memorialOption, _optionUI.transform);
     }
 }

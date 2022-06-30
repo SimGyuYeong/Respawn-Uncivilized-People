@@ -2610,11 +2610,11 @@ MonoBehaviour:
     serializedVersion: 2
     rgba: 4294967295
   m_fontColor: {r: 1, g: 1, b: 1, a: 1}
-  m_enableVertexGradient: 0
+  m_enableVertexGradient: 1
   m_colorMode: 3
   m_fontColorGradient:
-    topLeft: {r: 1, g: 1, b: 1, a: 1}
-    topRight: {r: 1, g: 1, b: 1, a: 1}
+    topLeft: {r: 1, g: 0, b: 0, a: 1}
+    topRight: {r: 1, g: 0, b: 0, a: 1}
     bottomLeft: {r: 1, g: 1, b: 1, a: 1}
     bottomRight: {r: 1, g: 1, b: 1, a: 1}
   m_fontColorGradientPreset: {fileID: 0}
@@ -4226,9 +4226,7 @@ MonoBehaviour:
   textCanvasTrm: {fileID: 730513548}
   selectPanel: {fileID: 0}
   _selectButton: {fileID: 0}
-  background: []
-  image: []
-  _endAnimationObj: {fileID: 0}
+  endAnimationObj: {fileID: 0}
   shakeTime: 0.13
   shakestr: 0
   textlogPrefab: {fileID: 6871316211140201032, guid: 63bd3abb528bc9547a3420689dedf61a, type: 3}
@@ -4238,6 +4236,8 @@ MonoBehaviour:
   lineNumber: 1
   backgroundID: 0
   slotID: 0
+  isTyping: 0
+  skip: 0
   chatSpeed: 0.04
   autoSpeed: 1
   isAuto: 0
@@ -4273,6 +4273,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   _fadeImage: {fileID: 0}
+  maincam: {fileID: 0}
   storyPanel: {fileID: 2091017815}
   restaurantOutImage: {fileID: 21300000, guid: 66b131ccdb7b8e84b955c5c69dc10d2f, type: 3}
   _istuto: 1
@@ -4377,7 +4378,6 @@ GameObject:
   - component: {fileID: 1625123767}
   - component: {fileID: 1625123766}
   - component: {fileID: 1625123765}
-  - component: {fileID: 1625123768}
   m_Layer: 5
   m_Name: SettingButton
   m_TagString: Untagged
@@ -4499,21 +4499,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1625123763}
   m_CullTransparentMesh: 1
---- !u!114 &1625123768
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1625123763}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_EffectColor: {r: 0.97647065, g: 0.68235296, b: 0.69411767, a: 1}
-  m_EffectDistance: {x: 3, y: 3}
-  m_UseGraphicAlpha: 1
 --- !u!1 &1646232790
 GameObject:
   m_ObjectHideFlags: 0
