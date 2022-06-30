@@ -11,6 +11,8 @@ public class Skill : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
     [SerializeField] protected int _damage;
     [SerializeField] protected int _range;
     [SerializeField] protected string _info;
+    [SerializeField] protected AudioClip _clip;
+    private AudioSource _source;
 
     protected List<GameObject> _distanceTiles = new List<GameObject>();
     protected List<GameObject> _attackAI = new List<GameObject>();
@@ -21,6 +23,8 @@ public class Skill : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
     {
         transform.Find("Name").GetComponent<TextMeshProUGUI>().text = _name;
         transform.Find("Cost").GetComponent<TextMeshProUGUI>().text = _cost.ToString();
+
+        _source = GetComponent<AudioSource>();
     }
 
     /// <summary>
@@ -95,6 +99,8 @@ public class Skill : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
     /// </summary>
     protected virtual void AIDamage()
     {
+        _source.clip = _clip;
+        _source.Play();
         FightManager.Instance.isSkillSelect = false;
         FightManager.Instance.HideDistance();
         _damagedAIList.ForEach(x => x.InfluencePoint -= _damage);
@@ -139,6 +145,14 @@ public class Skill : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
         }
     }
 
+    private void ShowInfomation(bool ck)
+    {
+        FightManager.Instance.UI.skillInfoTrm.gameObject.SetActive(ck);
+        FightManager.Instance.UI.skillInfoTrm.position = transform.position;
+
+        FightManager.Instance.UI.skillInfoTrm.Find("text").GetComponent<TextMeshProUGUI>().text = _info;
+    }
+
     public void OnPointerDown(PointerEventData eventData)
     {
         if(SkillWhether() == true)
@@ -149,11 +163,19 @@ public class Skill : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if(FightManager.Instance.isSkillSelect == false) ShowDistance();
+        if (FightManager.Instance.isSkillSelect == false)
+        {
+            ShowDistance();
+        }
+        ShowInfomation(true);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (FightManager.Instance.isSkillSelect == false) FightManager.Instance.HideDistance();
+        if (FightManager.Instance.isSkillSelect == false)
+        {
+            FightManager.Instance.HideDistance();
+        }
+        ShowInfomation(false);
     }
-}
+ }
