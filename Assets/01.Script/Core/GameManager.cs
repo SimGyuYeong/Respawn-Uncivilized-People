@@ -72,9 +72,13 @@ public class GameManager : MonoBehaviour
             {
                 DATA.SaveMenuPanelClose();
             }
-            else if(optionPanel.activeSelf == true)
+            else if(optionPanel.activeSelf == true && !TextUIManager.instance.isMemorial)
             {
                 TextUIManager.instance.ShowOptionPanel(false);
+            }
+            else if(optionPanel.activeSelf == true && TextUIManager.instance.isMemorial)
+            {
+                TextUIManager.instance.DownMemorial();
             }
             else
             {
