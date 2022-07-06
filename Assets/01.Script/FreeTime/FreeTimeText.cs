@@ -23,19 +23,19 @@ public class FreeTimeText : TextManager
 
     private InputButton inputButton = null;
 
-    private int nextCount = 0;
+    public static int nextCount = 0;
 
     private void Awake()
     {
         StartCoroutine(LoadTextData(URL));
         StartCoroutine(SetDelay1());
+        nextCount = 0;
     }
 
     IEnumerator SetDelay1()
     {
-        yield return new WaitForSeconds(0.7f);
-
         _tutorial_FreeTime = transform.Find("Tutorial").GetComponent<Tutorial_FreeTime>();
+        yield return new WaitForSeconds(0.8f);
 
         if (_istuto)
         {
@@ -188,9 +188,7 @@ public class FreeTimeText : TextManager
     IEnumerator GoToMain()
     {
         _time++;
-        nextCount++;
-
-        if (nextCount < 2)
+        if (_time < 2)
         {
             _isEnd = true;
             textPanelBTN.interactable = false;
@@ -205,8 +203,12 @@ public class FreeTimeText : TextManager
         }
         else
         {
-            FightManager.sendChatID = 7;
-            nextCount = 0;
+            if(nextCount == 0) FightManager.sendChatID = 7;
+            else if(nextCount == 1) FightManager.sendChatID = 10;
+            else if(nextCount == 2) FightManager.sendChatID = 12;
+            else if(nextCount == 3) FightManager.sendChatID = 100;
+            nextCount++;
+            _time = 0;
             SceneManager.LoadScene("Typing");
         }
     }

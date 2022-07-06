@@ -24,9 +24,10 @@ public class InputButton : ButtonManager
 
     public void InputStoryButton(int code)
     {
-        _id = code;
-        //Debug.Log(weekCount.ToString() + dayCount.ToString());
-        //timeText.text = string.Format($"{weekCount}st Week Day {dayCount} Post Meridiem");
+        _id = code + 5 * FreeTimeText.nextCount;
+
+        if (_id % 4 == 0) { _freeTimeText.StartCoroutine("GoToMain"); }
+
         StartCoroutine(ButtonMove());
     }
 
