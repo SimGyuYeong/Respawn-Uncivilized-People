@@ -136,7 +136,7 @@ public class FightManager : MonoBehaviour
 
     private void Start()
     {
-        StageStart(2);
+        StageStart(3);
     }
 
     public void StageStart(int stage)
