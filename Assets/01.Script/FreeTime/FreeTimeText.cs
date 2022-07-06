@@ -19,17 +19,32 @@ public class FreeTimeText : TextManager
 
     private Tutorial_FreeTime _tutorial_FreeTime = null;
 
-    public bool _istuto = true;
+    public static bool _istuto = true;
 
     private InputButton inputButton = null;
-
-    public static int nextCount = 0;
+    [SerializeField] private GameObject loadingpanel;
+    private GameObject _loadingPanel;
 
     private void Awake()
     {
         StartCoroutine(LoadTextData(URL));
         StartCoroutine(SetDelay1());
-        nextCount = 0;
+    }
+
+    public void Start()
+    {
+        base.Start();
+        StartCoroutine(LoadingPanel());
+    }
+
+    IEnumerator LoadingPanel()
+    {
+        GameObject g = loadingpanel;
+        _loadingPanel = Instantiate(g);
+
+        yield return new WaitForSeconds(1.7f);
+
+        _loadingPanel.SetActive(false);
     }
 
     IEnumerator SetDelay1()
@@ -140,15 +155,6 @@ public class FreeTimeText : TextManager
         SkipText();
     }
 
-    //IEnumerator ChangeBackground()
-    //{
-    //    SpriteRenderer _backgroundImage = storyPanel.transform.Find("BackGroundImage").GetComponent<SpriteRenderer>();
-
-    //    _backgroundImage.sprite = restaurantOutImage;
-
-    //    yield return null;
-    //}
-
     IEnumerator FadeOut()
     {
         if (_isEnd == false)
@@ -203,11 +209,11 @@ public class FreeTimeText : TextManager
         }
         else
         {
-            if(nextCount == 0) FightManager.sendChatID = 7;
+            if(nextCount == 0) FightManager.sendChatID = 8;
             else if(nextCount == 1) FightManager.sendChatID = 10;
             else if(nextCount == 2) FightManager.sendChatID = 12;
-            else if(nextCount == 3) FightManager.sendChatID = 100;
-            nextCount++;
+            else if(nextCount == 3) FightManager.sendChatID = 7;
+            nextCount += 1;
             _time = 0;
             SceneManager.LoadScene("Typing");
         }
