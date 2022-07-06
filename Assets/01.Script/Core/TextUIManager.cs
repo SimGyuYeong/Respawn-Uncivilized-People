@@ -19,7 +19,7 @@ public class TextUIManager : MonoBehaviour
     private GameObject _defaultOption;
     private GameObject _soundOption;
     public GameObject _memorialOptionPrefab;
-    private GameObject _memorialOption;
+    public GameObject _memorialOption;
 
     public Color selectColor;
     private TextMeshProUGUI _memorialText;

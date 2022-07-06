@@ -32,18 +32,26 @@ public class MemorialManager : MonoBehaviour
     {
         _wordText.text = string.Format("");
 
-        while (wordImage.fillAmount < 1)
+        if (itemName[num].isUnlock)
         {
-            wordImage.fillAmount += 0.05f;
-            yield return new WaitForSecondsRealtime(0.01f);
+            while (wordImage.fillAmount < 1)
+            {
+                wordImage.fillAmount += 0.05f;
+                yield return new WaitForSecondsRealtime(0.01f);
+            }
+
+            _wordText.text = string.Format(itemName[num].text);
+
+            for (int i = 0; i <= _memorialData.wordMeaning[num].Length; i++)
+            {
+                _textExplan.text = itemName[i].isUnlock ? string.Format("{0}", _memorialData.wordMeaning[num].Substring(0, i)) : string.Format("아직 개방되지 않았습니다.");
+                yield return new WaitForSecondsRealtime(0.5f / _memorialData.wordMeaning[num].Length);
+            }
         }
 
-        _wordText.text = string.Format(itemName[num].text);
-
-        for (int i = 0; i <= _memorialData.wordMeaning[num].Length; i++)
+        else
         {
-            _textExplan.text = string.Format("{0}", _memorialData.wordMeaning[num].Substring(0, i));
-            yield return new WaitForSecondsRealtime(0.5f / _memorialData.wordMeaning[num].Length);
+            _textExplan.text = string.Format("아직 개방되지 않았습니다.");
         }
     }
 
@@ -60,14 +68,6 @@ public class MemorialManager : MonoBehaviour
     {
         DisablingMemorial();
     }
-
-    //private void Update()
-    //{
-    //    if (Input.GetKeyDown(KeyCode.Space))
-    //    {
-    //        StartCoroutine(CreateButton());
-    //    }
-    //}
 
     public void InputText(int i)
     {
@@ -104,13 +104,12 @@ public class MemorialManager : MonoBehaviour
 
                 GameObject _itemButton = Instantiate(itemButton, _buttonInstansiateTransform.transform);
                 _textButton.Add(_itemButton.GetComponent<Button>());
-                //_textButton[i] = _itemButton.GetComponent<Button>();
 
                 _itemText[i] = _textButton[i].transform.Find("Text").GetComponent<TextMeshProUGUI>();
 
                 _textButton[i].onClick.AddListener(() => InputText(idx));
 
-                _itemText[i].text = string.Format($"{itemName[i]}");
+                _itemText[i].text = itemName[i].isUnlock ? string.Format($"{itemName[i].text}") : _itemText[i].text = string.Format("???");
 
                 yield return new WaitForSecondsRealtime(0.06f);
             }
@@ -121,6 +120,7 @@ public class MemorialManager : MonoBehaviour
             for (int i = 0; i < itemName.Count; i++)
             {
                 _textButton[i].gameObject.SetActive(true);
+                _itemText[i].text = itemName[i].isUnlock ? string.Format($"{itemName[i].text}") : _itemText[i].text = string.Format("???");
                 yield return new WaitForSecondsRealtime(0.06f);
             }
         }

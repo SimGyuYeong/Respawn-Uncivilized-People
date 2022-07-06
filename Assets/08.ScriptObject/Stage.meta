@@ -1,6 +1,10 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Material/End3D.unitypackage.meta
+guid: d197d319d6cf7094689c4b094b87c0fd
+========
 guid: f6caf0e24e069fa4d8afaf9301d97b0f
 folderAsset: yes
+>>>>>>>> dee5098fd451c3a00807c051da66fc7b1e674d06:Assets/08.ScriptObject/Stage.meta
 DefaultImporter:
   externalObjects: {}
   userData: 
