@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class TextUIManager : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class TextUIManager : MonoBehaviour
     private GameObject _defaultOption;
     private GameObject _soundOption;
     public GameObject _memorialOptionPrefab;
-    private GameObject _memorialOption;
+    public GameObject _memorialOption;
 
     public Color selectColor;
     private TextMeshProUGUI _memorialText;
@@ -26,6 +27,9 @@ public class TextUIManager : MonoBehaviour
     private TextMeshProUGUI _soundText;
     private TextMeshProUGUI _goTitleText;
     private TextMeshProUGUI _backText;
+
+    private Slider _bgmSlider;
+    private Slider _effectSlider;
     #endregion
 
     public bool isLoading = false;
@@ -46,6 +50,12 @@ public class TextUIManager : MonoBehaviour
         _soundText = _optionUI.transform.Find("Sound").GetComponent<TextMeshProUGUI>();
         _goTitleText = _optionUI.transform.Find("GoTitle").GetComponent<TextMeshProUGUI>();
         _backText = _optionUI.transform.Find("Back").GetComponent<TextMeshProUGUI>();
+
+        _bgmSlider = _optionUI.transform.Find("SoundSetting/BGM/Slider").GetComponent<Slider>();
+        _effectSlider = _optionUI.transform.Find("SoundSetting/Effect/Slider").GetComponent<Slider>();
+
+        _bgmSlider.value = PlayerPrefs.GetFloat("BGM", 0);
+        _effectSlider.value = PlayerPrefs.GetFloat("Effect", 0);
 
         SetMemorialPanel();
     }

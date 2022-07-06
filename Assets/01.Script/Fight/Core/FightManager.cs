@@ -12,6 +12,8 @@ public class FightManager : MonoBehaviour
     //싱글톤
     public static FightManager Instance;
 
+    public StageSO[] _stageSO;
+
     private Tutorial _tuto;
     private UIManager _uiManager;
     public UIManager UI { get => _uiManager; }
@@ -46,9 +48,6 @@ public class FightManager : MonoBehaviour
 
     public List<PlayerData> playerDataList = new List<PlayerData>();
     public List<AIData> aiDataList = new List<AIData>();
-
-    [field:SerializeField]
-    public List<AI> aiList11 = new List<AI>(); 
      
 
     //타일이 생성될 오브젝트 부모, 플레이어 프리팹, 플레이어가 움직이는 애니메이션 오브젝트
@@ -137,9 +136,22 @@ public class FightManager : MonoBehaviour
 
     private void Start()
     {
+        StageStart(3);
+    }
+
+    public void StageStart(int stage)
+    {
+        if (_stageSO[stage - 1] == null)
+        {
+            Debug.LogError("Not Found Stage! Check plz");
+            return;
+        }
+        isWallList = _stageSO[stage - 1].isWallList;
+        playerDataList = _stageSO[stage - 1].playerDataList;
+        aiDataList = _stageSO[stage - 1].aiDataList;
+
         turnType = TurnType.Player_Wait;
         StartCoroutine(TileSpawn(false));
-        //isIng = true;
         turn = maxTurn;
     }
 
@@ -305,6 +317,8 @@ public class FightManager : MonoBehaviour
                 break;
             case 'd':
                 pos.y--;
+                break;
+            default:
                 break;
         }    
 
