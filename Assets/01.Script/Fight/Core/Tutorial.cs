@@ -48,14 +48,14 @@ public class Tutorial : MonoBehaviour
             rawSize = line[i].Split('\t').Length;
             if (row[0] != "")
             {
-                if (chatID == 3)
+                if (chatID == 4)
                     _lineSize = lineCount;
                 lineCount = 1;
                 chatID = Convert.ToInt32(row[0]);
                 Sentence[chatID] = new string[lineSize, 20];
             }
 
-            if (chatID == 3)
+            if (chatID == 4)
             {
                 for (j = 1; j < rawSize; j++)
                 {

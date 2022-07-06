@@ -353,10 +353,10 @@ public class TextManager : MonoBehaviour
             string eventName = Sentence[chatID][lineNumber, (int)IDType.Event];
             if (eventName == "ÇÔ¼ö")
             {
-                string funcName = Sentence[chatID][lineNumber, (int)IDType.Event + 1];//StartCoroutine(funcName.Trim());
+                string funcName = Sentence[chatID][lineNumber, (int)IDType.Event + 1];
                 int memorial = Int32.Parse(Sentence[chatID][lineNumber, (int)IDType.Event + 2]);//StartCoroutine(funcName.Trim());
-                Debug.Log(memorial);
                 StartCoroutine($"{funcName.Trim()}", memorial);
+
                 if (_isEnd)
                 {
                     return;
