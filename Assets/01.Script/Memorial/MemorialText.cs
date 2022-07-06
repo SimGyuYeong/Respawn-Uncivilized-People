@@ -6,7 +6,7 @@ using UnityEngine;
 public class MemorialText
 {
     public string text;
-    public bool isUnlock;
+    public bool isUnlock = false;
 
     public MemorialText(MemorialText _text)
     {

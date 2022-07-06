@@ -34,6 +34,8 @@ public class TextManager : MonoBehaviour
     [SerializeField] protected GameObject textlogPrefab;
     [SerializeField] protected Transform textlogView;
     [SerializeField] private Text autoChecker;
+
+    [SerializeField] private MemorialCanvas memorialcanvas;
     
     protected Dictionary<int, string[,]> Sentence = new Dictionary<int, string[,]>();
     protected Dictionary<int, int> max = new Dictionary<int, int>();
@@ -95,12 +97,6 @@ public class TextManager : MonoBehaviour
         _textDataSO = GetComponentInChildren<TextDataSave>();
         StartCoroutine(LoadTextData(URL)); // 텍스트 데이터 읽기
         maincam = Camera.main;
-        memorialManager = GetComponent<MemorialManager>();
-        //Action a = GameManager.Instance.OptionPanelOC(0);
-        //Action a = dataManager.SaveMenuPanelOpen(1);
-
-        //textPanelObj = Instantiate(textPanelPrefab, textCanvasTrm);
-
     }
 
     public void Start()
@@ -122,6 +118,8 @@ public class TextManager : MonoBehaviour
 
             StartCoroutine(SetDelay());
         }
+
+        memorialcanvas = FindObjectOfType<MemorialCanvas>();
     }
 
     IEnumerator SetDelay()
@@ -357,8 +355,8 @@ public class TextManager : MonoBehaviour
             {
                 string funcName = Sentence[chatID][lineNumber, (int)IDType.Event + 1];//StartCoroutine(funcName.Trim());
                 int memorial = Int32.Parse(Sentence[chatID][lineNumber, (int)IDType.Event + 2]);//StartCoroutine(funcName.Trim());
-                //Debug.Log(funcName.Trim());
-                StartCoroutine(funcName.Trim(), memorial);
+                Debug.Log(memorial);
+                StartCoroutine($"{funcName.Trim()}", memorial);
                 if (_isEnd)
                 {
                     return;
@@ -487,7 +485,8 @@ public class TextManager : MonoBehaviour
 
     IEnumerator UnLockMemorial(int num)
     {
-        memorialManager.itemName[num - 2].isUnlock = true;
+        int nn = num - 2;
+        memorialcanvas.transform.GetChild(0).GetComponent<MemorialManager>().itemName[nn].isUnlock = true;
         yield return null;
     }
 
