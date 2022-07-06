@@ -54,6 +54,9 @@ public class TextUIManager : MonoBehaviour
         _bgmSlider = _optionUI.transform.Find("SoundSetting/BGM/Slider").GetComponent<Slider>();
         _effectSlider = _optionUI.transform.Find("SoundSetting/Effect/Slider").GetComponent<Slider>();
 
+        _bgmSlider.value = PlayerPrefs.GetFloat("BGM", 0);
+        _effectSlider.value = PlayerPrefs.GetFloat("Effect", 0);
+
         SetMemorialPanel();
     }
 

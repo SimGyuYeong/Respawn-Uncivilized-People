@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-public class AStarAI : AI
+public class EfficientAI : AI
 {
     protected override IEnumerator AIMoveState()
     {
