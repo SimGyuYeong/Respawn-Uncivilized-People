@@ -116,6 +116,11 @@ public class GameManager : MonoBehaviour
                 creditPanelCancelButton.SetActive(true);
 
                 break;
+
+            case "Å©·¹µ÷ ´Ý±â ¹öÆ°":
+                creditPanel.SetActive(false);
+                creditPanelCancelButton.SetActive(false);
+                break;
             default:
                 break;
         }
