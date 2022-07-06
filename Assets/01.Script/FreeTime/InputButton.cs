@@ -24,7 +24,7 @@ public class InputButton : ButtonManager
 
     public void InputStoryButton(int code)
     {
-        _id = code + 5 * FreeTimeText.nextCount;
+        _id = code + 5 * TextManager.nextCount;
 
         if (_id % 4 == 0) { _freeTimeText.StartCoroutine("GoToMain"); }
 

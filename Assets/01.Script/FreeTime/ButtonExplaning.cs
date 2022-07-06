@@ -24,7 +24,7 @@ public class ButtonExplaning : MonoBehaviour, IPointerEnterHandler, IPointerExit
     public void OnPointerEnter(PointerEventData eventData)
     {
         _explanaingText.TestInterface(buttonIntType);
-        if (!_freeTimeText._istuto)
+        if (!FreeTimeText._istuto)
         {
             switch (buttonIntType)
             {

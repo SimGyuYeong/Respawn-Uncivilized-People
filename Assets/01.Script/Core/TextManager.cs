@@ -16,6 +16,8 @@ public class TextManager : MonoBehaviour
     private TextDataSave _textDataSO;
     public TextDataSave TextSO => _textDataSO;
 
+    public static int nextCount = 0;
+
     protected TextMeshPro _textPanel;
     public GameObject textPanelObj;
     public GameObject textPanelPrefab;
@@ -110,7 +112,7 @@ public class TextManager : MonoBehaviour
         textPanelBTN.onClick.AddListener(() => SkipTextClick());
         textPanelObj.SetActive(false);
         ChildStart();
-
+        Debug.Log(FightManager.sendChatID);
         if(FightManager.sendChatID > 3)
         {
             chatID = FightManager.sendChatID;
