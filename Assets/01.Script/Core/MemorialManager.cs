@@ -8,7 +8,8 @@ using DG.Tweening;
 public class MemorialManager : MonoBehaviour
 {
     public GameObject itemButton;
-    public List<string> itemName = new List<string>();
+
+    public List<MemorialText> itemName = new List<MemorialText>();
     private TextMeshProUGUI[] _itemText = new TextMeshProUGUI[50];
     private GameObject _buttonInstansiateTransform;
 
@@ -18,7 +19,7 @@ public class MemorialManager : MonoBehaviour
 
     public TextMeshProUGUI _textExplan;
 
-    private Button[] _textButton = new Button[50];
+    private List<Button> _textButton = new List<Button>();
 
     public MemorialData _memorialData;
     public Image _textImage;
@@ -34,40 +35,48 @@ public class MemorialManager : MonoBehaviour
         while (wordImage.fillAmount < 1)
         {
             wordImage.fillAmount += 0.05f;
-            yield return new WaitForSeconds(0.01f);
+            yield return new WaitForSecondsRealtime(0.01f);
         }
 
-        _wordText.text = string.Format(itemName[num]);
+        _wordText.text = string.Format(itemName[num].text);
 
         for (int i = 0; i <= _memorialData.wordMeaning[num].Length; i++)
         {
             _textExplan.text = string.Format("{0}", _memorialData.wordMeaning[num].Substring(0, i));
-            yield return new WaitForSeconds(0.5f / _memorialData.wordMeaning[num].Length);
+            yield return new WaitForSecondsRealtime(0.5f / _memorialData.wordMeaning[num].Length);
         }
     }
 
     private void Start()
     {
-        StartCoroutine(SetTitle());
         _buttonInstansiateTransform = transform.GetChild(0).Find("WORDPANEL").GetChild(0).GetChild(0).GetChild(0).gameObject;
     }
 
-    private void Update()
+    private void OnEnable()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            StartCoroutine(CreateButton());
-        }
+        StartCoroutine(SetTitle());
     }
+    private void OnDisable()
+    {
+        DisablingMemorial();
+    }
+
+    //private void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.Space))
+    //    {
+    //        StartCoroutine(CreateButton());
+    //    }
+    //}
 
     public void InputText(int i)
     {
         wordImage.fillAmount = 0;
 
         seq = DOTween.Sequence();
-        seq.Append(_textImage.DOFade(0, 0.12f));
-        seq.AppendCallback(() => _textImage.sprite = _memorialData.wordImage[i]);
-        seq.Append(_textImage.DOFade(1, 0.1f));
+        seq.Append(_textImage.DOFade(0, 0.12f)).SetUpdate(true);
+        seq.AppendCallback(() => _textImage.sprite = _memorialData.wordImage[i]).SetUpdate(true);
+        seq.Append(_textImage.DOFade(1, 0.1f)).SetUpdate(true);
 
         StopCoroutine(nameof(SetText));
         StartCoroutine("SetText", i);
@@ -75,32 +84,56 @@ public class MemorialManager : MonoBehaviour
 
     IEnumerator SetTitle()
     {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSecondsRealtime(0.5f);
 
         seq = DOTween.Sequence();
 
-        seq.Append(_titleImage.transform.DOLocalMoveX(0, 0.6f));
-        seq.AppendInterval(0.2f);
-        seq.Append(_memorialTitle.transform.DOLocalMoveX(0, 0.4f));
+        seq.Append(_titleImage.transform.DOLocalMoveX(0, 0.6f)).SetUpdate(true);
+        seq.AppendInterval(0.14f).SetUpdate(true);
+        seq.Append(_memorialTitle.transform.DOLocalMoveX(0, 0.4f)).SetUpdate(true);
+        seq.AppendCallback(() => StartCoroutine(CreateButton())).SetUpdate(true);
     }
 
     IEnumerator CreateButton()
     {
+        if (_textButton.Count != itemName.Count)
+        {
+            for (int i = 0; i < itemName.Count; i++)
+            {
+                int idx = i;
+
+                GameObject _itemButton = Instantiate(itemButton, _buttonInstansiateTransform.transform);
+                _textButton.Add(_itemButton.GetComponent<Button>());
+                //_textButton[i] = _itemButton.GetComponent<Button>();
+
+                _itemText[i] = _textButton[i].transform.Find("Text").GetComponent<TextMeshProUGUI>();
+
+                _textButton[i].onClick.AddListener(() => InputText(idx));
+
+                _itemText[i].text = string.Format($"{itemName[i]}");
+
+                yield return new WaitForSecondsRealtime(0.06f);
+            }
+        }
+
+        else
+        {
+            for (int i = 0; i < itemName.Count; i++)
+            {
+                _textButton[i].gameObject.SetActive(true);
+                yield return new WaitForSecondsRealtime(0.06f);
+            }
+        }
+    }
+
+    private void DisablingMemorial()
+    {
+        _titleImage.transform.position = new Vector2(-2028, _titleImage.transform.position.y);
+        _memorialTitle.transform.position = new Vector2(-1950, _memorialTitle.transform.position.y);
+
         for (int i = 0; i < itemName.Count; i++)
         {
-            int idx = i;
-
-            GameObject _itemButton = Instantiate(itemButton, _buttonInstansiateTransform.transform);
-
-            _textButton[i] = _itemButton.GetComponent<Button>();
-
-            _itemText[i] = _textButton[i].transform.Find("Text").GetComponent<TextMeshProUGUI>();
-
-            _textButton[i].onClick.AddListener(() => InputText(idx));
-
-            _itemText[i].text = string.Format($"{itemName[i]}");
-
-            yield return new WaitForSeconds(0.06f);
+            _textButton[i].gameObject.SetActive(false);
         }
     }
 }
