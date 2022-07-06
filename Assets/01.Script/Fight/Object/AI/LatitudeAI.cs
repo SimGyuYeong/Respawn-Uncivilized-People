@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DefaultAI : AI
+public class LatitudeAI : AI
 {
 
 }

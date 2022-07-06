@@ -33,11 +33,11 @@ MonoBehaviour:
     info: 
     type: 0
   - name: b
-    influencePoint: 76
+    influencePoint: 35
     position: {x: 2, y: 5}
     range: 4
     info: 
-    type: 1
+    type: 0
   - name: c
     influencePoint: 55
     position: {x: 5, y: 5}
