@@ -65,7 +65,7 @@ public class UIManager : MonoBehaviour
     {
         _goalText.transform.DORewind();
         Sequence seq = DOTween.Sequence();
-        seq.Append(goalUI.transform.GetChild(3).transform.DOScaleX((float)FightManager.Instance.aiList.Count / 3, 1.5f));
+        seq.Append(goalUI.transform.GetChild(3).transform.DOScaleX((float)FightManager.Instance.aiList.Count / FightManager.Instance.aiDataList.Count, 1.5f));
         seq.Append(_goalText.transform.DOShakeScale(0.4f, 0.7f, 5));
         seq.AppendCallback(() =>
         {

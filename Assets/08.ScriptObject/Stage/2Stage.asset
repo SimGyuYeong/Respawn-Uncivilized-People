@@ -13,6 +13,40 @@ MonoBehaviour:
   m_Name: 2Stage
   m_EditorClassIdentifier: 
   stage: 2
-  isWallList: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  playerDataList: []
-  aiDataList: []
+  isWallList: 01010000000001010101000000000101010100000000010101010000000001010101000000000101010100000000010101010000000001010101000000000101
+  playerDataList:
+  - name: 
+    durabilityPoint: 100
+    kineticPoint: 100
+    position: {x: 3, y: 0}
+    info: 
+  - name: 
+    durabilityPoint: 100
+    kineticPoint: 100
+    position: {x: 4, y: 0}
+    info: 
+  aiDataList:
+  - name: 
+    influencePoint: 25
+    position: {x: 3, y: 7}
+    range: 0
+    info: 
+    type: 0
+  - name: 
+    influencePoint: 25
+    position: {x: 2, y: 5}
+    range: 0
+    info: 
+    type: 0
+  - name: 
+    influencePoint: 25
+    position: {x: 5, y: 5}
+    range: 0
+    info: 
+    type: 0
+  - name: 
+    influencePoint: 25
+    position: {x: 4, y: 3}
+    range: 0
+    info: 
+    type: 0
