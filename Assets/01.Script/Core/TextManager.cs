@@ -356,8 +356,9 @@ public class TextManager : MonoBehaviour
             if (eventName == "ÇÔ¼ö")
             {
                 string funcName = Sentence[chatID][lineNumber, (int)IDType.Event + 1];//StartCoroutine(funcName.Trim());
+                int memorial = Int32.Parse(Sentence[chatID][lineNumber, (int)IDType.Event + 2]);//StartCoroutine(funcName.Trim());
                 //Debug.Log(funcName.Trim());
-                StartCoroutine(funcName.Trim());
+                StartCoroutine(funcName.Trim(), memorial);
                 if (_isEnd)
                 {
                     return;
@@ -477,6 +478,12 @@ public class TextManager : MonoBehaviour
     IEnumerator GotoFight()
     {
         SceneManager.LoadScene("Fight");
+        yield return null;
+    }
+
+    IEnumerator UnLockMemorial(int num)
+    {
+        memorialManager.itemName[num - 2].isUnlock = true;
         yield return null;
     }
 
