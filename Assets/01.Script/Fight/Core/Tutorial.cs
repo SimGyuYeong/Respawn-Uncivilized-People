@@ -20,7 +20,7 @@ public class Tutorial : MonoBehaviour
     private List<string> _tutorialText = new List<string>();
 
     private int _number = 0, _lineSize = 0;
-    private bool _isTyping = false;
+    private bool _isTyping = false, _isSkip = false;
 
     private void Awake()
     {
@@ -82,34 +82,42 @@ public class Tutorial : MonoBehaviour
         seq.AppendCallback(() =>
         {
             _textNextButton.enabled = true;
-            TextTyping();
+            StartCoroutine(TypingCoroutine());
         });
     }
 
-    public void TextTyping()
+    public IEnumerator TypingCoroutine()
     {
-        _isTyping = true;
-        _text.text = "";
         _textEndObj.SetActive(false);
+        _isTyping = true;
 
-        Sequence seq = DOTween.Sequence();
-        seq.Append(_text.DOText(_tutorialText[_number], 3f));
-        seq.AppendCallback(() =>
+        for (int i = 0; i < _tutorialText[_number].Length + 1; i++)
         {
-            _textEndObj.SetActive(true);
-            _isTyping = false;
-        });
+
+            if (_isSkip)
+            {
+                _text.text = string.Format(_tutorialText[_number]);           // 텍스트 넘김.....누르면 한줄이 한번에 딱
+                _isSkip = false;
+                break;
+            }
+
+
+            _text.text = string.Format(_tutorialText[_number].Substring(0, i));
+            yield return new WaitForSeconds(0.1f);
+
+            _text.text = string.Format(_tutorialText[_number]);
+        }
+
+        ///↓↓↓ 타이핑 끝난 후 실행
+        _textEndObj.SetActive(true);
+        _isTyping = false;
     }
 
     public void SkipTextClick()
     {
         if(_isTyping)
         {
-            _text.DOKill();
-
-            _text.text = _tutorialText[_number];
-            _textEndObj.SetActive(true);
-            _isTyping = false;
+            _isSkip = true;
         }
         else
         {
@@ -127,7 +135,7 @@ public class Tutorial : MonoBehaviour
             }
             else
             {
-                TextTyping();
+                StartCoroutine(TypingCoroutine());
             }
         }
     }

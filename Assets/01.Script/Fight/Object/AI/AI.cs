@@ -87,6 +87,8 @@ public class AI : MonoBehaviour
     {
         FightManager.Instance.aiList.Remove(this);
         Destroy(gameObject);
+        FightManager.Instance.UI.UpdateGoalUI();
+        if (FightManager.Instance.aiList.Count == 0) FightManager.Instance.Win();
     }
 
     /// <summary>
