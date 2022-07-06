@@ -44,7 +44,7 @@ public class MemorialManager : MonoBehaviour
 
             for (int i = 0; i <= _memorialData.wordMeaning[num].Length; i++)
             {
-                _textExplan.text = itemName[i].isUnlock ? string.Format("{0}", _memorialData.wordMeaning[num].Substring(0, i)) : string.Format("아직 개방되지 않았습니다.");
+                _textExplan.text = string.Format("{0}", _memorialData.wordMeaning[num].Substring(0, i));
                 yield return new WaitForSecondsRealtime(0.5f / _memorialData.wordMeaning[num].Length);
             }
         }

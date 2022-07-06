@@ -143,6 +143,6 @@ public class TextUIManager : MonoBehaviour
     private void SetMemorialPanel()
     {
         GameObject _memorial = _memorialOptionPrefab;
-        _memorialOption = Instantiate(_memorial);
+        _memorialOption = Instantiate(_memorial).transform.GetChild(0).gameObject;
     }
 }
