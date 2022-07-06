@@ -325,9 +325,9 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 1.5484, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &2414442005293011908
 CanvasRenderer:
@@ -960,8 +960,8 @@ RectTransform:
   m_Father: {fileID: 2414442005485878859}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 0.4711253}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0.000034093857, y: 0.04309082}
   m_SizeDelta: {x: 0, y: -0.085199356}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1350,11 +1350,48 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemButton: {fileID: 5182677319872057509, guid: 7669d0f713c4044499eb7ce099237121, type: 3}
   itemName:
-  - "\uC9C0\uB77C\uCE58"
-  - "\uC815\uC815\uC815"
-  - "\uD544\uADDC"
-  - "\uADDC\uD544"
-  - "\uB9F9"
+  - text: "\uC815\uC6D0 - \uAC04\uB2E8 \uC18C\uAC1C"
+    isUnlock: 0
+  - text: "\uBE44\uC5F0"
+    isUnlock: 0
+  - text: "\uB85C\uBE48(Robin)"
+    isUnlock: 0
+  - text: "\uC0AC\uC5D0(\u5584\u7D75)"
+    isUnlock: 0
+  - text: "\uCE74\uD398"
+    isUnlock: 0
+  - text: "\uB180\uC774\uD130"
+    isUnlock: 0
+  - text: "\uB808\uC2A4\uD1A0\uB791"
+    isUnlock: 0
+  - text: KBT
+    isUnlock: 0
+  - text: "\uC885\uC774\uC2E0\uBB38"
+    isUnlock: 0
+  - text: "\uC885\uC774\uC2E0\uBB38"
+    isUnlock: 0
+  - text: "\uC885\uC774\uC2E0\uBB38"
+    isUnlock: 0
+  - text: "\uC885\uC774\uC2E0\uBB38"
+    isUnlock: 0
+  - text: "\uC885\uC774\uC2E0\uBB38"
+    isUnlock: 0
+  - text: "\uC885\uC774\uC2E0\uBB38"
+    isUnlock: 0
+  - text: "\uC885\uC774\uC2E0\uBB38"
+    isUnlock: 0
+  - text: "\uC885\uC774\uC2E0\uBB38"
+    isUnlock: 0
+  - text: "\uC885\uC774\uC2E0\uBB38"
+    isUnlock: 0
+  - text: "\uC885\uC774\uC2E0\uBB38"
+    isUnlock: 0
+  - text: "\uC885\uC774\uC2E0\uBB38"
+    isUnlock: 0
+  - text: "\uC885\uC774\uC2E0\uBB38"
+    isUnlock: 0
+  - text: "\uC885\uC774\uC2E0\uBB38"
+    isUnlock: 0
   _titleImage: {fileID: 2414442006671320073}
   _memorialTitle: {fileID: 2414442005677887404}
   _wordText: {fileID: 2414442004660640589}
@@ -1491,7 +1528,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2414442006712082489
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1531,7 +1568,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 70
   m_TargetDisplay: 0
 --- !u!114 &2414442006712082491
 MonoBehaviour:

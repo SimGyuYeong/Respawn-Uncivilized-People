@@ -17,7 +17,8 @@ public class TextUIManager : MonoBehaviour
 
     private GameObject _defaultOption;
     private GameObject _soundOption;
-    public GameObject _memorialOption;
+    public GameObject _memorialOptionPrefab;
+    private GameObject _memorialOption;
 
     public Color selectColor;
     private TextMeshProUGUI _memorialText;
@@ -28,6 +29,7 @@ public class TextUIManager : MonoBehaviour
     #endregion
 
     public bool isLoading = false;
+    public bool isMemorial = false;
 
     public static TextUIManager instance;
 
@@ -52,15 +54,15 @@ public class TextUIManager : MonoBehaviour
     {
         isLoading = true;
 
-        Sequence seq = DOTween.Sequence();
-        seq.Append(_loadingSprite.transform.DOMoveY(0.2f, 0.35f).SetEase(Ease.InQuart));
-        seq.AppendCallback(() => action?.Invoke());
-        seq.Append(_loadingSprite.transform.DOMoveY(10, 0.35f).SetEase(Ease.OutQuart));
-        seq.AppendCallback(() =>
+        Sequence loadingSeq = DOTween.Sequence();
+        loadingSeq.Append(_loadingSprite.transform.DOLocalMoveY(0f, 0.35f).SetEase(Ease.InQuart)).SetUpdate(true);
+        loadingSeq.AppendCallback(() => action?.Invoke()).SetUpdate(true);
+        loadingSeq.Append(_loadingSprite.transform.DOLocalMoveY(1090, 0.35f).SetEase(Ease.OutQuart)).SetUpdate(true);
+        loadingSeq.AppendCallback(() =>
         {
             isLoading = false;
-            seq.Rewind();
-        });
+            loadingSeq.Rewind();
+        }).SetUpdate(true);
     }
 
     public void ShowOptionPanel(bool check)
@@ -80,6 +82,7 @@ public class TextUIManager : MonoBehaviour
         _soundOption.SetActive(false);
         _defaultOption.SetActive(true);
         _memorialOption.SetActive(false);
+
         _soundText.color = Color.gray;
         _memorialText.color = Color.gray;
         _defaultText.color = selectColor;
@@ -97,16 +100,39 @@ public class TextUIManager : MonoBehaviour
 
     public void MemorialonClick()
     {
-        _soundOption.SetActive(false);
-        _defaultOption.SetActive(false);
-        _memorialOption.SetActive(true);
+        isMemorial = true;
+
         _soundText.color = Color.gray;
         _memorialText.color = selectColor;
         _defaultText.color = Color.gray;
+
+        Loading(() =>
+        {
+            _memorialOption.SetActive(true); 
+            _soundOption.SetActive(false);
+            _defaultOption.SetActive(false);
+        });
+    }
+
+    public void DownMemorial()
+    {
+        _soundText.color = Color.gray;
+        _memorialText.color = Color.gray;
+        _defaultText.color = selectColor;
+
+        Loading(() =>
+        {
+            _memorialOption.SetActive(false);
+            _soundOption.SetActive(false);
+            _defaultOption.SetActive(true);
+        });
+
+        isMemorial = false;
     }
 
     private void SetMemorialPanel()
     {
-        Instantiate(_memorialOption, _optionUI.transform);
+        GameObject _memorial = _memorialOptionPrefab;
+        _memorialOption = Instantiate(_memorial);
     }
 }
