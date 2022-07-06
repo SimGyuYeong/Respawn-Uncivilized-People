@@ -194,8 +194,11 @@ public class TextManager : MonoBehaviour
 
     public void SFXPlay()
     {
-        string sfxName = Sentence[chatID][lineNumber, (int)IDType.SFX];
-        GameManager.Instance.SfxSound.PlaySound(TextSO.sfxList[Convert.ToInt32(sfxName)], true);
+        if (Sentence[chatID][lineNumber, (int)IDType.SFX] != "")
+        {
+            string sfxName = Sentence[chatID][lineNumber, (int)IDType.SFX];
+            GameManager.Instance.SfxSound.PlaySound(TextSO.sfxList[Convert.ToInt32(sfxName)], true);
+        }
     }
 
     /// <summary>
