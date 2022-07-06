@@ -6938,6 +6938,7 @@ MonoBehaviour:
   textlogPrefab: {fileID: 6871316211140201032, guid: 63bd3abb528bc9547a3420689dedf61a, type: 3}
   textlogView: {fileID: 1269052449}
   autoChecker: {fileID: 0}
+  memorialcanvas: {fileID: 0}
   chatID: 1
   lineNumber: 1
   backgroundID: 1
@@ -11941,7 +11942,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1755990161
 RectTransform:
   m_ObjectHideFlags: 0
