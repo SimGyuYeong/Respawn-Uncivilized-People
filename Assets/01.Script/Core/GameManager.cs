@@ -112,14 +112,14 @@ public class GameManager : MonoBehaviour
 #endif
                 break;
             case "农饭调":
-                creditPanel.SetActive(true);
-                creditPanelCancelButton.SetActive(true);
-
-                break;
-
-            case "农饭调 摧扁 滚瓢":
-                creditPanel.SetActive(false);
-                creditPanelCancelButton.SetActive(false);
+                if (creditPanel.active.Equals(false))
+                {
+                    creditPanel.SetActive(true);
+                }
+                else
+                {
+                    creditPanel.SetActive(false);
+                }
                 break;
             default:
                 break;
