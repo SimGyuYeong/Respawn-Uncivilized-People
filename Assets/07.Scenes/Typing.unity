@@ -6938,6 +6938,7 @@ MonoBehaviour:
   textlogPrefab: {fileID: 6871316211140201032, guid: 63bd3abb528bc9547a3420689dedf61a, type: 3}
   textlogView: {fileID: 1269052449}
   autoChecker: {fileID: 0}
+  memorialcanvas: {fileID: 0}
   chatID: 1
   lineNumber: 1
   backgroundID: 1
@@ -10862,9 +10863,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1757475159}
-        m_TargetAssemblyTypeName: UnityEngine.Object, UnityEngine
-        m_MethodName: set_name
+      - m_Target: {fileID: 1757475160}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: Game
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -11979,12 +11980,12 @@ GameObject:
   - component: {fileID: 1755990163}
   - component: {fileID: 1755990162}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Credit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1755990161
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12001,7 +12002,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -2049}
+  m_AnchoredPosition: {x: 0.00024414, y: 1090}
   m_SizeDelta: {x: 2082, y: 4727.202}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1755990162
@@ -12084,7 +12085,7 @@ MonoBehaviour:
   audoSpeedSlider: {fileID: 1027883804}
   BlackImage: {fileID: 1642258638}
   BlackImageObject: {fileID: 1642258636}
-  creditPanel: {fileID: 0}
+  creditPanel: {fileID: 1755990160}
   creditPanelCancelButton: {fileID: 0}
 --- !u!4 &1757475161
 Transform:
