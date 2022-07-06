@@ -76,6 +76,8 @@ public class FightManager : MonoBehaviour
     //액션 버튼 오브젝트
     [SerializeField] private GameObject _actionButton;
 
+    public int fightStage;
+
     public int maxTurn = 10;
     public int turn = 0;
 
@@ -136,11 +138,12 @@ public class FightManager : MonoBehaviour
 
     private void Start()
     {
-        StageStart(3);
+        StageSave.instance.StageStart();
     }
 
     public void StageStart(int stage)
     {
+        fightStage = stage;
         if (_stageSO[stage - 1] == null)
         {
             Debug.LogError("Not Found Stage! Check plz");
@@ -151,7 +154,8 @@ public class FightManager : MonoBehaviour
         aiDataList = _stageSO[stage - 1].aiDataList;
 
         turnType = TurnType.Player_Wait;
-        StartCoroutine(TileSpawn(false));
+        if (stage == 1) StartCoroutine(TileSpawn());
+        else StartCoroutine(TileSpawn(false));
         turn = maxTurn;
     }
 
@@ -338,23 +342,6 @@ public class FightManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 공격이 가능한지 체크하는 함수
-    /// </summary>
-    /// <returns></returns>
-    private bool AttackCheck(Vector2 matchPos)
-    {
-        if (player.isFight == false)
-        {
-            foreach (var ai in aiList)
-            {
-                if (Vector2.Distance(ai.Position, matchPos) <= 1) return true;
-            }
-        }
-
-        return false;
-    }
-
-    /// <summary>
     /// 플레이어가 움직일 수 있는 상태인지 체크
     /// </summary>
     /// <returns>움직일 수 있다면 True, 아니면 False</returns>
@@ -492,7 +479,8 @@ public class FightManager : MonoBehaviour
             }
         }
 
-        _uiManager.TurnstopEmphasis();
+        if (aiList.Count == 0) Win();
+        else  _uiManager.TurnstopEmphasis();
     }
 
     /// <summary>
@@ -752,8 +740,11 @@ public class FightManager : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
         _uiManager.ViewText("Battle Command Complete", () =>
         {
-            sendChatID = 4;
-            SceneManager.LoadScene("Typing");
+            if (fightStage == 1)
+            {
+                SceneManager.LoadScene("Typing");
+                sendChatID = 5;
+            }
         });
     }
 
