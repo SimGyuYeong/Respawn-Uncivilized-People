@@ -318,6 +318,8 @@ public class FightManager : MonoBehaviour
             case 'd':
                 pos.y--;
                 break;
+            default:
+                break;
         }    
 
         if (pos.x < 0 || pos.x > 7 || pos.y > 7 || pos.y < 0)

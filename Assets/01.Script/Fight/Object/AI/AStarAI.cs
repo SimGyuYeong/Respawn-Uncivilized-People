@@ -27,8 +27,12 @@ public class AStarAI : AI
                 if (_stamina == 4) break;
 
                 Vector2 pos = new Vector2(FightManager.Instance.AStar.FinalNodeList[_stamina].x, FightManager.Instance.AStar.FinalNodeList[_stamina].y);
-                transform.DOMove(pos, 1f);
-                _pos = pos;
+
+                if (!FightManager.Instance.ObjCheck(pos, 'r'))
+                {
+                    transform.DOMove(pos, 1f);
+                    _pos = pos;
+                }
 
                 _stamina++;
                 yield return new WaitForSeconds(1f);
