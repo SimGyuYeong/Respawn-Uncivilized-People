@@ -5,52 +5,82 @@ using DG.Tweening;
 using TMPro;
 using System;
 
-[System.Serializable]
-public class AIData
-{
-    public string name;
-    [Range(0, 100)]
-    public int influencePoint;
-    public Vector2Int position;
-    public string info;
-}
-
 public class AI : MonoBehaviour
 {
-    public string aiName;
-    public int id;
-
-    public bool isRestructuring = false;
-    private bool _isDead = false;
+    [SerializeField] protected int _id;
+    [SerializeField] protected string _name;
+    [SerializeField] protected int _influencePoint;
+    [SerializeField] protected Vector2 _pos;
+    [SerializeField] protected string _info;
+    private int _range;
 
     private int _maxInfluencePoint;
     public int MaxInfluencePoint => _maxInfluencePoint;
-    private int _influence;
+
     public int InfluencePoint
     {
-        get => _influence;
+        get => _influencePoint;
         set
         {
-            _influence = value;
+            _influencePoint = value;
             
-            if (_influence > _maxInfluencePoint) _influence = _maxInfluencePoint;
+            if (_influencePoint > _maxInfluencePoint) _influencePoint = _maxInfluencePoint;
 
-            transform.GetComponentInChildren<TextMeshProUGUI>().text = _influence.ToString();
+            _influenceText.text = _influencePoint.ToString();
 
-            if (_influence <= 0)
+            if (_influencePoint <= 0)
             {
-                if(isRestructuring == true)
-                {
-                    Death();
-                }
+                if(_isRestructuring == true) Death();
                 else
                 {
-                    _influence = 0;
-                    isRestructuring = true;
-                    transform.GetComponentInChildren<TextMeshProUGUI>().text = "R";
+                    _influencePoint = 0;
+                    _isRestructuring = true;
+                    _influenceText.text = "R";
                 }
             }
         }
+    }
+
+    public Vector2 Position { get => _pos; set => _pos = value; }
+    public string Info => _info;
+    public string Name => _name;
+
+    protected GameObject _attackObj; //공격할 오브젝
+    protected Player _attackPlayer; //공격할 플레이어
+
+    private bool _isRestructuring = false; //제압되어있나?
+    private bool _isDead = false; //죽었나?
+
+    private TextMeshProUGUI _influenceText;
+
+    protected enum AI_STATE
+    {
+        WAIT_L,
+        WAIT_S,
+        WAIT_R
+    }
+    //AI 상태 초기설정
+    protected AI_STATE _state = AI_STATE.WAIT_L;
+
+    /// <summary>
+    /// 기본 데이터 설정
+    /// </summary>
+    /// <param name="_id"></param>
+    /// <param name="aData"></param>
+    public void Init(int _id, AIData aData)
+    {
+        this._id = _id;
+        _name = aData.name;
+        Position = aData.position;
+        _info = aData.info;
+        _maxInfluencePoint = aData.influencePoint;
+        InfluencePoint = aData.influencePoint;
+        _range = aData.range;
+    }
+
+    private void Awake()
+    {
+        _influenceText = GetComponentInChildren<TextMeshProUGUI>();
     }
 
     public void Death()
@@ -59,63 +89,21 @@ public class AI : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public string info;
-
-    private Vector2 _pos = Vector2.zero;
-    public Vector2 Position
-    {
-        get
-        {
-            return _pos;
-        }
-        set
-        {
-            _pos = value;
-        }
-    }
-
-    //공격대상 오브젝트
-    private GameObject _attackObj;
-
-    private Player _attackPlayer;
-
-    //행동력
-    private int _stamina = 2;
-
-    public enum AI_STATE
-    {
-        WAIT_L,
-        WAIT_S,
-        WAIT_R
-    }
-    //AI 상태 초기설정
-    private AI_STATE _state = AI_STATE.WAIT_L;
-
-    public void Init(int _id, AIData aData)
-    {
-        id = _id;
-        aiName = aData.name;
-        Position = aData.position;
-        info = aData.info;
-        _maxInfluencePoint = aData.influencePoint;
-        InfluencePoint = aData.influencePoint;
-    }
-
     /// <summary>
     /// AI 턴 시작 함수
     /// </summary>
     public void AIMoveStart()
     {
-        if(isRestructuring == false)
+        if(_isRestructuring == false)
         {
             TargetOfAttackCheck();
-            StartCoroutine(AIMove());
+            StartCoroutine(AIMoveState());
         }else
         {
             if(_isDead == true)
             {
                 _isDead = false;
-                isRestructuring = false;
+                _isRestructuring = false;
                 InfluencePoint = _maxInfluencePoint;
             }
             else  _isDead = true;
@@ -127,20 +115,22 @@ public class AI : MonoBehaviour
     /// AI 움직이는 함수
     /// </summary>
     /// <returns></returns>
-    private IEnumerator AIMove()
+    protected virtual IEnumerator AIMoveState()
     {
         _attackPlayer = _attackObj.GetComponent<Player>();
+        int _stamina = 2;
 
         if (_attackObj != gameObject) //공격대상이 본인 오브젝트가 아니라면 (공격대상이 지정됬다면)
         {
-            _stamina = 2; 
-            while (_stamina > 0)
+            while (true)
             {
                 if (AttackDistanceCheck())
                 {
                     _attackPlayer.DurabilityPoint -= InfluencePoint;
                     break;
                 }
+
+                if (_stamina == 0) break;
 
                 if (_pos.x == _attackPlayer.Position.x)
                 {
@@ -225,11 +215,12 @@ public class AI : MonoBehaviour
         FightManager.Instance.TurnChange();
     }
 
+
     /// <summary>
     /// Enemy 오브젝트 이동 함수
     /// </summary>
     /// <param name="value"></param>
-    private void ObjMove(int value)
+    protected void ObjMove(int value)
     {
         if (value == 1 || value == -1)
             _pos.x += value;
@@ -248,22 +239,22 @@ public class AI : MonoBehaviour
     /// 공격대상 지정 함수
     /// </summary>
     /// <returns>공격대상 지정 여부</returns>
-    private bool AttackDistanceCheck()
+    protected bool AttackDistanceCheck()
     { 
-        float distance = Vector2.Distance(_pos, _attackObj.GetComponent<Player>().Position);
+        float distance = Vector2.Distance(_pos, _attackPlayer.Position);
         if (distance <= 1)
             return true;
 
         return false;
     }
 
-    private void TargetOfAttackCheck()
+    protected void TargetOfAttackCheck()
     {
         _attackObj = gameObject;
 
         float distance = 0;
         distance = Vector2.Distance(_pos, FightManager.Instance.playerList[0].Position);
-        if (distance <= 3)
+        if (distance <= _range)
         {
             _attackObj = FightManager.Instance.playerList[0].gameObject;
         }
@@ -279,5 +270,10 @@ public class AI : MonoBehaviour
                 _attackObj = p.gameObject;
             }
         }
+    }
+
+    public bool IsRestructuring()
+    {
+        return _isRestructuring;
     }
 }

@@ -52,7 +52,7 @@ public class Skill : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
         CheckDistance();
         foreach (var ai in _attackAI)
         {
-            if (ai.GetComponentInChildren<AI>().isRestructuring == true)
+            if (ai.GetComponentInChildren<AI>().IsRestructuring() == true)
             {
                 _attackAI.Remove(ai);
             }

@@ -9,7 +9,7 @@ public class KnockdownSkill : Skill
         base.AIDamage();
         foreach(var ai in _damagedAIList)
         {
-            if(ai.isRestructuring)
+            if(ai.IsRestructuring())
             {
                 ai.Death();
             }

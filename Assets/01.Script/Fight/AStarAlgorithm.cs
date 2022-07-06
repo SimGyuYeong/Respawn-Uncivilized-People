@@ -56,6 +56,9 @@ public class AStarAlgorithm : MonoBehaviour
             }
         }
 
+        NodeArray[playerPos.x, playerPos.y].isWall = false;
+        NodeArray[targetPos.x, targetPos.y].isWall = false;
+
         // 시작 끝 노트, 리스트들 초기화
         StartNode = NodeArray[playerPos.x, playerPos.y]; //시작노드 정보
         TargetNode = NodeArray[targetPos.x, targetPos.y]; //끝노드 정보

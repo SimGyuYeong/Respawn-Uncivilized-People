@@ -10,7 +10,7 @@ public class SuppressionSkill : Skill
         int _count = _attackAI.Count;
         foreach(var ai in _attackAI)
         { 
-            if(ai.GetComponentInChildren<AI>().isRestructuring == false)
+            if(ai.GetComponentInChildren<AI>().IsRestructuring() == false)
             {
                 _count--;
             }
@@ -24,7 +24,7 @@ public class SuppressionSkill : Skill
         base.ShowDistance();
         foreach(var ai in _attackAI)
         {
-            if (ai.GetComponentInChildren<AI>().isRestructuring == false)
+            if (ai.GetComponentInChildren<AI>().IsRestructuring() == false)
             {
                 ai.transform.GetComponent<SpriteRenderer>().color = Color.white;
             }

@@ -47,12 +47,15 @@ public class FightManager : MonoBehaviour
     public List<PlayerData> playerDataList = new List<PlayerData>();
     public List<AIData> aiDataList = new List<AIData>();
 
+    [field:SerializeField]
+    public List<AI> aiList11 = new List<AI>(); 
+     
 
     //타일이 생성될 오브젝트 부모, 플레이어 프리팹, 플레이어가 움직이는 애니메이션 오브젝트
     public GameObject content, moveAni;
 
     public Tile tilePrefab;
-    public AI enemyPrefab;
+    public List<AI> enemyPrefab = new List<AI>();
     public Player playerPrefab;
 
     public Player player;
@@ -226,7 +229,7 @@ public class FightManager : MonoBehaviour
         {
             int slot = Mathf.FloorToInt((7 - ai.position.y) * 8 + ai.position.x);
 
-            var _ai = Instantiate(enemyPrefab, tileList[slot].transform);
+            var _ai = Instantiate(enemyPrefab[(int)ai.type], tileList[slot].transform);
             _ai.gameObject.SetActive(false);
 
             aiList.Add(_ai);
