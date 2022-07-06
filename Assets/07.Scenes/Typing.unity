@@ -5419,7 +5419,15 @@ MonoBehaviour:
   - {fileID: 8300000, guid: ef38715e17fab364a8197d43f16c1eda, type: 3}
   - {fileID: 8300000, guid: f3a201102c6fb984bbab5b83ad81f493, type: 3}
   - {fileID: 8300000, guid: f3a201102c6fb984bbab5b83ad81f493, type: 3}
-  bgmList: []
+  bgmList:
+  - {fileID: 8300000, guid: fdf5ce99ec53cc144a92c3001e01ee7c, type: 3}
+  - {fileID: 8300000, guid: 082250d438608c549bd29ecc133067c9, type: 3}
+  - {fileID: 8300000, guid: b358464682b253f4ebf331e93f90ec42, type: 3}
+  - {fileID: 8300000, guid: da374060e4d87794da6e759f55f9084d, type: 3}
+  - {fileID: 8300000, guid: 3e17dd51f916ab74b85d2826ba203aaf, type: 3}
+  - {fileID: 8300000, guid: f009ba4c6f6398943950606118863e0e, type: 3}
+  - {fileID: 8300000, guid: 137285273a7f3ea409d1a28962ba5f3b, type: 3}
+  - {fileID: 8300000, guid: bf96579bfa05a6a4686665fd29b8ea32, type: 3}
 --- !u!1 &726335349
 GameObject:
   m_ObjectHideFlags: 0
@@ -10863,9 +10871,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1757475159}
-        m_TargetAssemblyTypeName: UnityEngine.Object, UnityEngine
-        m_MethodName: set_name
+      - m_Target: {fileID: 1757475160}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: Game
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -11979,8 +11987,9 @@ GameObject:
   - component: {fileID: 1755990161}
   - component: {fileID: 1755990163}
   - component: {fileID: 1755990162}
+  - component: {fileID: 1755990164}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Credit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12002,7 +12011,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -2049}
+  m_AnchoredPosition: {x: 0, y: -1622}
   m_SizeDelta: {x: 2082, y: 4727.202}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1755990162
@@ -12043,6 +12052,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1755990160}
   m_CullTransparentMesh: 1
+--- !u!114 &1755990164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1755990160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a4878f263d29e94889f78232dbffb80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1757475159
 GameObject:
   m_ObjectHideFlags: 0
@@ -12085,7 +12106,7 @@ MonoBehaviour:
   audoSpeedSlider: {fileID: 1027883804}
   BlackImage: {fileID: 1642258638}
   BlackImageObject: {fileID: 1642258636}
-  creditPanel: {fileID: 0}
+  creditPanel: {fileID: 1755990160}
   creditPanelCancelButton: {fileID: 0}
 --- !u!4 &1757475161
 Transform:
