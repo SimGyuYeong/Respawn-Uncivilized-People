@@ -8,9 +8,9 @@ public class PlayerData
 {
     public string name;
     [Range(0, 100)]
-    public int durabilityPoint;
+    public int durabilityPoint = 100;
     [Range(0, 100)]
-    public int kineticPoint;
+    public int kineticPoint = 100;
     public Vector2Int position;
     public string info;
 }

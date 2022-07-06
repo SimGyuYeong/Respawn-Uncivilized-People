@@ -15,32 +15,48 @@ MonoBehaviour:
   stage: 1
   isWallList: 00000000000000000000000000000000000000000000000100000000000000010000000000000101010000000001010101010000010101010101010101010101
   playerDataList:
-  - name: aa
+  - name: "\uC81C13AI\uBD80\uB300"
     durabilityPoint: 100
     kineticPoint: 100
     position: {x: 2, y: 2}
-    info: 
-  - name: bb
+    info: "\u03B3\uBC14\uC774\uB7EC\uC2A4 \uAC10\uC5FC\uCCB4\uB97C \uC81C\uC555\uD558\uAE30\uC704\uD55C
+      \uBD80\uB300\uC911 \uD558\uB098. \uADFC\uAC70\uB9AC\uC5D0\uC11C \uD070 \uD53C\uD574\uB97C
+      \uC785\uD788\uACE0 \uC81C\uC555\uD558\uB294\uB370\uC5D0 \uD2B9\uD654\uB418\uC5B4\uC788\uB2E4."
+  - name: "\uC81C13AI\uBD80\uB300"
     durabilityPoint: 100
     kineticPoint: 100
     position: {x: 4, y: 2}
-    info: 
+    info: "\u03B3\uBC14\uC774\uB7EC\uC2A4 \uAC10\uC5FC\uCCB4\uB97C \uC81C\uC555\uD558\uAE30\uC704\uD55C
+      \uBD80\uB300\uC911 \uD558\uB098. \uADFC\uAC70\uB9AC\uC5D0\uC11C \uD070 \uD53C\uD574\uB97C
+      \uC785\uD788\uACE0 \uC81C\uC555\uD558\uB294\uB370\uC5D0 \uD2B9\uD654\uB418\uC5B4\uC788\uB2E4."
   aiDataList:
-  - name: a
-    influencePoint: 89
+  - name: 'TYPE-A '
+    influencePoint: 25
     position: {x: 3, y: 7}
     range: 3
-    info: 
+    info: "\u03B3\uBC14\uC774\uB7EC\uC2A4 \uAC10\uC5FC\uCCB4\uC758 \uAE30\uBCF8\uC801\uC778
+      \uD615\uD0DC. \uC9C0\uAD6C\uC758 \uC704\uB3C4\uB97C \uB530\uB77C \uC774\uB3D9\uD558\uB294
+      \uACBD\uD5A5\uC774 \uC788\uAE30 \uB54C\uBB38\uC5D0, \uC801\uC744 \uCD94\uC801\uD560
+      \uB54C\uC5D0\uB3C4 \uC704\uB3C4\uB97C \uBA3C\uC800 \uAE30\uC900\uC73C\uB85C
+      \uCD94\uC801\uD55C\uB2E4\uACE0 \uD55C\uB2E4. "
     type: 0
-  - name: b
-    influencePoint: 35
+  - name: 'TYPE-A '
+    influencePoint: 25
     position: {x: 2, y: 5}
     range: 4
-    info: 
+    info: "\u03B3\uBC14\uC774\uB7EC\uC2A4 \uAC10\uC5FC\uCCB4\uC758 \uAE30\uBCF8\uC801\uC778
+      \uD615\uD0DC. \uC9C0\uAD6C\uC758 \uC704\uB3C4\uB97C \uB530\uB77C \uC774\uB3D9\uD558\uB294
+      \uACBD\uD5A5\uC774 \uC788\uAE30 \uB54C\uBB38\uC5D0, \uC801\uC744 \uCD94\uC801\uD560
+      \uB54C\uC5D0\uB3C4 \uC704\uB3C4\uB97C \uBA3C\uC800 \uAE30\uC900\uC73C\uB85C
+      \uCD94\uC801\uD55C\uB2E4\uACE0 \uD55C\uB2E4. "
     type: 0
-  - name: c
-    influencePoint: 55
+  - name: 'TYPE-A '
+    influencePoint: 25
     position: {x: 5, y: 5}
     range: 3
-    info: 
+    info: "\u03B3\uBC14\uC774\uB7EC\uC2A4 \uAC10\uC5FC\uCCB4\uC758 \uAE30\uBCF8\uC801\uC778
+      \uD615\uD0DC. \uC9C0\uAD6C\uC758 \uC704\uB3C4\uB97C \uB530\uB77C \uC774\uB3D9\uD558\uB294
+      \uACBD\uD5A5\uC774 \uC788\uAE30 \uB54C\uBB38\uC5D0, \uC801\uC744 \uCD94\uC801\uD560
+      \uB54C\uC5D0\uB3C4 \uC704\uB3C4\uB97C \uBA3C\uC800 \uAE30\uC900\uC73C\uB85C
+      \uCD94\uC801\uD55C\uB2E4\uACE0 \uD55C\uB2E4. "
     type: 0

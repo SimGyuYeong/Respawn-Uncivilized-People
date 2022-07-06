@@ -112,9 +112,14 @@ public class GameManager : MonoBehaviour
 #endif
                 break;
             case "Å©·¹µ÷":
-                creditPanel.SetActive(true);
-                creditPanelCancelButton.SetActive(true);
-
+                if (creditPanel.active.Equals(false))
+                {
+                    creditPanel.SetActive(true);
+                }
+                else
+                {
+                    creditPanel.SetActive(false);
+                }
                 break;
             default:
                 break;
