@@ -110,10 +110,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f4bc4a5efba99748b17bebf1b074704, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aiName: 
-  id: 0
-  isRestructuring: 0
-  info: 
+  _id: 0
+  _name: 
+  _influencePoint: 0
+  _pos: {x: 0, y: 0}
+  _info: 
 --- !u!1 &6315941996836355910
 GameObject:
   m_ObjectHideFlags: 0
