@@ -841,10 +841,10 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300002, guid: 8dafcfc761c44c548a42120f675d5d63, type: 2}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 0.1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -3794,7 +3794,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300002, guid: 8253b7b5e4219f846908589cd340049e, type: 2}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 0.1
   m_Pitch: 1
   Loop: 0
@@ -6938,6 +6938,7 @@ MonoBehaviour:
   textlogPrefab: {fileID: 6871316211140201032, guid: 63bd3abb528bc9547a3420689dedf61a, type: 3}
   textlogView: {fileID: 1269052449}
   autoChecker: {fileID: 0}
+  memorialcanvas: {fileID: 0}
   chatID: 1
   lineNumber: 1
   backgroundID: 1
@@ -11984,7 +11985,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1755990161
 RectTransform:
   m_ObjectHideFlags: 0
