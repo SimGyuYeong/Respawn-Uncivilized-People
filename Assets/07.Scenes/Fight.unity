@@ -2535,6 +2535,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e85b431714ae4441938c34f682c54ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _stageSO:
+  - {fileID: 11400000, guid: b58c672a7892066478faa81752ed4eb1, type: 2}
+  - {fileID: 11400000, guid: 484a54c67f134834a855b75383535fd9, type: 2}
+  - {fileID: 11400000, guid: 8b253d89237edcf4190f16f63e76517b, type: 2}
+  - {fileID: 11400000, guid: 46ac7d309137a264db0aeca787a80ace, type: 2}
+  - {fileID: 11400000, guid: 56a2535b4dd5fe6478243a91c4a18878, type: 2}
+  - {fileID: 11400000, guid: 4558cd66c8a3f554e8ae0c7fc1061b50, type: 2}
   playerDataList:
   - name: aa
     durabilityPoint: 100
@@ -2565,7 +2572,6 @@ MonoBehaviour:
     range: 3
     info: 
     type: 0
-  aiList11: []
   content: {fileID: 1718551215}
   moveAni: {fileID: 4460019810026274728, guid: 94cd5b94ebda27547838fdb3e82373ac, type: 3}
   tilePrefab: {fileID: 2317601914350064403, guid: 1d6d0f545e3055240bcab4713ac88eaf, type: 3}

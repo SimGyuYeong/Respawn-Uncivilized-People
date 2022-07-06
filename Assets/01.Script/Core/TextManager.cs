@@ -453,8 +453,12 @@ public class TextManager : MonoBehaviour
         foreach (string x in imageList)
         {
             int num = Convert.ToInt32(x) - 1;
-
-            TextSO.imageList[num].gameObject.SetActive(set);
+            if (TextSO.imageList[num] == null)
+            {
+                Debug.LogError($"Not Found Image! {num} is Not Image Number");
+                continue;
+            }
+            TextSO.imageList[num].SetActive(set);
         }
     }
 

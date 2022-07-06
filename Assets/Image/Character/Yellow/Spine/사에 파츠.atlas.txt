@@ -1,0 +1,49 @@
+사에 파츠.png
+size:1681,1272
+filter:Linear,Linear
+pma:true
+body
+bounds:1130,40,383,533
+offsets:0,0,492,533
+rotate:90
+close eye
+bounds:1130,2,164,36
+offsets:11,2,182,41
+face
+bounds:241,61,232,199
+faceBase
+bounds:475,78,182,184
+rotate:90
+front hair
+bounds:1130,440,240,262
+rotate:90
+hair
+bounds:2,662,608,889
+offsets:0,0,611,889
+rotate:90
+hiden body
+bounds:771,157,294,84
+rotate:90
+left arm
+bounds:2,262,189,767
+rotate:90
+left eye
+bounds:661,94,97,61
+offsets:0,0,182,71
+left leg
+bounds:2,453,207,855
+rotate:90
+mouse
+bounds:1296,4,44,34
+right arm
+bounds:893,14,235,666
+right eye
+bounds:661,200,64,60
+right leg
+bounds:1420,425,259,845
+skirt
+bounds:893,682,588,525
+rotate:90
+밑바탕
+bounds:2,46,214,237
+rotate:90
