@@ -442,10 +442,8 @@ public class FightManager : MonoBehaviour
         {
             var obj = Instantiate(moveAni);
             obj.transform.position = new Vector2(finalNodeList[i].x, finalNodeList[i].y);
-            player.DurabilityPoint -= 2;
             yield return new WaitForSeconds(0.2f);
         }
-        player.DurabilityPoint += 2;
         player.Position = tPos;
         player.gameObject.SetActive(true);
         OnUIChange?.Invoke();
@@ -463,8 +461,8 @@ public class FightManager : MonoBehaviour
         isIng = false;
         if (_turnCount > 0)
         {
-            if (action == Action.Move) player.isMove = true;  
-            else if (action == Action.Attack)  player.isFight = true; 
+            if (action == Action.Move) player.isMove = true;
+            else if (action == Action.Attack) player.isFight = true;
 
             foreach(Player p in playerList)
             {
@@ -479,8 +477,7 @@ public class FightManager : MonoBehaviour
             }
         }
 
-        if (aiList.Count == 0) Win();
-        else  _uiManager.TurnstopEmphasis();
+        _uiManager.TurnstopEmphasis();
     }
 
     /// <summary>
@@ -718,6 +715,9 @@ public class FightManager : MonoBehaviour
         if(turnType == TurnType.Player)
         {
             turnType = TurnType.Player_Ing;
+            _uiManager.ShowSkillUI(false);
+            HideDistance();
+            lineRenderer.positionCount = 0;
             _uiManager.TurnstopEmphasisStop();
             TurnChange();
         }

@@ -345,11 +345,6 @@ public class TextManager : MonoBehaviour
             StartCoroutine(directName.Trim());
         }
 
-        if (Sentence[chatID][lineNumber, (int)IDType.SFX] != "" && Sentence[chatID][lineNumber, (int)IDType.SFX] != null)
-        {
-            string clipName = Sentence[chatID][lineNumber, (int)IDType.SFX].Trim();
-        }
-
         if (Sentence[chatID][lineNumber, (int)IDType.Event] != "" && Sentence[chatID][lineNumber, (int)IDType.Event] != null)
         {
             string eventName = Sentence[chatID][lineNumber, (int)IDType.Event];
