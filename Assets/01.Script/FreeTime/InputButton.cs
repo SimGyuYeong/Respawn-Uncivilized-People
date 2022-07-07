@@ -26,7 +26,7 @@ public class InputButton : ButtonManager
     {
         _id = code + 5 * TextManager.nextCount;
 
-        if (_id % 4 == 0) { _freeTimeText.StartCoroutine("GoToMain"); }
+        if (_id % (4 + 5 * TextManager.nextCount) == 0) { _freeTimeText.StartCoroutine("GoToMain"); }
 
         StartCoroutine(ButtonMove());
     }
@@ -109,12 +109,12 @@ public class InputButton : ButtonManager
             yield return new WaitForSeconds(0.005f);
         }
 
-        storyButton[_id - 1].interactable = false;
+        storyButton[_id - 1 - 5 * TextManager.nextCount].interactable = false;
 
-        Color textAlpha = storyButton[_id - 1].transform.Find("ButtonImageMask/Image").GetComponent<Image>().color;
+        Color textAlpha = storyButton[_id - 1 - 5 * TextManager.nextCount].transform.Find("ButtonImageMask/Image").GetComponent<Image>().color;
         
         textAlpha.a = 170;
-        storyButton[_id - 1].transform.Find("ButtonImageMask/Text").GetComponent<TextMeshProUGUI>().color = textAlpha;
+        storyButton[_id - 1 - 5 * TextManager.nextCount].transform.Find("ButtonImageMask/Text").GetComponent<TextMeshProUGUI>().color = textAlpha;
 
         //storyButton[_id - 1].transform.Find("iIntimacy").GetComponent<Button>().interactable = false;
 
