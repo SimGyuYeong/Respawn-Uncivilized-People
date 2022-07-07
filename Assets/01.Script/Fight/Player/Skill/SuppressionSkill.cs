@@ -21,8 +21,10 @@ public class SuppressionSkill : Skill
 
     protected override void ShowDistance()
     {
-        base.ShowDistance();
-        foreach(var ai in _attackAI)
+        CheckDistance();
+        _distanceTiles.ForEach(x => x.GetComponent<SpriteRenderer>().color = Color.red);
+
+        foreach (var ai in _attackAI)
         {
             if (ai.GetComponentInChildren<AI>().IsRestructuring() == false)
             {

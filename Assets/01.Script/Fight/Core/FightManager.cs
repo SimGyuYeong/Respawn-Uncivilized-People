@@ -138,12 +138,14 @@ public class FightManager : MonoBehaviour
 
     private void Start()
     {
-        StageSave.instance.StageStart();
+        //StageSave.instance.StageStart();
+        StageStart(2);
     }
 
     public void StageStart(int stage)
     {
         fightStage = stage;
+        //_soundManager.PlayBGM(stage);
         if (_stageSO[stage - 1] == null)
         {
             Debug.LogError("Not Found Stage! Check plz");
@@ -697,6 +699,7 @@ public class FightManager : MonoBehaviour
                 {
                     pInput = InputType.None;
                     _uiManager.ShowSkillUI(false);
+                    HideDistance();
                 }
                 else if(tile.isAI())
                 {
@@ -736,15 +739,20 @@ public class FightManager : MonoBehaviour
             yield return new WaitForSeconds(0.06f);
         }
         _uiManager.ShowInfoUI(false);
+        SoundManager.PauseBGM();
 
         yield return new WaitForSeconds(0.2f);
         _uiManager.ViewText("Battle Command Complete", () =>
         {
-            if (fightStage == 1)
-            {
-                SceneManager.LoadScene("Typing");
-                sendChatID = 5;
-            }
+            tileList.Clear();
+            playerList.Clear();
+            aiList.Clear();
+
+            turn = maxTurn;
+
+            if (fightStage == 1) sendChatID = 5;
+
+            SceneManager.LoadScene("Typing");
         });
     }
 
@@ -761,6 +769,7 @@ public class FightManager : MonoBehaviour
             yield return new WaitForSeconds(0.06f);
         }
         _uiManager.ShowInfoUI(false);
+        SoundManager.PauseBGM();
 
         yield return new WaitForSeconds(0.2f);
         _uiManager.ViewText("Battle Command Faild!", () => 
@@ -771,8 +780,16 @@ public class FightManager : MonoBehaviour
 
             turn = maxTurn;
 
-            StartCoroutine(TileSpawn(false));
-            _uiManager.ShowInfoUI(true);
+            if (fightStage == 1)
+            {
+                StartCoroutine(TileSpawn(false));
+                _uiManager.ShowInfoUI(true);
+            }
+            else
+            {
+                if (fightStage == 1) sendChatID = 5;
+                SceneManager.LoadScene("Typing");
+            }
         });
     }
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using TMPro;
+using DG.Tweening;
+using UnityEngine.UI;
 
 public class Skill : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
 {
@@ -19,6 +21,8 @@ public class Skill : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
 
     protected List<AI> _damagedAIList = new List<AI>();
 
+    private static int selectButtonNum;
+
     private void Awake()
     {
         transform.Find("Name").GetComponent<TextMeshProUGUI>().text = _name;
@@ -33,6 +37,7 @@ public class Skill : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
     /// <returns></returns>
     public bool SkillWhether()
     {
+        
         if(FightManager.Instance.player.KineticPoint >= _cost)
         {
             if(CountingAI() > 0)
@@ -50,13 +55,24 @@ public class Skill : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
     protected virtual int CountingAI()
     {
         CheckDistance();
-        foreach (var ai in _attackAI)
+        Debug.Log(_attackAI.Count);
+        List<GameObject> removeAIList = new List<GameObject>();
+        if(_attackAI.Count > 0)
         {
-            if (ai.GetComponentInChildren<AI>().IsRestructuring() == true)
+            foreach (var ai in _attackAI)
             {
-                _attackAI.Remove(ai);
+                if (ai.GetComponentInChildren<AI>().IsRestructuring() == true)
+                {
+                    removeAIList.Add(ai);
+                } 
             }
         }
+
+        foreach(var ai in removeAIList)
+        {
+            _attackAI.Remove(ai);
+        }
+
         return _attackAI.Count;
     }
 
@@ -67,8 +83,15 @@ public class Skill : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
     {
         CheckDistance();
         _distanceTiles.ForEach(x => x.GetComponent<SpriteRenderer>().color = Color.red);
-    }
 
+        foreach (var ai in _attackAI)
+        {
+            if (ai.GetComponentInChildren<AI>().IsRestructuring() == true)
+            {
+                ai.transform.GetComponent<SpriteRenderer>().color = Color.white;
+            }
+        }
+    }
     /// <summary>
     /// 스킬 버튼을 눌렀을 때
     /// </summary>
@@ -158,6 +181,11 @@ public class Skill : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
         if(SkillWhether() == true)
         {
             SelectSkillButton();
+
+            Image image = transform.GetComponent<Image>();
+            Sequence seq = DOTween.Sequence();
+            seq.Append(image.DOColor(Color.black, .1f));
+            seq.Append(image.DOColor(Color.white, .1f));
         }
     }
 

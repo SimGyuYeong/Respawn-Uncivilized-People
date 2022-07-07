@@ -9,9 +9,12 @@ public class IronFistSkill : Skill
         FightManager.Instance.player.KineticPoint -= _cost;
 
         _damagedAIList.Clear();
-        foreach(var tile in _attackAI)
+        if(_attackAI.Count > 0)
         {
-            _damagedAIList.Add(tile.GetComponentInChildren<AI>());
+            foreach (var tile in _attackAI)
+            {
+                _damagedAIList.Add(tile.GetComponentInChildren<AI>());
+            }
         }
 
         AIDamage();

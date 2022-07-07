@@ -188,6 +188,7 @@ public class UIManager : MonoBehaviour
         {
             foreach (var button in _skillButton)
             {
+                Debug.Log(button.name);
                 button.color = button.GetComponent<Skill>().SkillWhether() ? Color.white : Color.gray;
             }
         }

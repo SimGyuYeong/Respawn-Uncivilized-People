@@ -8,51 +8,30 @@ public class FightSoundManager : MonoBehaviour
     private AudioSource BGM;
 
     [SerializeField] // Effect 출력 전용 오디오 소스
-    private AudioSource Effect1;
-
-    [SerializeField] // Effect 출력 전용 서브 오디오 소스
-    private AudioSource Effect2;
+    private AudioSource Effect;
 
     [SerializeField] // 배경음악, 효과음 등등 오디오 소스 배열
     private AudioClip[] Sounds;
 
-    enum SoundsIndexNumber
+    public void PlayBGM(int bgmNum)
     {
-        BGM = 0,
-        GameOver,
-        PlayerMove,
-        EnemyMove,
-        ButtonClick,
-        PlayerClick,
-        TurnEndButton,
-        AttackEffect,
-    };
-
-    SoundsIndexNumber soundsIndexNumber = SoundsIndexNumber.BGM;
-
-    private void Awake()
-    {
-
+        BGM.clip = Sounds[bgmNum];
+        BGM.Play();
     }
 
-    void Update()
+    public void PauseBGM()
     {
-        
+        BGM.Pause();
     }
 
-    public void BGMSet(int SoundsNum)
+    public void PlayEffect(int effectNum)
     {
-        switch (SoundsNum)
-        {
-            case (int)SoundsIndexNumber.BGM :
-                BGM.clip = Sounds[SoundsNum];
-                BGM.Play();
-                Debug.Log("f");
-                break;  
+        Effect.clip = Sounds[effectNum];
+        Effect.Play();
+    }
 
-            case (int)SoundsIndexNumber.GameOver :
-
-                break;
-        }
+    public void PauseEffect()
+    {
+        Effect.Pause();
     }
 }
