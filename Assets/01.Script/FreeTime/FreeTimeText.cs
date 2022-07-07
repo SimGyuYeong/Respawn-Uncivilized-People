@@ -31,21 +31,21 @@ public class FreeTimeText : TextManager
         StartCoroutine(SetDelay1());
     }
 
-    public void Start()
-    {
-        base.Start();
-        StartCoroutine(LoadingPanel());
-    }
+    //public void Start()
+    //{
+    //    base.Start();
+    //    StartCoroutine(LoadingPanel());
+    //}
 
-    IEnumerator LoadingPanel()
-    {
-        GameObject g = loadingpanel;
-        _loadingPanel = Instantiate(g);
+    //IEnumerator LoadingPanel()
+    //{
+    //    GameObject g = loadingpanel;
+    //    _loadingPanel = Instantiate(g);
 
-        yield return new WaitForSeconds(1.7f);
+    //    yield return new WaitForSeconds(1.7f);
 
-        _loadingPanel.SetActive(false);
-    }
+    //    _loadingPanel.SetActive(false);
+    //}
 
     IEnumerator SetDelay1()
     {
@@ -216,7 +216,7 @@ public class FreeTimeText : TextManager
             
             _time = 0;
             nextCount += 1;
-            SceneManager.LoadScene("Typing");
+            ChangeScene.Instance.SceneChange("Typing");
         }
     }
 }
