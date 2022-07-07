@@ -470,13 +470,13 @@ public class TextManager : MonoBehaviour
 
     IEnumerator GoToFreeTime()
     {
-        SceneManager.LoadScene("FreeTime");
+        ChangeScene.Instance.SceneChange("FreeTime");
         yield return null;
     }
 
     IEnumerator GotoFight()
     {
-        SceneManager.LoadScene("Fight");
+        ChangeScene.Instance.SceneChange("Fight");
         yield return null;
     }
 
@@ -484,6 +484,7 @@ public class TextManager : MonoBehaviour
     {
         int nn = num - 2;
         memorialcanvas.transform.GetChild(0).GetComponent<MemorialManager>().itemName[nn].isUnlock = true;
+        //MemorialManager.itemName[nn].isUnlock = true;
         yield return null;
     }
 

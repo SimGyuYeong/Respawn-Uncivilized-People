@@ -144,5 +144,6 @@ public class TextUIManager : MonoBehaviour
     {
         GameObject _memorial = _memorialOptionPrefab;
         _memorialOption = Instantiate(_memorial).transform.GetChild(0).gameObject;
+        DontDestroyOnLoad(_memorialOption);
     }
 }
