@@ -126,7 +126,7 @@ public class TextManager : MonoBehaviour
 
     IEnumerator SetDelay()
     {
-        yield return new WaitForSeconds(0.9f);
+        yield return new WaitForSeconds(2f);
         GameManager.Instance.TitlePanel.SetActive(false);
         GameManager.Instance.Buttons.SetActive(false);
         StartCoroutine(GameManager.Instance.FadeIn());
@@ -470,13 +470,13 @@ public class TextManager : MonoBehaviour
 
     IEnumerator GoToFreeTime()
     {
-        ChangeScene.Instance.SceneChange("FreeTime");
+        ChangeScene.Instance.StartCoroutine("SceneChange", "FreeTime");
         yield return null;
     }
 
     IEnumerator GotoFight()
     {
-        ChangeScene.Instance.SceneChange("Fight");
+        ChangeScene.Instance.StartCoroutine("SceneChange", "Fight");
         yield return null;
     }
 

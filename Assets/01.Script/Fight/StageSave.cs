@@ -5,15 +5,8 @@ using UnityEngine;
 public class StageSave : MonoBehaviour
 {
     public static int STAGE = 0;
-    public static StageSave instance;
 
-    private void Awake()
-    {
-        instance = this;
-        DontDestroyOnLoad(this);
-    }
-
-    public void StageStart()
+    public static void StageStart()
     {
         STAGE++;
         FightManager.Instance.StageStart(STAGE);

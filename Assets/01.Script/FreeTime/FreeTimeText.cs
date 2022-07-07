@@ -215,8 +215,8 @@ public class FreeTimeText : TextManager
             else if (nextCount == 3) FightManager.sendChatID = 7;
             
             _time = 0;
-            nextCount += 1;
-            ChangeScene.Instance.SceneChange("Typing");
+            nextCount++;
+            ChangeScene.Instance.StartCoroutine("SceneChange", "Typing");
         }
     }
 }

@@ -59,7 +59,19 @@ public class TextUIManager : MonoBehaviour
         _bgmSlider.value = PlayerPrefs.GetFloat("BGM", 0);
         _effectSlider.value = PlayerPrefs.GetFloat("Effect", 0);
 
-        SetMemorialPanel();
+        
+    }
+
+    private void Start()
+    {
+        if(FightManager.sendChatID < 3)
+        {
+            SetMemorialPanel();
+        }
+        else
+        {
+            _memorialOption = FindObjectOfType<MemorialCanvas>().gameObject.transform.GetChild(0).gameObject;
+        }
     }
 
     public void Loading(Action action)

@@ -138,7 +138,7 @@ public class FightManager : MonoBehaviour
 
     private void Start()
     {
-        StageSave.instance.StageStart();
+        StageSave.StageStart();
     }
 
     public void StageStart(int stage)
@@ -751,7 +751,7 @@ public class FightManager : MonoBehaviour
 
             if (fightStage == 1) sendChatID = 5;
             else if (fightStage == 2) sendChatID = 11;
-            ChangeScene.Instance.StartCoroutine("ScnenChange", "Typing");
+            ChangeScene.Instance.StartCoroutine("SceneChange", "Typing");
         });
     }
 
@@ -788,7 +788,7 @@ public class FightManager : MonoBehaviour
             {
                 if (fightStage == 2) sendChatID = 12;
 
-                ChangeScene.Instance.StartCoroutine("ScnenChange", "Typing");
+                ChangeScene.Instance.StartCoroutine("SceneChange", "Typing");
             }
         });
     }

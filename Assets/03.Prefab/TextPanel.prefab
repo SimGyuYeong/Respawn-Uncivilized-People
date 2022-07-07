@@ -765,7 +765,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b67ae48014430c4487f557226e213b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _textLogPanel: {fileID: 4053891990404427236}
   defaultColor: {r: 0.6431373, g: 0.6431373, b: 0.6431373, a: 1}
   activeColor: {r: 0.9245283, g: 0.27386966, b: 0.27386966, a: 1}
 --- !u!114 &3779011821131852671
