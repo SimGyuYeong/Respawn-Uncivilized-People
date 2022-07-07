@@ -209,12 +209,13 @@ public class FreeTimeText : TextManager
         }
         else
         {
-            if(nextCount == 0) FightManager.sendChatID = 8;
-            else if(nextCount == 1) FightManager.sendChatID = 10;
-            else if(nextCount == 2) FightManager.sendChatID = 12;
-            else if(nextCount == 3) FightManager.sendChatID = 7;
-            nextCount += 1;
+            if (nextCount == 0) FightManager.sendChatID = 8;
+            else if (nextCount == 1) FightManager.sendChatID = 10;
+            else if (nextCount == 2) FightManager.sendChatID = 12;
+            else if (nextCount == 3) FightManager.sendChatID = 7;
+            
             _time = 0;
+            nextCount += 1;
             SceneManager.LoadScene("Typing");
         }
     }

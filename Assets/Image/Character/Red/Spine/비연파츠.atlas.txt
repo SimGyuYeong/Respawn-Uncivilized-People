@@ -1,0 +1,32 @@
+비연파츠.png
+size:1502,1309
+filter:Linear,Linear
+pma:true
+body
+bounds:2,2,644,744
+rotate:90
+close eye
+bounds:748,46,170,50
+face
+bounds:1109,131,201,206
+offsets:1,0,203,206
+front hair
+bounds:748,98,117,359
+rotate:90
+front mid hair
+bounds:1312,119,218,177
+rotate:90
+hair
+bounds:748,217,358,429
+hide face
+bounds:1108,339,242,307
+offsets:29,0,306,338
+left eye
+bounds:920,48,69,48
+offsets:0,1,69,53
+leg
+bounds:2,648,659,1498
+offsets:0,0,660,1498
+rotate:90
+right eye
+bounds:1352,597,75,49
