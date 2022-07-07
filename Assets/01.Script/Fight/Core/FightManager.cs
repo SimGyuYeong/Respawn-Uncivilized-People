@@ -750,7 +750,7 @@ public class FightManager : MonoBehaviour
             turn = maxTurn;
 
             if (fightStage == 1) sendChatID = 5;
-
+            else if (fightStage == 2) sendChatID = 11;
             SceneManager.LoadScene("Typing");
         });
     }
@@ -786,7 +786,7 @@ public class FightManager : MonoBehaviour
             }
             else
             {
-                if (fightStage == 1) sendChatID = 5;
+                if (fightStage == 2) sendChatID = 12;
                 SceneManager.LoadScene("Typing");
             }
         });
