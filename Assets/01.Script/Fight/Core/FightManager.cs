@@ -138,14 +138,13 @@ public class FightManager : MonoBehaviour
 
     private void Start()
     {
-        //StageSave.instance.StageStart();
-        StageStart(2);
+        StageSave.instance.StageStart();
     }
 
     public void StageStart(int stage)
     {
         fightStage = stage;
-        //_soundManager.PlayBGM(stage);
+        _soundManager.PlayBGM(stage);
         if (_stageSO[stage - 1] == null)
         {
             Debug.LogError("Not Found Stage! Check plz");

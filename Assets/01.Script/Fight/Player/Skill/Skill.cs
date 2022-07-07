@@ -199,7 +199,7 @@ public class Skill : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
     }
 
     public void OnPointerExit(PointerEventData eventData)
-    {
+    { 
         if (FightManager.Instance.isSkillSelect == false)
         {
             FightManager.Instance.HideDistance();
