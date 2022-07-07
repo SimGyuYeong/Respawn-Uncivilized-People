@@ -5,8 +5,6 @@ using UnityEngine.UI;
 
 public class TextOption : MonoBehaviour
 {
-    [SerializeField] private GameObject _textLogPanel;
-
     [SerializeField] private Color defaultColor;
     [SerializeField] private Color activeColor;
 
@@ -30,7 +28,7 @@ public class TextOption : MonoBehaviour
 
     public void ShowTextLog()
     {
-        _textLogPanel.SetActive(true);
+        TextUIManager.instance.textLogUI.SetActive(true);
     }
 
     /// <summary>

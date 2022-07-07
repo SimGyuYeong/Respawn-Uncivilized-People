@@ -16,6 +16,7 @@ public class TextUIManager : MonoBehaviour
     [Tooltip("¼³Á¤Ã¢ UI")]
     [SerializeField] private GameObject _optionUI;
 
+    public GameObject textLogUI;
     private GameObject _defaultOption;
     private GameObject _soundOption;
     public GameObject _memorialOptionPrefab;
@@ -41,6 +42,7 @@ public class TextUIManager : MonoBehaviour
     {
         instance = this;
 
+        textLogUI = _optionUI.transform.parent.Find("TextLogPanel").gameObject;
         _defaultOption = _optionUI.transform.Find("DefaultSetting").gameObject;
         _soundOption = _optionUI.transform.Find("SoundSetting").gameObject;
         //_memorialOption = _optionUI.transform.Find("Memorial").gameObject;

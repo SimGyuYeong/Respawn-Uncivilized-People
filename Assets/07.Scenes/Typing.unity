@@ -4029,6 +4029,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _loadingSprite: {fileID: 169186628}
   _optionUI: {fileID: 1677435524}
+  textLogUI: {fileID: 0}
   _memorialOptionPrefab: {fileID: 2414442006712082469, guid: 83ff7ed7f643e2c468bc1ca873c74a8c, type: 3}
   _memorialOption: {fileID: 0}
   selectColor: {r: 0.7921569, g: 0.43137255, b: 0.05490196, a: 1}
@@ -10628,8 +10629,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 36.440018, y: 65.39}
-  m_SizeDelta: {x: 1427.1, y: 769.21}
+  m_AnchoredPosition: {x: 0.00012207, y: -5.4}
+  m_SizeDelta: {x: 1920, y: 1090.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1584400388
 MonoBehaviour:
@@ -10674,14 +10675,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 7b8b3c2b004263844b5dbea8eef23ad9, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -12450,15 +12451,15 @@ RectTransform:
   m_GameObject: {fileID: 1773615243}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 100, y: 100, z: 1}
   m_Children: []
   m_Father: {fileID: 1584400387}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 691, y: 375}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchoredPosition: {x: 887, y: 463}
+  m_SizeDelta: {x: 1, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1773615245
 MonoBehaviour:
@@ -12504,9 +12505,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: TextManager, Assembly-CSharp
-        m_MethodName: ShowTextLog
+      - m_Target: {fileID: 1584400386}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -12536,7 +12537,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: c67b3b0b71aa81f45bebbe26dee67276, type: 3}
+  m_Sprite: {fileID: -8943924478185911527, guid: 2a01691a87fedbe4aa6de6f1c0c0f3d4, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
