@@ -138,14 +138,13 @@ public class FightManager : MonoBehaviour
 
     private void Start()
     {
-        //StageSave.instance.StageStart();
-        StageStart(2);
+        StageSave.instance.StageStart();
     }
 
     public void StageStart(int stage)
     {
         fightStage = stage;
-        //_soundManager.PlayBGM(stage);
+        _soundManager.PlayBGM(stage);
         if (_stageSO[stage - 1] == null)
         {
             Debug.LogError("Not Found Stage! Check plz");
@@ -751,7 +750,7 @@ public class FightManager : MonoBehaviour
             turn = maxTurn;
 
             if (fightStage == 1) sendChatID = 5;
-
+            else if (fightStage == 2) sendChatID = 11;
             SceneManager.LoadScene("Typing");
         });
     }
@@ -787,7 +786,7 @@ public class FightManager : MonoBehaviour
             }
             else
             {
-                if (fightStage == 1) sendChatID = 5;
+                if (fightStage == 2) sendChatID = 12;
                 SceneManager.LoadScene("Typing");
             }
         });

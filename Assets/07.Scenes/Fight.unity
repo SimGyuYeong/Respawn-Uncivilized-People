@@ -3850,11 +3850,12 @@ MonoBehaviour:
   BGM: {fileID: 35408761}
   Effect: {fileID: 1169727728}
   Sounds:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 8300000, guid: 795bfa920e091f14b932acd8582dec44, type: 3}
+  - {fileID: 8300000, guid: c32d9bc72ec530345860fd343d85d81f, type: 3}
+  - {fileID: 8300000, guid: 0cfe7aaaba8297e439a246bea151b642, type: 3}
+  - {fileID: 8300000, guid: aa6ecdecc6920834fae69b58134df785, type: 3}
+  - {fileID: 8300000, guid: c31485000f13bc84094d71c07e9d4e59, type: 3}
+  - {fileID: 8300000, guid: ee5584caa570f8644bcb68a3c03d26a2, type: 3}
 --- !u!1 &1218029293
 GameObject:
   m_ObjectHideFlags: 0
