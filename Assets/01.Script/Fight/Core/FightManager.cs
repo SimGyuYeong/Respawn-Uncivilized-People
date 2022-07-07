@@ -787,6 +787,7 @@ public class FightManager : MonoBehaviour
             else
             {
                 if (fightStage == 2) sendChatID = 12;
+
                 SceneManager.LoadScene("Typing");
             }
         });
