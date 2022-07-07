@@ -138,13 +138,14 @@ public class FightManager : MonoBehaviour
 
     private void Start()
     {
-        StageSave.instance.StageStart();
+        //StageSave.instance.StageStart();
+        StageStart(2);
     }
 
     public void StageStart(int stage)
     {
         fightStage = stage;
-        _soundManager.PlayBGM(stage);
+        //_soundManager.PlayBGM(stage);
         if (_stageSO[stage - 1] == null)
         {
             Debug.LogError("Not Found Stage! Check plz");
@@ -698,6 +699,7 @@ public class FightManager : MonoBehaviour
                 {
                     pInput = InputType.None;
                     _uiManager.ShowSkillUI(false);
+                    HideDistance();
                 }
                 else if(tile.isAI())
                 {

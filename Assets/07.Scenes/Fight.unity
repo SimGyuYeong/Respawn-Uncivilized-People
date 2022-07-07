@@ -244,7 +244,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300002, guid: 8dafcfc761c44c548a42120f675d5d63, type: 2}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 1
@@ -3848,9 +3848,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BGM: {fileID: 35408761}
-  Effect1: {fileID: 1169727728}
-  Effect2: {fileID: 0}
-  Sounds: []
+  Effect: {fileID: 1169727728}
+  Sounds:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!1 &1218029293
 GameObject:
   m_ObjectHideFlags: 0
