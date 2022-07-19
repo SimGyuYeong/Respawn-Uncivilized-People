@@ -92,6 +92,7 @@ public class FightManager : MonoBehaviour
     public LineRenderer lineRenderer;
 
     public bool isSkillSelect = false;
+    public bool isTutorial = false;
 
     [field: SerializeField] public UnityEvent OnUIChange { get; set; }
 
@@ -256,7 +257,10 @@ public class FightManager : MonoBehaviour
         OnUIChange?.Invoke();
 
         if (tuto)
+        {
             StartCoroutine(_tuto.StartTutorial());
+            isTutorial = true;
+        }
         else
         {
             TurnChange();

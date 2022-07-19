@@ -131,6 +131,7 @@ public class Tutorial : MonoBehaviour
                     FightManager.Instance.turnType = FightManager.TurnType.Player_Wait;
                     FightManager.Instance.TurnChange();
                     FightManager.Instance.isIng = false;
+                    FightManager.Instance.isTutorial = false;
                 });
             }
             else
