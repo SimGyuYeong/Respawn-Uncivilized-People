@@ -1,1 +1,2 @@
-# Uncivilized-People
+# 좀비연시
+2022 GIGDC 출품작품
