@@ -1,0 +1,1 @@
+{"root":[{"assemblyName":"Assembly-CSharp","nameSpace":"Gravitons.UI.Modal","className":"ModalManager","methodName":"DomainReset","loadTypes":4,"isUnityClass":false},{"assemblyName":"spine-unity","nameSpace":"Spine.Unity.AttachmentTools","className":"AtlasUtilities","methodName":"Init","loadTypes":4,"isUnityClass":false}]}
