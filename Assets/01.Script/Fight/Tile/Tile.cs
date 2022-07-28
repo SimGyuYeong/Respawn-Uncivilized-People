@@ -65,15 +65,18 @@ public class Tile : MonoBehaviour
     /// </summary>
     void OnMouseExit()
     {
-        _highlight.SetActive(false);
-
-        if(_isShowUI)
+        if (FightManager.Instance.isIng == false)
         {
-            _isShowUI = false;
-            if (isPlayer())
-                FightManager.Instance.UI.HidePlayerStatusUI();
-            else
-                FightManager.Instance.UI.HideAIStatusUI();
+            _highlight.SetActive(false);
+
+            if (_isShowUI)
+            {
+                _isShowUI = false;
+                if (isPlayer())
+                    FightManager.Instance.UI.HidePlayerStatusUI();
+                else
+                    FightManager.Instance.UI.HideAIStatusUI();
+            }
         }
     }
 
@@ -82,7 +85,8 @@ public class Tile : MonoBehaviour
     /// </summary>
     private void OnMouseDown()
     {
-        FightManager.Instance.ClickTile(gameObject);
+        if (FightManager.Instance.isIng == false)
+            FightManager.Instance.ClickTile(gameObject);
     }
 
     public bool isAI()
