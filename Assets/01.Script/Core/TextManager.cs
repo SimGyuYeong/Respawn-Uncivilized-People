@@ -197,7 +197,7 @@ public class TextManager : MonoBehaviour
         if (Sentence[chatID][lineNumber, (int)IDType.SFX] != "")
         {
             string sfxName = Sentence[chatID][lineNumber, (int)IDType.SFX];
-            GameManager.Instance.SfxSound.PlaySound(TextSO.sfxList[Convert.ToInt32(sfxName)], true);
+            GameManager.Instance.SfxSound.PlaySound(TextSO.sfxList[Convert.ToInt32(sfxName)], false);
         }
     }
 
@@ -275,7 +275,7 @@ public class TextManager : MonoBehaviour
 
         if (Sentence[chatID][lineNumber, (int)IDType.Direct] == "" || Sentence[chatID][lineNumber, (int)IDType.Direct] == null)
         {
-            for (int i = 0; i < storyText.Length + 1; i++)
+            for (int i = 0; i < storyText.Length; i++)
             {
 
                 if (skip)
@@ -285,10 +285,15 @@ public class TextManager : MonoBehaviour
                     break;
                 }
 
-
                 _textPanel.text = string.Format("{0}\n{1}", pName, storyText.Substring(0, i));
                 //soundManager.TypingSound(); // 텍스트 출력....따따따따
-                yield return new WaitForSeconds(chatSpeed);
+
+                if (storyText[i] != ' ')
+                {
+                    yield return new WaitForSeconds(chatSpeed);
+                }
+
+                //yield return null;
 
                 _textPanel.text = string.Format("{0}\n{1}", pName, storyText);
             }

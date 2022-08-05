@@ -41,6 +41,7 @@ public class TextUIManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        DontDestroyOnLoad(this);
 
         textLogUI = _optionUI.transform.parent.Find("TextLogPanel").gameObject;
         _defaultOption = _optionUI.transform.Find("DefaultSetting").gameObject;
@@ -59,7 +60,6 @@ public class TextUIManager : MonoBehaviour
         _bgmSlider.value = PlayerPrefs.GetFloat("BGM", 0);
         _effectSlider.value = PlayerPrefs.GetFloat("Effect", 0);
 
-        
     }
 
     private void Start()
