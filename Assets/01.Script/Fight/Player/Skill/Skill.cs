@@ -55,7 +55,6 @@ public class Skill : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
     protected virtual int CountingAI()
     {
         CheckDistance();
-        Debug.Log(_attackAI.Count);
         List<GameObject> removeAIList = new List<GameObject>();
         if(_attackAI.Count > 0)
         {

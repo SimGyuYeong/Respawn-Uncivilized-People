@@ -98,7 +98,7 @@ public class Tile : MonoBehaviour
         return false;
     }
 
-    public bool isPlayer()
+    public bool isPlayer() 
     {
         if (transform.childCount > 1)
         {
