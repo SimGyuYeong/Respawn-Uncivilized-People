@@ -13,7 +13,7 @@ public class AIData
 
     public enum AIType
     {
-        Latitude = 0,
-        Efficient
+        LatitudeAI = 0,
+        EfficientAI = 1
     }
 }

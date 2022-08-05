@@ -4,8 +4,9 @@ using UnityEngine;
 using DG.Tweening;
 using TMPro;
 using System;
+using UnityEngine.UI;
 
-public class AI : MonoBehaviour
+public class AI : PoolableMono
 {
     [SerializeField] protected int _id;
     [SerializeField] protected string _name;
@@ -53,6 +54,9 @@ public class AI : MonoBehaviour
 
     private TextMeshProUGUI _influenceText;
 
+    [SerializeField]
+    private GameObject deathParticle;
+
     protected enum AI_STATE
     {
         WAIT_L,
@@ -86,7 +90,15 @@ public class AI : MonoBehaviour
     public void Death()
     {
         FightManager.Instance.aiList.Remove(this);
-        Destroy(gameObject);
+        StartCoroutine(DeathCoroutine());
+    }
+
+    private IEnumerator DeathCoroutine()
+    {
+        Instantiate(deathParticle, transform);
+        transform.GetComponent<SpriteRenderer>().DOFade(0, 1f);
+        yield return new WaitForSeconds(2f);
+        PoolManager.Instance.Push(this);
         FightManager.Instance.UI.UpdateGoalUI();
         if (FightManager.Instance.aiList.Count == 0) FightManager.Instance.StartCoroutine("Win");
     }
@@ -277,5 +289,10 @@ public class AI : MonoBehaviour
     public bool IsRestructuring()
     {
         return _isRestructuring;
+    }
+
+    public override void Reset()
+    {
+
     }
 }

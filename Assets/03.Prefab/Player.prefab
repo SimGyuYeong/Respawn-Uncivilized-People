@@ -228,3 +228,4 @@ MonoBehaviour:
   isFight: 0
   id: 0
   info: 
+  deathParticle: {fileID: 100008, guid: 7075bd5fe1480184695a32611c15da57, type: 3}

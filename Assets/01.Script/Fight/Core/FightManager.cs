@@ -12,7 +12,9 @@ public class FightManager : MonoBehaviour
     //싱글톤
     public static FightManager Instance;
 
+    [Header("SO")]
     public StageSO[] _stageSO;
+    [SerializeField] private PoolingListSO _initList = null;
 
     private Tutorial _tuto;
     private UIManager _uiManager;
@@ -46,17 +48,16 @@ public class FightManager : MonoBehaviour
     }
     #endregion
 
+    [Header("오브젝트 데이터")]
     public List<PlayerData> playerDataList = new List<PlayerData>();
     public List<AIData> aiDataList = new List<AIData>();
-     
 
+    [Header("프리팹")]
     //타일이 생성될 오브젝트 부모, 플레이어 프리팹, 플레이어가 움직이는 애니메이션 오브젝트
-    public GameObject content, moveAni;
+    public GameObject content;
+    public GameObject moveAni;
 
     public Tile tilePrefab;
-    public List<AI> enemyPrefab = new List<AI>();
-    public Player playerPrefab;
-
     public Player player;
 
     //현재 플레이어 애니메이션이 작동중인지
@@ -69,6 +70,7 @@ public class FightManager : MonoBehaviour
     private int _maxTurnCount = 0;
     private int _turnCount = 0;
 
+    [Header("오브젝트 정보")]
     public List<Tile> tileList = new List<Tile>();
     public List<AI> aiList = new List<AI>();
     public List<Player> playerList = new List<Player>();
@@ -76,6 +78,7 @@ public class FightManager : MonoBehaviour
     //액션 버튼 오브젝트
     [SerializeField] private GameObject _actionButton;
 
+    [Header("기타변수 (건들일필요X)")]
     public int fightStage;
 
     public int maxTurn = 10;
@@ -135,11 +138,22 @@ public class FightManager : MonoBehaviour
         _tuto = transform.parent.Find("Tutorial").GetComponent<Tutorial>();
         _uiManager = transform.parent.Find("UIManager").GetComponent<UIManager>();
         _soundManager = transform.parent.Find("FightSoundManager").GetComponent<FightSoundManager>();
+
+        PoolManager.Instance = new PoolManager(transform);
+        CreatePool();
     }
 
     private void Start()
     {
         StageSave.StageStart();
+    }
+
+    private void CreatePool()
+    {
+        foreach (PoolingPair pair in _initList.list)
+        {
+            PoolManager.Instance.CreatePool(pair.prefab, pair.poolCnt);
+        }
     }
 
     public void StageStart(int stage)
@@ -168,7 +182,8 @@ public class FightManager : MonoBehaviour
         {
             int slot = Mathf.FloorToInt((7 - p.position.y) * 8 + p.position.x);
 
-            var _player = Instantiate(playerPrefab, tileList[slot].transform);
+            Player _player = PoolManager.Instance.Pop("Player") as Player;
+            _player.transform.parent = tileList[slot].transform;
             _player.Init(count, p);
             _maxTurnCount += 2;
 
@@ -247,8 +262,10 @@ public class FightManager : MonoBehaviour
         {
             int slot = Mathf.FloorToInt((7 - ai.position.y) * 8 + ai.position.x);
 
-            var _ai = Instantiate(enemyPrefab[(int)ai.type], tileList[slot].transform);
+            AI _ai = PoolManager.Instance.Pop(ai.type.ToString()) as AI;
+            _ai.transform.parent = tileList[slot].transform;
             _ai.gameObject.SetActive(false);
+            _ai.transform.position = tileList[slot].transform.position;
 
             aiList.Add(_ai);
         }

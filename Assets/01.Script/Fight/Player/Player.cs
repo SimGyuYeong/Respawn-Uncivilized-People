@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
+using DG.Tweening;
 
 [System.Serializable]
 public class PlayerData
@@ -15,7 +17,7 @@ public class PlayerData
     public string info;
 }
 
-public class Player : MonoBehaviour
+public class Player : PoolableMono
 {
     public string playerName;
 
@@ -33,8 +35,7 @@ public class Player : MonoBehaviour
             
             if (_durabilityPoint <= 0)
             {
-                FightManager.Instance.playerList.Remove(this);
-                Destroy(gameObject);
+                StartCoroutine(DeathCoroutine());
             }
         }
     }
@@ -75,6 +76,9 @@ public class Player : MonoBehaviour
     public Vector2Int IPos => new Vector2Int((int)_pos.x, (int)_pos.y);
     public string info;
 
+    [SerializeField]
+    private GameObject deathParticle;
+
     public void Init(int _id, PlayerData pData)
     {
         id = _id;
@@ -85,5 +89,19 @@ public class Player : MonoBehaviour
         _durabilityPoint = pData.durabilityPoint;
         _maxKineticPoint = pData.kineticPoint;
         _kineticPoint = pData.kineticPoint;
+    }
+
+    private IEnumerator DeathCoroutine()
+    {
+        Instantiate(deathParticle, transform);
+        transform.GetComponent<Image>().DOFade(0, 1f);
+        FightManager.Instance.playerList.Remove(this);
+        yield return new WaitForSeconds(2f);
+        PoolManager.Instance.Push(this);
+    }
+
+    public override void Reset()
+    {
+
     }
 }
