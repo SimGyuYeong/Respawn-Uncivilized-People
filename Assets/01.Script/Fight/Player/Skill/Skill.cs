@@ -123,6 +123,9 @@ public class Skill : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, I
     {
         _source.clip = _clip;
         _source.Play();
+
+        // 스킬 이펙트 발생부분
+
         FightManager.Instance.isSkillSelect = false;
         FightManager.Instance.HideDistance();
         _damagedAIList.ForEach(x => x.InfluencePoint -= _damage);
